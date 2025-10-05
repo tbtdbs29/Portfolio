@@ -1,0 +1,697 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Portfolio Futuriste</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Arial', sans-serif;
+      color: white;
+      background: #0a0a0a;
+      overflow-x: hidden;
+    }
+
+    /* ==== Fond animé ==== */
+    #bgCanvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+    }
+
+    header {
+      text-align: center;
+      padding: 5rem 2rem;
+    }
+
+    header h1 {
+      font-size: 3rem;
+      color: #00ffe5;
+      text-shadow: 0 0 15px #00ffe5;
+    }
+    header p {
+      font-size: 1.2rem;
+      color: #ccc;
+    }
+
+    section {
+      padding: 5rem 2rem;
+      text-align: center;
+      opacity: 0;
+      transform: translateY(50px);
+      transition: all 0.8s ease-out;
+    }
+    section.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    
+    h2 {
+        font-size: 2.5rem;
+        margin-bottom: 3rem;
+        color: #00ffe5;
+        text-shadow: 0 0 10px #00ffe5;
+    }
+
+    /* ==== Présentation ==== */
+    .about {
+      max-width: 800px;
+      margin: auto;
+      font-size: 1.2rem;
+      line-height: 1.6;
+    }
+
+    /* ==== Passions ==== */
+    .passions {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 2rem;
+      margin-top: 2rem;
+    }
+    .passion-card {
+      background: rgba(255,255,255,0.05);
+      border-radius: 15px;
+      padding: 2rem;
+      transition: transform 0.3s;
+      box-shadow: 0 0 20px rgba(0,255,229,0.3);
+    }
+    .passion-card:hover {
+      transform: scale(1.05);
+    }
+
+    /* ==== Projets ==== */
+    .projects {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 2rem;
+      margin-top: 2rem;
+    }
+    .project-card {
+      background: rgba(255,255,255,0.05);
+      border-radius: 15px;
+      padding: 2rem;
+      transition: all 0.3s;
+      box-shadow: 0 0 20px rgba(255,0,255,0.3);
+      cursor: pointer; /* Ajout du curseur pour indiquer que c'est cliquable */
+    }
+    .project-card:hover {
+      transform: translateY(-10px) scale(1.02);
+    }
+
+    /* ==== Timeline ==== */
+    .timeline {
+      position: relative;
+      margin: 4rem auto;
+      padding: 2rem 0;
+      width: 80%;
+      max-width: 800px;
+    }
+    .timeline::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 4px;
+      height: 100%;
+      background: #00ffe5;
+      box-shadow: 0 0 10px #00ffe5;
+    }
+    .timeline-item {
+      position: relative;
+      width: 50%;
+      padding: 1.5rem;
+      background: rgba(255,255,255,0.05);
+      border-radius: 10px;
+      box-shadow: 0 0 15px rgba(0,255,229,0.2);
+      opacity: 0;
+      transform: translateY(50px);
+      transition: all 0.8s ease-out;
+    }
+    .timeline-item.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .timeline-item.left {
+      left: 0;
+      transform: translateX(-120%) translateY(50px);
+    }
+    .timeline-item.right {
+      left: 50%;
+      transform: translateX(120%) translateY(50px);
+    }
+    .timeline-item.left.visible {
+      transform: translateX(-20px) translateY(0);
+    }
+    .timeline-item.right.visible {
+      transform: translateX(20px) translateY(0);
+    }
+    .timeline-item h3 {
+      margin-bottom: 0.5rem;
+      color: #00ffe5;
+    }
+    .timeline-item p {
+      font-size: 0.9rem;
+      color: #ccc;
+    }
+
+    /* ================= SECTION COMPÉTENCES ================= */
+    .competences-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 2.5rem;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .competence-card {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(0, 255, 229, 0.2);
+      padding: 2.5rem;
+      border-radius: 15px;
+      box-shadow: 0 0 20px rgba(0, 255, 229, 0.1);
+      text-align: left;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      opacity: 0; /* Caché pour l'animation */
+      transform: translateY(30px);
+    }
+
+    .competence-card.visible {
+      opacity: 1;
+      transform: translateY(0);
+      transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+    }
+
+    .competence-card:hover {
+      transform: translateY(-10px);
+      box-shadow: 0 0 30px rgba(0, 255, 229, 0.4);
+    }
+
+    .competence-header {
+      display: flex;
+      align-items: center;
+      margin-bottom: 1.5rem;
+    }
+
+    .competence-icon {
+      font-size: 2rem;
+      color: #00ffe5;
+      text-shadow: 0 0 10px #00ffe5;
+      margin-right: 1.5rem;
+      width: 40px;
+    }
+
+    .competence-card h3 {
+      font-size: 1.3rem;
+      color: #fff;
+      margin: 0;
+    }
+
+    .competence-card p {
+      font-size: 1rem;
+      color: #ccc;
+      line-height: 1.6;
+      margin-bottom: 2rem;
+    }
+
+    .btn-projet {
+      display: inline-block;
+      border: 2px solid #00ffe5;
+      color: #00ffe5;
+      padding: 0.75rem 1.5rem;
+      border-radius: 30px;
+      text-decoration: none;
+      font-weight: bold;
+      transition: background-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .btn-projet:hover {
+      background-color: #00ffe5;
+      color: #0a0a0a;
+      box-shadow: 0 0 20px #00ffe5;
+    }
+    
+    /* Délais d'animation */
+    .competence-card:nth-child(2).visible { transition-delay: 0.1s; }
+    .competence-card:nth-child(3).visible { transition-delay: 0.2s; }
+    .competence-card:nth-child(4).visible { transition-delay: 0.3s; }
+    .competence-card:nth-child(5).visible { transition-delay: 0.4s; }
+    .competence-card:nth-child(6).visible { transition-delay: 0.5s; }
+
+    /* ==== Formulaire ==== */
+    form {
+      max-width: 600px;
+      margin: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+    input, textarea {
+      padding: 1rem;
+      border: 1px solid rgba(255,255,255,0.2);
+      border-radius: 8px;
+      font-size: 1rem;
+      background: rgba(255,255,255,0.05);
+      color: white;
+    }
+    button {
+      padding: 1rem;
+      border: none;
+      border-radius: 8px;
+      background: linear-gradient(90deg, #00ffe5, #ff00ff);
+      color: white;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+    button:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 20px #00ffe5;
+    }
+
+    footer {
+      text-align: center;
+      padding: 2rem;
+      background: #111;
+      color: #888;
+    }
+    .profile-pic-container {
+      position: relative;
+      width: 250px;
+      height: 250px;
+      border-radius: 50%;
+      margin: 0 auto 2rem;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .profile-pic {
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      object-fit: cover;
+      z-index: 1;
+      position: relative;
+      transition: transform 0.4s ease;
+    }
+
+    .profile-pic-container::before {
+      content: "";
+      position: absolute;
+      top: -5px; 
+      left: -5px;
+      width: calc(100% + 10px);
+      height: calc(100% + 10px);
+      border-radius: 50%;
+      background: conic-gradient(#0ff, #ff00ff, #0ff, #ff00ff);
+      z-index: 0;
+      filter: blur(15px);
+      opacity: 0;
+      transition: opacity 0.3s;
+      animation: rotateNeon 3s linear infinite;
+    }
+
+    .profile-pic-container:hover::before {
+      opacity: 1;
+    }
+
+    .profile-pic-container:hover .profile-pic {
+      transform: scale(1.1) rotate(3deg);
+    }
+
+    @keyframes rotateNeon {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    .back-arrow {
+      position: fixed;
+      top: 20px;
+      left: 20px;
+      font-size: 2rem;
+      color: #00ffe5;
+      text-shadow: 0 0 10px #00ffe5, 0 0 20px #00ffe5;
+      cursor: pointer;
+      z-index: 1001;
+      transition: transform 0.3s, color 0.3s;
+    }
+    .back-arrow:hover {
+      transform: scale(1.2) rotate(-10deg);
+      color: #ff00ff;
+    }
+
+    .overlay {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      width: 0;
+      height: 0;
+      background: radial-gradient(circle, #00ffe5 0%, #ff00ff 70%);
+      border-radius: 50%;
+      z-index: 1000;
+      pointer-events: none;
+      transition: width 1.5s ease, height 1.5s ease, top 1.5s ease, left 1.5s ease;
+    }
+    .overlay.active {
+      width: 300vw;
+      height: 300vw;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
+
+    /* ==== STYLES POUR LA MODALE ==== */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.7);
+      backdrop-filter: blur(8px);
+      z-index: 2000;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.4s ease-in-out;
+    }
+    .modal-overlay.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .modal {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -30%);
+      background: rgba(10, 10, 10, 0.8);
+      border: 1px solid #00ffe5;
+      border-radius: 20px;
+      box-shadow: 0 0 40px rgba(0, 255, 229, 0.5);
+      width: 90%;
+      max-width: 600px;
+      padding: 3rem;
+      z-index: 2001;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.4s ease-in-out, transform 0.4s ease-in-out;
+    }
+    .modal.active {
+      opacity: 1;
+      pointer-events: auto;
+      transform: translate(-50%, -50%);
+    }
+
+    .modal-close {
+      position: absolute;
+      top: 15px;
+      right: 20px;
+      font-size: 2.5rem;
+      color: #fff;
+      cursor: pointer;
+      transition: transform 0.3s, color 0.3s;
+    }
+    .modal-close:hover {
+      color: #ff00ff;
+      transform: rotate(90deg);
+    }
+
+    .modal h3 {
+      font-size: 2rem;
+      color: #00ffe5;
+      margin-top: 0;
+      margin-bottom: 1.5rem;
+      text-shadow: 0 0 10px #00ffe5;
+    }
+    .modal p {
+      font-size: 1.1rem;
+      color: #ccc;
+      line-height: 1.6;
+    }
+  </style>
+</head>
+<body>
+  <div class="back-arrow" id="backArrow">⬅</div>
+  <div class="overlay" id="overlay"></div>
+
+  <canvas id="bgCanvas"></canvas>
+
+  <header>
+    <div class="profile-pic-container">
+      <img src="../assets/pdp.jpg" alt="Moi" class="profile-pic">
+    </div>
+    <h1>🚀 Portfolio de Thibault</h1>
+    <p>Développeur • Créatif • Passionné d'IA</p>
+  </header>
+
+  <section class="about">
+    <h2>À propos de moi</h2>
+    <p>
+      Je m'appelle Thibault, passionné par le développement web, l'IA et l'innovation.  
+      J'aime créer des projets qui mélangent technologie et créativité, et je suis toujours en quête 
+      de nouveaux défis à relever.
+    </p>
+  </section>
+
+  <section>
+    <h2>Mes Passions</h2>
+    <div class="passions">
+      <div class="passion-card">💻 Développement Web</div>
+      <div class="passion-card">🤖 Intelligence Artificielle</div>
+      <div class="passion-card">🎮 Jeux Vidéo & E-sport</div>
+      <div class="passion-card">🚀 Nouvelles Technologies</div>
+    </div>
+  </section>
+
+  <section id="competences">
+    <h2>Mes Compétences</h2>
+    <div class="competences-grid">
+      <div class="competence-card">
+        <div class="competence-header">
+          <i class="fas fa-code competence-icon"></i>
+          <h3>Réaliser un développement d'application</h3>
+        </div>
+        <p>Conception, développement, et déploiement de solutions logicielles robustes et performantes.</p>
+        <a href="#projet1" class="btn-projet">Voir le projet</a>
+      </div>
+      <div class="competence-card">
+        <div class="competence-header">
+          <i class="fas fa-cogs competence-icon"></i>
+          <h3>Optimiser des applications</h3>
+        </div>
+        <p>Analyse et amélioration des performances, de la consommation mémoire et de la rapidité des applications.</p>
+        <a href="#projet2" class="btn-projet">Voir le projet</a>
+      </div>
+      <div class="competence-card">
+        <div class="competence-header">
+          <i class="fas fa-tasks competence-icon"></i>
+          <h3>Administrer des systèmes</h3>
+        </div>
+        <p>Gestion d'infrastructures informatiques, déploiement et maintenance de services réseaux et systèmes.</p>
+        <a href="#projet3" class="btn-projet">Voir le projet</a>
+      </div>
+      <div class="competence-card">
+        <div class="competence-header">
+          <i class="fas fa-database competence-icon"></i> <h3>Gérer des données</h3>
+        </div>
+        <p>Modélisation, création et administration de bases de données pour garantir l'intégrité et la sécurité.</p>
+        <a href="#projet4" class="btn-projet">Voir le projet</a>
+      </div>
+      <div class="competence-card">
+        <div class="competence-header">
+          <i class="fas fa-sitemap competence-icon"></i> <h3>Conduire un projet</h3>
+        </div>
+        <p>Maîtrise des méthodologies agiles, planification, suivi et livraison de projets informatiques.</p>
+        <a href="#projet5" class="btn-projet">Voir le projet</a>
+      </div>
+      <div class="competence-card">
+        <div class="competence-header">
+          <i class="fas fa-users competence-icon"></i>
+          <h3>Travailler en équipe</h3>
+        </div>
+        <p>Collaboration, communication et utilisation d'outils collaboratifs pour la réussite des projets.</p>
+        <a href="#projet6" class="btn-projet">Voir le projet</a>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Mes Projets</h2>
+    <div class="projects">
+       <div class="project-card" data-description="Ce portfolio a été conçu pour être interactif et futuriste, utilisant un chatbot avec l'IA de Cohere pour une expérience utilisateur unique et engageante.">
+        <h3>🌐 Portfolio IA</h3>
+        <p>Un site interactif avec chatbot intégré pour présenter mes compétences.</p>
+      </div>
+      <div class="project-card" data-description="Développement d'une application web pour visualiser des données complexes en temps réel. Utilisation de bibliothèques JavaScript modernes pour des graphiques dynamiques et interactifs.">
+        <h3>📊 Dashboard Data</h3>
+        <p>Application de visualisation de données en temps réel.</p>
+      </div>
+      <div class="project-card" data-description="Création d'un bot pour la plateforme Discord. Il est capable de modérer les discussions, de jouer de la musique et de répondre à des commandes personnalisées grâce à des APIs externes.">
+        <h3>🤖 Bot Discord</h3>
+        <p>Un assistant intelligent qui répond aux commandes des utilisateurs.</p>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Mon Parcours</h2>
+    <div class="timeline">
+      <div class="timeline-item left">
+        <h3>2020</h3>
+        <p>Début de mes études en informatique.</p>
+      </div>
+      <div class="timeline-item right">
+        <h3>2022</h3>
+        <p>Premier stage en développement web.</p>
+      </div>
+      <div class="timeline-item left">
+        <h3>2023</h3>
+        <p>Création de mes premiers projets personnels IA.</p>
+      </div>
+      <div class="timeline-item right">
+        <h3>2025</h3>
+        <p>Portfolio futuriste lancé 🚀</p>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Contact</h2>
+    <form>
+      <input type="text" placeholder="Votre nom" required>
+      <input type="email" placeholder="Votre email" required>
+      <textarea rows="5" placeholder="Votre message"></textarea>
+      <button type="submit">Envoyer</button>
+    </form>
+  </section>
+
+  <footer>
+    <p>© 2025 - Thibault Dubois | Tous droits réservés</p>
+  </footer>
+
+  <div class="modal-overlay" id="modalOverlay">
+    <div class="modal" id="projectModal">
+      <span class="modal-close" id="modalClose">&times;</span>
+      <h3 id="modalTitle">Titre du projet</h3>
+      <p id="modalDescription">Description détaillée du projet...</p>
+    </div>
+  </div>
+
+
+  <script>
+    // On attend que tout le contenu de la page soit chargé avant d'exécuter le script
+    document.addEventListener('DOMContentLoaded', () => {
+
+      /* === Fond animé avec particules interactives === */
+      const canvas = document.getElementById("bgCanvas");
+      const ctx = canvas.getContext("2d");
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+
+      let particles = Array.from({length: 120}, () => ({
+        x: Math.random() * canvas.width,
+        y: Math.random() * canvas.height,
+        radius: Math.random() * 2 + 1,
+        dx: (Math.random() - 0.5) * 0.3,
+        dy: (Math.random() - 0.5) * 0.3
+      }));
+
+      let mouse = { x: canvas.width / 2, y: canvas.height / 2 };
+
+      window.addEventListener("mousemove", e => {
+        mouse.x = e.clientX;
+        mouse.y = e.clientY;
+      });
+
+      function animate() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        particles.forEach(p => {
+          let dx = mouse.x - p.x;
+          let dy = mouse.y - p.y;
+          let dist = Math.sqrt(dx*dx + dy*dy);
+          if (dist < 150) {
+            p.x -= dx * 0.005;
+            p.y -= dy * 0.005;
+          }
+
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+          ctx.fillStyle = "#00ffe5";
+          ctx.shadowColor = "#00ffe5";
+          ctx.shadowBlur = 15;
+          ctx.fill();
+
+          p.x += p.dx;
+          p.y += p.dy;
+          if (p.x < 0 || p.x > canvas.width) p.dx *= -1;
+          if (p.y < 0 || p.y > canvas.height) p.dy *= -1;
+        });
+        requestAnimationFrame(animate);
+      }
+      animate();
+
+      /* === Animations au défilement (UN SEUL OBSERVER) === */
+      const animatedElements = document.querySelectorAll("section, .timeline-item, .competence-card");
+
+      const observer = new IntersectionObserver(entries => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("visible");
+            observer.unobserve(entry.target);
+          }
+        });
+      }, {threshold: 0.15});
+
+      animatedElements.forEach(el => observer.observe(el));
+
+      /* === Flèche de retour === */
+      const backArrow = document.getElementById("backArrow");
+      const overlay = document.getElementById("overlay");
+
+      backArrow.addEventListener("click", () => {
+        overlay.classList.add("active");
+        setTimeout(() => {
+          window.location.href = "../index.html";
+        }, 1500);
+      });
+
+
+      /* ==== SCRIPT POUR LA MODALE ==== */
+      const projectCards = document.querySelectorAll('.project-card');
+      const modalOverlay = document.getElementById('modalOverlay');
+      const projectModal = document.getElementById('projectModal');
+      const modalClose = document.getElementById('modalClose');
+      const modalTitle = document.getElementById('modalTitle');
+      const modalDescription = document.getElementById('modalDescription');
+
+      projectCards.forEach(card => {
+        card.addEventListener('click', () => {
+          const title = card.querySelector('h3').textContent;
+          const description = card.dataset.description;
+
+          modalTitle.textContent = title;
+          modalDescription.textContent = description;
+
+          modalOverlay.classList.add('active');
+          projectModal.classList.add('active');
+        });
+      });
+
+      function closeModal() {
+        modalOverlay.classList.remove('active');
+        projectModal.classList.remove('active');
+      }
+
+      modalClose.addEventListener('click', closeModal);
+      modalOverlay.addEventListener('click', (e) => {
+          if (e.target === modalOverlay) {
+              closeModal();
+          }
+      });
+    });
+  </script>
+</body>
+</html>

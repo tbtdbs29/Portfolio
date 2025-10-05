@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Portfolio Futuriste</title>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600&display=swap" rel="stylesheet">
+  <style>
+    /* ---- Reset ---- */
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html,body { height: 100%; }
+    body {
+      font-family: 'Orbitron', sans-serif;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      background: linear-gradient(270deg, #0f0c29, #302b63, #24243e);
+      background-size: 600% 600%;
+      animation: gradientBG 15s ease infinite;
+      overflow: hidden;
+      color: white;
+      cursor: none; /* cache le curseur natif */
+    }
+
+    @keyframes gradientBG {
+      0% {background-position: 0% 50%;}
+      50% {background-position: 100% 50%;}
+      100% {background-position: 0% 50%;}
+    }
+
+    h1 {
+      font-size: 3.6rem;
+      text-transform: uppercase;
+      margin-bottom: 2.6rem;
+      color: #00ffe5;
+      text-shadow: 0 0 10px #00ffe5, 0 0 20px #00ffe5;
+      animation: flicker 2s infinite;
+      z-index: 2;
+    }
+    @keyframes flicker {
+      0%,19%,21%,23%,25%,54%,56%,100% {opacity:1;}
+      20%,24%,55% {opacity:0.3;}
+    }
+
+    .choices { display:flex; gap:2rem; z-index:2; }
+
+    .card {
+      background: rgba(255,255,255,0.04);
+      border: 2px solid rgba(0,255,229,0.6);
+      padding: 2rem 3rem;
+      border-radius: 20px;
+      backdrop-filter: blur(10px);
+      transition: transform 0.28s cubic-bezier(.2,.9,.3,1), box-shadow .28s;
+      cursor: pointer; /* visuel quand on a un trackpad/mouse, natif caché mais utile pour a11y */
+      text-align: center;
+      font-size: 1.15rem;
+      color: #fff;
+      min-width: 250px;
+      box-shadow: 0 0 15px rgba(0,255,229,0.18);
+    }
+    .card:hover {
+      transform: perspective(800px) rotateY(8deg) scale(1.05);
+      box-shadow: 0 0 30px rgba(0,255,229,0.55);
+    }
+    .card h2 { margin-bottom: 0.8rem; color: #00ffe5; text-shadow: 0 0 8px #00ffe5; }
+    .card p { font-size: 0.98rem; opacity: 0.85; }
+
+    /* stars background */
+    .stars { position:absolute; inset:0; z-index:0; overflow:hidden; }
+    .stars::before, .stars::after {
+      content:"";
+      position:absolute; top:-100%;
+      width:200%; height:200%;
+      background-image:
+        radial-gradient(2px 2px at 20px 30px, #fff, transparent),
+        radial-gradient(2px 2px at 40px 70px, #fff, transparent),
+        radial-gradient(2px 2px at 80px 130px, #fff, transparent),
+        radial-gradient(2px 2px at 120px 170px, #fff, transparent),
+        radial-gradient(2px 2px at 200px 300px, #fff, transparent);
+      background-size:200px 200px;
+      animation: moveStars 100s linear infinite;
+      opacity:0.45;
+    }
+    @keyframes moveStars { from { transform: translateY(0);} to { transform: translateY(1000px);} }
+
+    /* ---- Curseur personnalisé ---- */
+    .cursor {
+      position: fixed;
+      top: 0; left: 0;
+      width: 26px; height: 26px;
+      border: 2px solid #00ffe5;
+      border-radius: 50%;
+      pointer-events: none;
+      transform: translate3d(0,0,0) translate(-50%,-50%);
+      transition: width .18s ease, height .18s ease, box-shadow .18s ease, border-color .18s;
+      z-index: 9999;
+      box-shadow: 0 0 10px #00ffe5, 0 0 22px rgba(0,255,229,0.18);
+      will-change: transform;
+      mix-blend-mode: screen;
+      backdrop-filter: blur(2px);
+    }
+
+    /* Glow halo */
+    .cursor::after {
+      content: "";
+      position: absolute;
+      left: 50%; top: 50%;
+      transform: translate(-50%,-50%);
+      width: 120%; height: 120%;
+      border-radius: 50%;
+      filter: blur(12px);
+      opacity: 0.5;
+      background: radial-gradient(circle, rgba(0,255,229,0.5) 0%, transparent 60%);
+      pointer-events:none;
+    }
+
+    /* hover state (on cards) */
+    .cursor.cursor--hover {
+      width: 64px; height: 64px;
+      border-color: #ff00ff;
+      box-shadow: 0 0 24px #ff00ff, 0 0 48px rgba(255,0,255,0.18);
+    }
+    .cursor.cursor--fast {
+      transform: scale(1.05) translate3d(0,0,0) translate(-50%,-50%);
+      box-shadow: 0 0 30px #00ffe5, 0 0 60px rgba(0,255,229,0.25);
+    }
+    .cursor.cursor--active {
+      transform: translate3d(0,0,0) translate(-50%,-50%) scale(0.85);
+      box-shadow: 0 0 6px rgba(0,0,0,0.2) inset;
+    }
+
+    /* small responsive tweak */
+    @media (max-width:600px) {
+      h1 { font-size: 2.2rem; }
+      .choices { flex-direction: column; align-items:center; }
+    }
+  </style>
+</head>
+<body>
+  <div class="stars"></div>
+
+  <h1>Bienvenue dans mon univers</h1>
+
+  <div class="choices">
+    <div class="card" onclick="window.location.href='chatbot/index.html'">
+      <h2>💡 Version IA</h2>
+      <p>Discute avec mon IA et découvre mon parcours.</p>
+    </div>
+    <div class="card" onclick="window.location.href='classic/index.html'">
+      <h2>🌐 Version Classique</h2>
+      <p>Explore mon portfolio traditionnel.</p>
+    </div>
+  </div>
+
+  <!-- Script placé ici, à la fin du body -->
+  <script>
+    // create cursor element
+    const cursor = document.createElement('div');
+    cursor.className = 'cursor';
+    document.body.appendChild(cursor);
+
+    // target mouse position
+    let mouseX = window.innerWidth / 2;
+    let mouseY = window.innerHeight / 2;
+    let posX = mouseX;
+    let posY = mouseY;
+
+    let lastMouseX = mouseX, lastMouseY = mouseY, lastMoveTime = performance.now();
+
+    window.addEventListener('mousemove', (e) => {
+      mouseX = e.clientX;
+      mouseY = e.clientY;
+      lastMoveTime = performance.now();
+    });
+
+    // smooth follow loop
+    function rafLoop() {
+      // interpolation (lerp)
+      posX += (mouseX - posX) * 0.15;
+      posY += (mouseY - posY) * 0.15;
+
+      // set position (centered)
+      cursor.style.transform = `translate3d(${posX}px, ${posY}px, 0) translate(-50%, -50%)`;
+
+      // speed detection for "trail/fast" effect
+      const dx = mouseX - lastMouseX;
+      const dy = mouseY - lastMouseY;
+      const dist = Math.hypot(dx, dy);
+      // threshold tuned for smooth feel
+      if (dist > 20) {
+        cursor.classList.add('cursor--fast');
+      } else {
+        cursor.classList.remove('cursor--fast');
+      }
+      lastMouseX = mouseX; lastMouseY = mouseY;
+
+      requestAnimationFrame(rafLoop);
+    }
+    requestAnimationFrame(rafLoop);
+
+    // hover on cards -> add class (robust vs CSS sibling selectors)
+    document.querySelectorAll('.card').forEach(card => {
+      card.addEventListener('mouseenter', () => cursor.classList.add('cursor--hover'));
+      card.addEventListener('mouseleave', () => cursor.classList.remove('cursor--hover'));
+      // optionally scale a bit on press inside card
+      card.addEventListener('mousedown', () => cursor.classList.add('cursor--active'));
+      card.addEventListener('mouseup', () => cursor.classList.remove('cursor--active'));
+    });
+
+    // global click / release effects
+    document.addEventListener('mousedown', () => cursor.classList.add('cursor--active'));
+    document.addEventListener('mouseup', () => cursor.classList.remove('cursor--active'));
+
+    // hide cursor on touch devices
+    function isTouch() {
+      return ('ontouchstart' in window) || navigator.maxTouchPoints > 0;
+    }
+    if (isTouch()) {
+      cursor.style.display = 'none';
+      document.body.style.cursor = 'auto';
+    }
+  </script>
+</body>
+</html>
