@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Portfolio Futuriste</title>
+  <title id="pageTitle">Portfolio Futuriste</title>
   <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600&display=swap" rel="stylesheet">
   <style>
     /* ---- Reset ---- */
@@ -53,7 +53,7 @@
       border-radius: 20px;
       backdrop-filter: blur(10px);
       transition: transform 0.28s cubic-bezier(.2,.9,.3,1), box-shadow .28s;
-      cursor: pointer; /* visuel quand on a un trackpad/mouse, natif caché mais utile pour a11y */
+      cursor: pointer;
       text-align: center;
       font-size: 1.15rem;
       color: #fff;
@@ -131,6 +131,35 @@
       box-shadow: 0 0 6px rgba(0,0,0,0.2) inset;
     }
 
+    .language-switcher {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      z-index: 100;
+      display: flex;
+      gap: 10px;
+    }
+
+    .language-switcher img {
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      box-shadow: 0 0 8px rgba(0,255,229,0.6);
+      cursor: pointer;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .language-switcher img:hover {
+      transform: scale(1.1);
+      box-shadow: 0 0 15px rgba(0,255,229,1);
+    }
+
+    .language-switcher img.active-lang {
+      border: 2px solid #ff00ff;
+      box-shadow: 0 0 15px #ff00ff;
+    }
+
+
     /* small responsive tweak */
     @media (max-width:600px) {
       h1 { font-size: 2.2rem; }
@@ -141,86 +170,141 @@
 <body>
   <div class="stars"></div>
 
-  <h1>Bienvenue dans mon univers</h1>
+  <h1 id="welcomeTitle">Bienvenue dans mon univers</h1>
 
   <div class="choices">
     <div class="card" onclick="window.location.href='chatbot/index.html'">
-      <h2>💡 Version IA</h2>
-      <p>Discute avec mon IA et découvre mon parcours.</p>
+      <h2 id="aiVersionTitle">💡 Version IA</h2>
+      <p id="aiVersionDesc">Discute avec mon IA et découvre mon parcours.</p>
     </div>
     <div class="card" onclick="window.location.href='classic/index.html'">
-      <h2>🌐 Version Classique</h2>
-      <p>Explore mon portfolio traditionnel.</p>
+      <h2 id="classicVersionTitle">🌐 Version Classique</h2>
+      <p id="classicVersionDesc">Explore mon portfolio traditionnel.</p>
     </div>
   </div>
 
-  <!-- Script placé ici, à la fin du body -->
+  <div class="language-switcher">
+    <img src="assets/fr.png" alt="Français" onclick="setLanguage('fr')" id="lang-fr" class="active-lang">
+    <img src="assets/en.png" alt="English" onclick="setLanguage('en')" id="lang-en">
+    </div>
+
   <script>
-    // create cursor element
-    const cursor = document.createElement('div');
-    cursor.className = 'cursor';
-    document.body.appendChild(cursor);
-
-    // target mouse position
-    let mouseX = window.innerWidth / 2;
-    let mouseY = window.innerHeight / 2;
-    let posX = mouseX;
-    let posY = mouseY;
-
-    let lastMouseX = mouseX, lastMouseY = mouseY, lastMoveTime = performance.now();
-
-    window.addEventListener('mousemove', (e) => {
-      mouseX = e.clientX;
-      mouseY = e.clientY;
-      lastMoveTime = performance.now();
-    });
-
-    // smooth follow loop
-    function rafLoop() {
-      // interpolation (lerp)
-      posX += (mouseX - posX) * 0.15;
-      posY += (mouseY - posY) * 0.15;
-
-      // set position (centered)
-      cursor.style.transform = `translate3d(${posX}px, ${posY}px, 0) translate(-50%, -50%)`;
-
-      // speed detection for "trail/fast" effect
-      const dx = mouseX - lastMouseX;
-      const dy = mouseY - lastMouseY;
-      const dist = Math.hypot(dx, dy);
-      // threshold tuned for smooth feel
-      if (dist > 20) {
-        cursor.classList.add('cursor--fast');
-      } else {
-        cursor.classList.remove('cursor--fast');
+    const translations = {
+      fr: {
+        pageTitle: "Portfolio Futuriste",
+        welcomeTitle: "Bienvenue dans mon univers",
+        aiVersionTitle: "💡 Version IA",
+        aiVersionDesc: "Discute avec mon IA et découvre mon parcours.",
+        classicVersionTitle: "🌐 Version Classique",
+        classicVersionDesc: "Explore mon portfolio traditionnel."
+      },
+      en: {
+        pageTitle: "Futuristic Portfolio",
+        welcomeTitle: "Welcome to my universe",
+        aiVersionTitle: "💡 AI Version",
+        aiVersionDesc: "Chat with my AI and discover my journey.",
+        classicVersionTitle: "🌐 Classic Version",
+        classicVersionDesc: "Explore my traditional portfolio."
       }
-      lastMouseX = mouseX; lastMouseY = mouseY;
+    };
 
+    function setLanguage(lang) {
+      document.documentElement.lang = lang;
+      localStorage.setItem('lang', lang);
+
+      const elementsToTranslate = {
+        pageTitle: document.getElementById('pageTitle'),
+        welcomeTitle: document.getElementById('welcomeTitle'),
+        aiVersionTitle: document.getElementById('aiVersionTitle'),
+        aiVersionDesc: document.getElementById('aiVersionDesc'),
+        classicVersionTitle: document.getElementById('classicVersionTitle'),
+        classicVersionDesc: document.getElementById('classicVersionDesc')
+      };
+
+      for (const id in elementsToTranslate) {
+        if (elementsToTranslate[id]) {
+          elementsToTranslate[id].textContent = translations[lang][id];
+        }
+      }
+
+      // Gérer la classe active pour les drapeaux
+      document.querySelectorAll('.language-switcher img').forEach(img => {
+        img.classList.remove('active-lang');
+      });
+      document.getElementById('lang-' + lang).classList.add('active-lang');
+    }
+
+    // Détecter la langue au chargement de la page
+    document.addEventListener('DOMContentLoaded', () => {
+      const savedLang = localStorage.getItem('lang') || 'fr'; // 'fr' par défaut
+      setLanguage(savedLang);
+
+      // create cursor element
+      const cursor = document.createElement('div');
+      cursor.className = 'cursor';
+      document.body.appendChild(cursor);
+
+      // target mouse position
+      let mouseX = window.innerWidth / 2;
+      let mouseY = window.innerHeight / 2;
+      let posX = mouseX;
+      let posY = mouseY;
+
+      let lastMouseX = mouseX, lastMouseY = mouseY, lastMoveTime = performance.now();
+
+      window.addEventListener('mousemove', (e) => {
+        mouseX = e.clientX;
+        mouseY = e.clientY;
+        lastMoveTime = performance.now();
+      });
+
+      // smooth follow loop
+      function rafLoop() {
+        // interpolation (lerp)
+        posX += (mouseX - posX) * 0.15;
+        posY += (mouseY - posY) * 0.15;
+
+        // set position (centered)
+        cursor.style.transform = `translate3d(${posX}px, ${posY}px, 0) translate(-50%, -50%)`;
+
+        // speed detection for "trail/fast" effect
+        const dx = mouseX - lastMouseX;
+        const dy = mouseY - lastMouseY;
+        const dist = Math.hypot(dx, dy);
+        // threshold tuned for smooth feel
+        if (dist > 20) {
+          cursor.classList.add('cursor--fast');
+        } else {
+          cursor.classList.remove('cursor--fast');
+        }
+        lastMouseX = mouseX; lastMouseY = mouseY;
+
+        requestAnimationFrame(rafLoop);
+      }
       requestAnimationFrame(rafLoop);
-    }
-    requestAnimationFrame(rafLoop);
 
-    // hover on cards -> add class (robust vs CSS sibling selectors)
-    document.querySelectorAll('.card').forEach(card => {
-      card.addEventListener('mouseenter', () => cursor.classList.add('cursor--hover'));
-      card.addEventListener('mouseleave', () => cursor.classList.remove('cursor--hover'));
-      // optionally scale a bit on press inside card
-      card.addEventListener('mousedown', () => cursor.classList.add('cursor--active'));
-      card.addEventListener('mouseup', () => cursor.classList.remove('cursor--active'));
+      // hover on cards -> add class (robust vs CSS sibling selectors)
+      document.querySelectorAll('.card').forEach(card => {
+        card.addEventListener('mouseenter', () => cursor.classList.add('cursor--hover'));
+        card.addEventListener('mouseleave', () => cursor.classList.remove('cursor--hover'));
+        // optionally scale a bit on press inside card
+        card.addEventListener('mousedown', () => cursor.classList.add('cursor--active'));
+        card.addEventListener('mouseup', () => cursor.classList.remove('cursor--active'));
+      });
+
+      // global click / release effects
+      document.addEventListener('mousedown', () => cursor.classList.add('cursor--active'));
+      document.addEventListener('mouseup', () => cursor.classList.remove('cursor--active'));
+
+      // hide cursor on touch devices
+      function isTouch() {
+        return ('ontouchstart' in window) || navigator.maxTouchPoints > 0;
+      }
+      if (isTouch()) {
+        cursor.style.display = 'none';
+        document.body.style.cursor = 'auto';
+      }
     });
-
-    // global click / release effects
-    document.addEventListener('mousedown', () => cursor.classList.add('cursor--active'));
-    document.addEventListener('mouseup', () => cursor.classList.remove('cursor--active'));
-
-    // hide cursor on touch devices
-    function isTouch() {
-      return ('ontouchstart' in window) || navigator.maxTouchPoints > 0;
-    }
-    if (isTouch()) {
-      cursor.style.display = 'none';
-      document.body.style.cursor = 'auto';
-    }
   </script>
 </body>
 </html>

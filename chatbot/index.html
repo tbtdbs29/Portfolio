@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Chatbot Futuriste</title>
+<title id="pageTitle">Chatbot Futuriste</title>
 <style>
   * {margin:0;padding:0;box-sizing:border-box;}
   body {
@@ -170,6 +170,34 @@
     top:50%; left:50%;
     transform:translate(-50%,-50%);
   }
+
+  .language-switcher {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 100;
+    display: flex;
+    gap: 10px;
+  }
+
+  .language-switcher img {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    box-shadow: 0 0 8px rgba(0,255,229,0.6);
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+
+  .language-switcher img:hover {
+    transform: scale(1.1);
+    box-shadow: 0 0 15px rgba(0,255,229,1);
+  }
+
+  .language-switcher img.active-lang {
+    border: 2px solid #ff00ff;
+    box-shadow: 0 0 15px #ff00ff;
+  }
 </style>
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600&display=swap" rel="stylesheet">
 </head>
@@ -179,115 +207,158 @@
 <div class="back-arrow" id="backArrow">⬅</div>
 <div class="overlay" id="overlay"></div>
 
-<h1>🤖 Chat avec mon IA</h1>
+<h1 id="chatTitle">🤖 Chat avec mon IA</h1>
 <div class="chat-container" id="chat"></div>
 
 <div class="input-container">
   <input type="text" id="userInput" placeholder="Écris ton message...">
-  <button onclick="sendMessage()">Envoyer</button>
+  <button onclick="sendMessage()" id="sendButton">Envoyer</button>
 </div>
+
+<div class="language-switcher">
+    <img src="../assets/fr.png" alt="Français" onclick="setLanguage('fr')" id="lang-fr" class="active-lang">
+    <img src="../assets/en.png" alt="English" onclick="setLanguage('en')" id="lang-en">
+    </div>
 
 <div class="cursor" id="cursor"></div>
 
 <script>
-  // ===== Curseur custom =====
-  const cursor = document.getElementById("cursor");
-  window.addEventListener("mousemove", e => {
-    cursor.style.top = e.clientY + "px";
-    cursor.style.left = e.clientX + "px";
-  });
+  const translations = {
+    fr: {
+      pageTitle: "Chatbot Futuriste",
+      chatTitle: "🤖 Chat avec mon IA",
+      inputPlaceholder: "Écris ton message...",
+      sendButton: "Envoyer",
+      errorConnecting: "Erreur de connexion au backend, réessaie plus tard."
+    },
+    en: {
+      pageTitle: "Futuristic Chatbot",
+      chatTitle: "🤖 Chat with my AI",
+      inputPlaceholder: "Type your message...",
+      sendButton: "Send",
+      errorConnecting: "Error connecting to the backend, please try again later."
+    }
+  };
 
-  // ===== Fond animé étoiles =====
-  const canvas = document.getElementById("bgCanvas");
-  const ctx = canvas.getContext("2d");
-  canvas.width = window.innerWidth;
-  canvas.height = window.innerHeight;
+  function setLanguage(lang) {
+    document.documentElement.lang = lang;
+    localStorage.setItem('lang', lang);
 
-  let particles = Array.from({length:150},()=>({
-    x:Math.random()*canvas.width,
-    y:Math.random()*canvas.height,
-    radius:Math.random()*2+1,
-    dx:(Math.random()-0.5)*0.5,
-    dy:(Math.random()-0.5)*0.5
-  }));
+    document.getElementById('pageTitle').textContent = translations[lang].pageTitle;
+    document.getElementById('chatTitle').textContent = translations[lang].chatTitle;
+    document.getElementById('userInput').placeholder = translations[lang].inputPlaceholder;
+    document.getElementById('sendButton').textContent = translations[lang].sendButton;
 
-  let mouse = {x:canvas.width/2,y:canvas.height/2};
-  window.addEventListener("mousemove", e=>{mouse.x=e.clientX;mouse.y=e.clientY;});
-
-  function animate(){
-    ctx.clearRect(0,0,canvas.width,canvas.height);
-    particles.forEach(p=>{
-      let dx = mouse.x - p.x;
-      let dy = mouse.y - p.y;
-      let dist = Math.sqrt(dx*dx+dy*dy);
-      if(dist<150){p.x-=dx*0.005;p.y-=dy*0.005;}
-      ctx.beginPath();
-      ctx.arc(p.x,p.y,p.radius,0,Math.PI*2);
-      ctx.fillStyle="#00ffe5";
-      ctx.shadowColor="#00ffe5";
-      ctx.shadowBlur=10;
-      ctx.fill();
-      p.x+=p.dx;
-      p.y+=p.dy;
-      if(p.x<0||p.x>canvas.width)p.dx*=-1;
-      if(p.y<0||p.y>canvas.height)p.dy*=-1;
+    // Gérer la classe active pour les drapeaux
+    document.querySelectorAll('.language-switcher img').forEach(img => {
+      img.classList.remove('active-lang');
     });
-    requestAnimationFrame(animate);
-  }
-  animate();
-
-  // ===== Chatbot =====
-  const chat = document.getElementById("chat");
-  const input = document.getElementById("userInput");
-
-  function addMessage(text,sender){
-    const msg=document.createElement("div");
-    msg.classList.add("message",sender);
-    msg.textContent=text;
-    chat.appendChild(msg);
-    chat.scrollTop=chat.scrollHeight;
+    document.getElementById('lang-' + lang).classList.add('active-lang');
   }
 
-  async function getGeminiResponse(prompt){
-    try{
-      const response = await fetch("http://localhost:3000/chat",{ // On appelle bien votre backend
-        method:"POST",
-        headers:{
-          "Content-Type":"application/json",
-        },
-        body:JSON.stringify({
-          message: prompt // On envoie la clé "message" que le backend attend
-        })
+  document.addEventListener('DOMContentLoaded', () => {
+    const savedLang = localStorage.getItem('lang') || 'fr';
+    setLanguage(savedLang);
+
+    // ===== Curseur custom =====
+    const cursor = document.getElementById("cursor");
+    window.addEventListener("mousemove", e => {
+      cursor.style.top = e.clientY + "px";
+      cursor.style.left = e.clientX + "px";
+    });
+
+    // ===== Fond animé étoiles =====
+    const canvas = document.getElementById("bgCanvas");
+    const ctx = canvas.getContext("2d");
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    let particles = Array.from({length:150},()=>({
+      x:Math.random()*canvas.width,
+      y:Math.random()*canvas.height,
+      radius:Math.random()*2+1,
+      dx:(Math.random()-0.5)*0.5,
+      dy:(Math.random()-0.5)*0.5
+    }));
+
+    let mouse = {x:canvas.width/2,y:canvas.height/2};
+    window.addEventListener("mousemove", e=>{mouse.x=e.clientX;mouse.y=e.clientY;});
+
+    function animate(){
+      ctx.clearRect(0,0,canvas.width,canvas.height);
+      particles.forEach(p=>{
+        let dx = mouse.x - p.x;
+        let dy = mouse.y - p.y;
+        let dist = Math.sqrt(dx*dx+dy*dy);
+        if(dist<150){p.x-=dx*0.005;p.y-=dy*0.005;}
+        ctx.beginPath();
+        ctx.arc(p.x,p.y,p.radius,0,Math.PI*2);
+        ctx.fillStyle="#00ffe5";
+        ctx.shadowColor="#00ffe5";
+        ctx.shadowBlur=10;
+        ctx.fill();
+        p.x+=p.dx;
+        p.y+=p.dy;
+        if(p.x<0||p.x>canvas.width)p.dx*=-1;
+        if(p.y<0||p.y>canvas.height)p.dy*=-1;
       });
-      const data = await response.json();
-      return data.reply; // On retourne la réponse du backend
-    } catch(err){
-      console.error(err);
-      return "Erreur de connexion au backend, réessaie plus tard.";
+      requestAnimationFrame(animate);
     }
-  }
+    animate();
 
-  async function sendMessage(){
-    const msg=input.value.trim();
-    if(msg!==""){
-      addMessage(msg,"user");
-      input.value="";
-      const botReply = await getGeminiResponse(msg);
-      addMessage(botReply,"bot");
+    // ===== Chatbot =====
+    const chat = document.getElementById("chat");
+    const input = document.getElementById("userInput");
+
+    function addMessage(text,sender){
+      const msg=document.createElement("div");
+      msg.classList.add("message",sender);
+      msg.textContent=text;
+      chat.appendChild(msg);
+      chat.scrollTop=chat.scrollHeight;
     }
-  }
 
-  input.addEventListener("keypress",e=>{
-    if(e.key==="Enter"){e.preventDefault();sendMessage();}
-  });
+    async function getGeminiResponse(prompt){
+      try{
+        const response = await fetch("http://localhost:3000/chat",{ // On appelle bien votre backend
+          method:"POST",
+          headers:{
+            "Content-Type":"application/json",
+          },
+          body:JSON.stringify({
+            message: prompt // On envoie la clé "message" que le backend attend
+          })
+        });
+        const data = await response.json();
+        return data.reply; // On retourne la réponse du backend
+      } catch(err){
+        console.error(err);
+        return translations[localStorage.getItem('lang') || 'fr'].errorConnecting;
+      }
+    }
 
-  // ===== Flèche retour futuriste =====
-  const backArrow = document.getElementById("backArrow");
-  const overlay = document.getElementById("overlay");
+    async function sendMessage(){
+      const msg=input.value.trim();
+      if(msg!==""){
+        addMessage(msg,"user");
+        input.value="";
+        const botReply = await getGeminiResponse(msg);
+        addMessage(botReply,"bot");
+      }
+    }
 
-  backArrow.addEventListener("click", ()=>{
-    overlay.classList.add("active");
-    setTimeout(()=>{ window.location.href="../index.html"; },1500);
+    input.addEventListener("keypress",e=>{
+      if(e.key==="Enter"){e.preventDefault();sendMessage();}
+    });
+
+    // ===== Flèche retour futuriste =====
+    const backArrow = document.getElementById("backArrow");
+    const overlay = document.getElementById("overlay");
+
+    backArrow.addEventListener("click", ()=>{
+      overlay.classList.add("active");
+      setTimeout(()=>{ window.location.href="../index.html"; },1500);
+    });
   });
 </script>
 </body>

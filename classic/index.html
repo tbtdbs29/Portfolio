@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Portfolio Futuriste</title>
+  <title id="pageTitle">Portfolio Futuriste</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
   <style>
     body {
@@ -79,9 +79,15 @@
       padding: 2rem;
       transition: transform 0.3s;
       box-shadow: 0 0 20px rgba(0,255,229,0.3);
+      cursor: pointer;
     }
     .passion-card:hover {
       transform: scale(1.05);
+    }
+    .passion-card a {
+        text-decoration: none;
+        color: inherit;
+        display: block; /* Rend toute la carte cliquable via le lien */
     }
 
     /* ==== Projets ==== */
@@ -97,7 +103,7 @@
       padding: 2rem;
       transition: all 0.3s;
       box-shadow: 0 0 20px rgba(255,0,255,0.3);
-      cursor: pointer; /* Ajout du curseur pour indiquer que c'est cliquable */
+      cursor: pointer;
     }
     .project-card:hover {
       transform: translateY(-10px) scale(1.02);
@@ -177,7 +183,7 @@
       box-shadow: 0 0 20px rgba(0, 255, 229, 0.1);
       text-align: left;
       transition: transform 0.3s ease, box-shadow 0.3s ease;
-      opacity: 0; /* Caché pour l'animation */
+      opacity: 0;
       transform: translateY(30px);
     }
 
@@ -431,6 +437,34 @@
       color: #ccc;
       line-height: 1.6;
     }
+
+    .language-switcher {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      z-index: 100;
+      display: flex;
+      gap: 10px;
+    }
+
+    .language-switcher img {
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      box-shadow: 0 0 8px rgba(0,255,229,0.6);
+      cursor: pointer;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .language-switcher img:hover {
+      transform: scale(1.1);
+      box-shadow: 0 0 15px rgba(0,255,229,1);
+    }
+
+    .language-switcher img.active-lang {
+      border: 2px solid #ff00ff;
+      box-shadow: 0 0 15px #ff00ff;
+    }
   </style>
 </head>
 <body>
@@ -443,13 +477,13 @@
     <div class="profile-pic-container">
       <img src="../assets/pdp.jpg" alt="Moi" class="profile-pic">
     </div>
-    <h1>🚀 Portfolio de Thibault</h1>
-    <p>Développeur • Créatif • Passionné d'IA</p>
+    <h1 id="headerTitle">🚀 Portfolio de Thibault</h1>
+    <p id="headerSubtitle">Développeur • Créatif • Passionné d'IA</p>
   </header>
 
   <section class="about">
-    <h2>À propos de moi</h2>
-    <p>
+    <h2 id="aboutTitle">À propos de moi</h2>
+    <p id="aboutText">
       Je m'appelle Thibault, passionné par le développement web, l'IA et l'innovation.  
       J'aime créer des projets qui mélangent technologie et créativité, et je suis toujours en quête 
       de nouveaux défis à relever.
@@ -457,119 +491,119 @@
   </section>
 
   <section>
-    <h2>Mes Passions</h2>
+    <h2 id="passionsTitle">Mes Passions</h2>
     <div class="passions">
-      <div class="passion-card">💻 Développement Web</div>
-      <div class="passion-card">🤖 Intelligence Artificielle</div>
-      <div class="passion-card">🎮 Jeux Vidéo & E-sport</div>
-      <div class="passion-card">🚀 Nouvelles Technologies</div>
+      <div class="passion-card" id="passionWeb">💻 Développement Web</div>
+      <div class="passion-card" id="passionAI">🤖 Intelligence Artificielle</div>
+      <div class="passion-card"><a href="gallery.html" style="text-decoration: none; color: inherit;" id="passionPhoto">📸 Photo & Vidéo</a></div>
+      <div class="passion-card" id="passionTech">🚀 Nouvelles Technologies</div>
     </div>
   </section>
 
   <section id="competences">
-    <h2>Mes Compétences</h2>
+    <h2 id="skillsTitle">Mes Compétences</h2>
     <div class="competences-grid">
       <div class="competence-card">
         <div class="competence-header">
           <i class="fas fa-code competence-icon"></i>
-          <h3>Réaliser un développement d'application</h3>
+          <h3 id="skill1Title">Réaliser un développement d'application</h3>
         </div>
-        <p>Conception, développement, et déploiement de solutions logicielles robustes et performantes.</p>
-        <a href="#projet1" class="btn-projet">Voir le projet</a>
+        <p id="skill1Desc">Conception, développement, et déploiement de solutions logicielles robustes et performantes.</p>
+        <a href="#projet1" class="btn-projet" id="skill1Btn">Voir le projet</a>
       </div>
       <div class="competence-card">
         <div class="competence-header">
           <i class="fas fa-cogs competence-icon"></i>
-          <h3>Optimiser des applications</h3>
+          <h3 id="skill2Title">Optimiser des applications</h3>
         </div>
-        <p>Analyse et amélioration des performances, de la consommation mémoire et de la rapidité des applications.</p>
-        <a href="#projet2" class="btn-projet">Voir le projet</a>
+        <p id="skill2Desc">Analyse et amélioration des performances, de la consommation mémoire et de la rapidité des applications.</p>
+        <a href="#projet2" class="btn-projet" id="skill2Btn">Voir le projet</a>
       </div>
       <div class="competence-card">
         <div class="competence-header">
           <i class="fas fa-tasks competence-icon"></i>
-          <h3>Administrer des systèmes</h3>
+          <h3 id="skill3Title">Administrer des systèmes</h3>
         </div>
-        <p>Gestion d'infrastructures informatiques, déploiement et maintenance de services réseaux et systèmes.</p>
-        <a href="#projet3" class="btn-projet">Voir le projet</a>
+        <p id="skill3Desc">Gestion d'infrastructures informatiques, déploiement et maintenance de services réseaux et systèmes.</p>
+        <a href="#projet3" class="btn-projet" id="skill3Btn">Voir le projet</a>
       </div>
       <div class="competence-card">
         <div class="competence-header">
-          <i class="fas fa-database competence-icon"></i> <h3>Gérer des données</h3>
+          <i class="fas fa-database competence-icon"></i> <h3 id="skill4Title">Gérer des données</h3>
         </div>
-        <p>Modélisation, création et administration de bases de données pour garantir l'intégrité et la sécurité.</p>
-        <a href="#projet4" class="btn-projet">Voir le projet</a>
+        <p id="skill4Desc">Modélisation, création et administration de bases de données pour garantir l'intégrité et la sécurité.</p>
+        <a href="#projet4" class="btn-projet" id="skill4Btn">Voir le projet</a>
       </div>
       <div class="competence-card">
         <div class="competence-header">
-          <i class="fas fa-sitemap competence-icon"></i> <h3>Conduire un projet</h3>
+          <i class="fas fa-sitemap competence-icon"></i> <h3 id="skill5Title">Conduire un projet</h3>
         </div>
-        <p>Maîtrise des méthodologies agiles, planification, suivi et livraison de projets informatiques.</p>
-        <a href="#projet5" class="btn-projet">Voir le projet</a>
+        <p id="skill5Desc">Maîtrise des méthodologies agiles, planification, suivi et livraison de projets informatiques.</p>
+        <a href="#projet5" class="btn-projet" id="skill5Btn">Voir le projet</a>
       </div>
       <div class="competence-card">
         <div class="competence-header">
           <i class="fas fa-users competence-icon"></i>
-          <h3>Travailler en équipe</h3>
+          <h3 id="skill6Title">Travailler en équipe</h3>
         </div>
-        <p>Collaboration, communication et utilisation d'outils collaboratifs pour la réussite des projets.</p>
-        <a href="#projet6" class="btn-projet">Voir le projet</a>
+        <p id="skill6Desc">Collaboration, communication et utilisation d'outils collaboratifs pour la réussite des projets.</p>
+        <a href="#projet6" class="btn-projet" id="skill6Btn">Voir le projet</a>
       </div>
     </div>
   </section>
 
   <section>
-    <h2>Mes Projets</h2>
+    <h2 id="projectsTitle">Mes Projets</h2>
     <div class="projects">
-       <div class="project-card" data-description="Ce portfolio a été conçu pour être interactif et futuriste, utilisant un chatbot avec l'IA de Cohere pour une expérience utilisateur unique et engageante.">
-        <h3>🌐 Portfolio IA</h3>
-        <p>Un site interactif avec chatbot intégré pour présenter mes compétences.</p>
+       <div class="project-card" data-description-fr="Ce portfolio a été conçu pour être interactif et futuriste, utilisant un chatbot avec l'IA de Cohere pour une expérience utilisateur unique et engageante." data-description-en="This portfolio was designed to be interactive and futuristic, using a chatbot with Cohere's AI for a unique and engaging user experience.">
+        <h3 id="project1Title">🌐 Portfolio IA</h3>
+        <p id="project1Desc">Un site interactif avec chatbot intégré pour présenter mes compétences.</p>
       </div>
-      <div class="project-card" data-description="Développement d'une application web pour visualiser des données complexes en temps réel. Utilisation de bibliothèques JavaScript modernes pour des graphiques dynamiques et interactifs.">
-        <h3>📊 Dashboard Data</h3>
-        <p>Application de visualisation de données en temps réel.</p>
+      <div class="project-card" data-description-fr="Développement d'une application web pour visualiser des données complexes en temps réel. Utilisation de bibliothèques JavaScript modernes pour des graphiques dynamiques et interactifs." data-description-en="Development of a web application to visualize complex data in real-time. Using modern JavaScript libraries for dynamic and interactive charts.">
+        <h3 id="project2Title">📊 Dashboard Data</h3>
+        <p id="project2Desc">Application de visualisation de données en temps réel.</p>
       </div>
-      <div class="project-card" data-description="Création d'un bot pour la plateforme Discord. Il est capable de modérer les discussions, de jouer de la musique et de répondre à des commandes personnalisées grâce à des APIs externes.">
-        <h3>🤖 Bot Discord</h3>
-        <p>Un assistant intelligent qui répond aux commandes des utilisateurs.</p>
+      <div class="project-card" data-description-fr="Création d'un bot pour la plateforme Discord. Il est capable de modérer les discussions, de jouer de la musique et de répondre à des commandes personnalisées grâce à des APIs externes." data-description-en="Creation of a bot for the Discord platform. It can moderate discussions, play music, and respond to custom commands using external APIs.">
+        <h3 id="project3Title">🤖 Bot Discord</h3>
+        <p id="project3Desc">Un assistant intelligent qui répond aux commandes des utilisateurs.</p>
       </div>
     </div>
   </section>
 
   <section>
-    <h2>Mon Parcours</h2>
+    <h2 id="journeyTitle">Mon Parcours</h2>
     <div class="timeline">
       <div class="timeline-item left">
-        <h3>2020</h3>
-        <p>Début de mes études en informatique.</p>
+        <h3 id="timeline2020Title">2020</h3>
+        <p id="timeline2020Desc">Début de mes études en informatique.</p>
       </div>
       <div class="timeline-item right">
-        <h3>2022</h3>
-        <p>Premier stage en développement web.</p>
+        <h3 id="timeline2022Title">2022</h3>
+        <p id="timeline2022Desc">Premier stage en développement web.</p>
       </div>
       <div class="timeline-item left">
-        <h3>2023</h3>
-        <p>Création de mes premiers projets personnels IA.</p>
+        <h3 id="timeline2023Title">2023</h3>
+        <p id="timeline2023Desc">Création de mes premiers projets personnels IA.</p>
       </div>
       <div class="timeline-item right">
-        <h3>2025</h3>
-        <p>Portfolio futuriste lancé 🚀</p>
+        <h3 id="timeline2025Title">2025</h3>
+        <p id="timeline2025Desc">Portfolio futuriste lancé 🚀</p>
       </div>
     </div>
   </section>
 
   <section>
-    <h2>Contact</h2>
+    <h2 id="contactTitle">Contact</h2>
     <form>
-      <input type="text" placeholder="Votre nom" required>
-      <input type="email" placeholder="Votre email" required>
-      <textarea rows="5" placeholder="Votre message"></textarea>
-      <button type="submit">Envoyer</button>
+      <input type="text" id="contactName" placeholder="Votre nom" required>
+      <input type="email" id="contactEmail" placeholder="Votre email" required>
+      <textarea rows="5" id="contactMessage" placeholder="Votre message"></textarea>
+      <button type="submit" id="contactBtn">Envoyer</button>
     </form>
   </section>
 
   <footer>
-    <p>© 2025 - Thibault Dubois | Tous droits réservés</p>
+    <p id="footerText">© 2025 - Thibault Dubois | Tous droits réservés</p>
   </footer>
 
   <div class="modal-overlay" id="modalOverlay">
@@ -580,10 +614,211 @@
     </div>
   </div>
 
+  <div class="language-switcher">
+    <img src="../assets/fr.png" alt="Français" onclick="setLanguage('fr')" id="lang-fr" class="active-lang">
+    <img src="../assets/en.png" alt="English" onclick="setLanguage('en')" id="lang-en">
+    </div>
 
   <script>
+    const translations = {
+      fr: {
+        pageTitle: "Portfolio Futuriste",
+        headerTitle: "🚀 Portfolio de Thibault",
+        headerSubtitle: "Développeur • Créatif • Passionné d'IA",
+        aboutTitle: "À propos de moi",
+        aboutText: "Je m'appelle Thibault, passionné par le développement web, l'IA et l'innovation. J'aime créer des projets qui mélangent technologie et créativité, et je suis toujours en quête de nouveaux défis à relever.",
+        passionsTitle: "Mes Passions",
+        passionWeb: "💻 Développement Web",
+        passionAI: "🤖 Intelligence Artificielle",
+        passionPhoto: "📸 Photo & Vidéo",
+        passionTech: "🚀 Nouvelles Technologies",
+        skillsTitle: "Mes Compétences",
+        skill1Title: "Réaliser un développement d'application",
+        skill1Desc: "Conception, développement, et déploiement de solutions logicielles robustes et performantes.",
+        skill1Btn: "Voir le projet",
+        skill2Title: "Optimiser des applications",
+        skill2Desc: "Analyse et amélioration des performances, de la consommation mémoire et de la rapidité des applications.",
+        skill2Btn: "Voir le projet",
+        skill3Title: "Administrer des systèmes",
+        skill3Desc: "Gestion d'infrastructures informatiques, déploiement et maintenance de services réseaux et systèmes.",
+        skill3Btn: "Voir le projet",
+        skill4Title: "Gérer des données",
+        skill4Desc: "Modélisation, création et administration de bases de données pour garantir l'intégrité et la sécurité.",
+        skill4Btn: "Voir le projet",
+        skill5Title: "Conduire un projet",
+        skill5Desc: "Maîtrise des méthodologies agiles, planification, suivi et livraison de projets informatiques.",
+        skill5Btn: "Voir le projet",
+        skill6Title: "Travailler en équipe",
+        skill6Desc: "Collaboration, communication et utilisation d'outils collaboratifs pour la réussite des projets.",
+        skill6Btn: "Voir le projet",
+        projectsTitle: "Mes Projets",
+        project1Title: "🌐 Portfolio IA",
+        project1Desc: "Un site interactif avec chatbot intégré pour présenter mes compétences.",
+        project2Title: "📊 Dashboard Data",
+        project2Desc: "Application de visualisation de données en temps réel.",
+        project3Title: "🤖 Bot Discord",
+        project3Desc: "Un assistant intelligent qui répond aux commandes des utilisateurs.",
+        journeyTitle: "Mon Parcours",
+        timeline2020Title: "2020",
+        timeline2020Desc: "Début de mes études en informatique.",
+        timeline2022Title: "2022",
+        timeline2022Desc: "Premier stage en développement web.",
+        timeline2023Title: "2023",
+        timeline2023Desc: "Création de mes premiers projets personnels IA.",
+        timeline2025Title: "2025",
+        timeline2025Desc: "Portfolio futuriste lancé 🚀",
+        contactTitle: "Contact",
+        contactNamePlaceholder: "Votre nom",
+        contactEmailPlaceholder: "Votre email",
+        contactMessagePlaceholder: "Votre message",
+        contactBtn: "Envoyer",
+        footerText: "© 2025 - Thibault Dubois | Tous droits réservés",
+        modalTitle: "Titre du projet", // Default for modal
+        modalDescription: "Description détaillée du projet...", // Default for modal
+      },
+      en: {
+        pageTitle: "Futuristic Portfolio",
+        headerTitle: "🚀 Thibault's Portfolio",
+        headerSubtitle: "Developer • Creative • AI Enthusiast",
+        aboutTitle: "About Me",
+        aboutText: "My name is Thibault, passionate about web development, AI, and innovation. I love creating projects that blend technology and creativity, and I am always looking for new challenges to tackle.",
+        passionsTitle: "My Passions",
+        passionWeb: "💻 Web Development",
+        passionAI: "🤖 Artificial Intelligence",
+        passionPhoto: "📸 Photo & Video",
+        passionTech: "🚀 New Technologies",
+        skillsTitle: "My Skills",
+        skill1Title: "Application Development",
+        skill1Desc: "Design, develop, and deploy robust and high-performing software solutions.",
+        skill1Btn: "View project",
+        skill2Title: "Application Optimization",
+        skill2Desc: "Analyze and improve performance, memory consumption, and application speed.",
+        skill2Btn: "View project",
+        skill3Title: "System Administration",
+        skill3Desc: "Manage IT infrastructures, deploy and maintain network and system services.",
+        skill3Btn: "View project",
+        skill4Title: "Data Management",
+        skill4Desc: "Model, create, and administer databases to ensure integrity and security.",
+        skill4Btn: "View project",
+        skill5Title: "Project Management",
+        skill5Desc: "Master agile methodologies, plan, monitor, and deliver IT projects.",
+        skill5Btn: "View project",
+        skill6Title: "Teamwork",
+        skill6Desc: "Collaborate, communicate, and use collaborative tools for project success.",
+        skill6Btn: "View project",
+        projectsTitle: "My Projects",
+        project1Title: "🌐 AI Portfolio",
+        project1Desc: "An interactive website with an integrated chatbot to showcase my skills.",
+        project2Title: "📊 Data Dashboard",
+        project2Desc: "Real-time data visualization application.",
+        project3Title: "🤖 Discord Bot",
+        project3Desc: "An intelligent assistant that responds to user commands.",
+        journeyTitle: "My Journey",
+        timeline2020Title: "2020",
+        timeline2020Desc: "Started my computer science studies.",
+        timeline2022Title: "2022",
+        timeline2022Desc: "First web development internship.",
+        timeline2023Title: "2023",
+        timeline2023Desc: "Created my first personal AI projects.",
+        timeline2025Title: "2025",
+        timeline2025Desc: "Futuristic portfolio launched 🚀",
+        contactTitle: "Contact",
+        contactNamePlaceholder: "Your name",
+        contactEmailPlaceholder: "Your email",
+        contactMessagePlaceholder: "Your message",
+        contactBtn: "Send",
+        footerText: "© 2025 - Thibault Dubois | All rights reserved",
+        modalTitle: "Project Title", // Default for modal
+        modalDescription: "Detailed project description...", // Default for modal
+      }
+    };
+
+    function setLanguage(lang) {
+      document.documentElement.lang = lang;
+      localStorage.setItem('lang', lang);
+
+      const elementsToTranslate = {
+        pageTitle: document.getElementById('pageTitle'),
+        headerTitle: document.getElementById('headerTitle'),
+        headerSubtitle: document.getElementById('headerSubtitle'),
+        aboutTitle: document.getElementById('aboutTitle'),
+        aboutText: document.getElementById('aboutText'),
+        passionsTitle: document.getElementById('passionsTitle'),
+        passionWeb: document.getElementById('passionWeb'),
+        passionAI: document.getElementById('passionAI'),
+        passionPhoto: document.getElementById('passionPhoto'),
+        passionTech: document.getElementById('passionTech'),
+        skillsTitle: document.getElementById('skillsTitle'),
+        skill1Title: document.getElementById('skill1Title'),
+        skill1Desc: document.getElementById('skill1Desc'),
+        skill1Btn: document.getElementById('skill1Btn'),
+        skill2Title: document.getElementById('skill2Title'),
+        skill2Desc: document.getElementById('skill2Desc'),
+        skill2Btn: document.getElementById('skill2Btn'),
+        skill3Title: document.getElementById('skill3Title'),
+        skill3Desc: document.getElementById('skill3Desc'),
+        skill3Btn: document.getElementById('skill3Btn'),
+        skill4Title: document.getElementById('skill4Title'),
+        skill4Desc: document.getElementById('skill4Desc'),
+        skill4Btn: document.getElementById('skill4Btn'),
+        skill5Title: document.getElementById('skill5Title'),
+        skill5Desc: document.getElementById('skill5Desc'),
+        skill5Btn: document.getElementById('skill5Btn'),
+        skill6Title: document.getElementById('skill6Title'),
+        skill6Desc: document.getElementById('skill6Desc'),
+        skill6Btn: document.getElementById('skill6Btn'),
+        projectsTitle: document.getElementById('projectsTitle'),
+        project1Title: document.getElementById('project1Title'),
+        project1Desc: document.getElementById('project1Desc'),
+        project2Title: document.getElementById('project2Title'),
+        project2Desc: document.getElementById('project2Desc'),
+        project3Title: document.getElementById('project3Title'),
+        project3Desc: document.getElementById('project3Desc'),
+        journeyTitle: document.getElementById('journeyTitle'),
+        timeline2020Title: document.getElementById('timeline2020Title'),
+        timeline2020Desc: document.getElementById('timeline2020Desc'),
+        timeline2022Title: document.getElementById('timeline2022Title'),
+        timeline2022Desc: document.getElementById('timeline2022Desc'),
+        timeline2023Title: document.getElementById('timeline2023Title'),
+        timeline2023Desc: document.getElementById('timeline2023Desc'),
+        timeline2025Title: document.getElementById('timeline2025Title'),
+        timeline2025Desc: document.getElementById('timeline2025Desc'),
+        contactTitle: document.getElementById('contactTitle'),
+        contactBtn: document.getElementById('contactBtn'),
+        footerText: document.getElementById('footerText'),
+      };
+
+      for (const id in elementsToTranslate) {
+        if (elementsToTranslate[id]) {
+          elementsToTranslate[id].textContent = translations[lang][id];
+        }
+      }
+
+      // Handle placeholders
+      document.getElementById('contactName').placeholder = translations[lang].contactNamePlaceholder;
+      document.getElementById('contactEmail').placeholder = translations[lang].contactEmailPlaceholder;
+      document.getElementById('contactMessage').placeholder = translations[lang].contactMessagePlaceholder;
+
+      // Update project modal description based on selected card's data-description attribute
+      // This will be handled when the modal is opened, but we need to ensure the attribute is correct
+      document.querySelectorAll('.project-card').forEach(card => {
+        card.addEventListener('click', () => {
+          modalDescription.textContent = card.dataset['description-' + lang];
+          modalTitle.textContent = card.querySelector('h3').textContent; // Title is updated from its own textContent
+        });
+      });
+
+      // Gérer la classe active pour les drapeaux
+      document.querySelectorAll('.language-switcher img').forEach(img => {
+        img.classList.remove('active-lang');
+      });
+      document.getElementById('lang-' + lang).classList.add('active-lang');
+    }
+
     // On attend que tout le contenu de la page soit chargé avant d'exécuter le script
     document.addEventListener('DOMContentLoaded', () => {
+      const savedLang = localStorage.getItem('lang') || 'fr'; // 'fr' par défaut
+      setLanguage(savedLang);
 
       /* === Fond animé avec particules interactives === */
       const canvas = document.getElementById("bgCanvas");
@@ -640,7 +875,11 @@
         entries.forEach(entry => {
           if (entry.isIntersecting) {
             entry.target.classList.add("visible");
-            observer.unobserve(entry.target);
+            // Ne pas unobserve si on veut que les éléments réapparaissent en scrollant de nouveau
+            // observer.unobserve(entry.target); 
+          } else {
+            // Optionnel: remove 'visible' if scrolling away
+            entry.target.classList.remove("visible");
           }
         });
       }, {threshold: 0.15});
@@ -669,8 +908,9 @@
 
       projectCards.forEach(card => {
         card.addEventListener('click', () => {
+          const currentLang = localStorage.getItem('lang') || 'fr';
           const title = card.querySelector('h3').textContent;
-          const description = card.dataset.description;
+          const description = card.dataset['description-' + currentLang];
 
           modalTitle.textContent = title;
           modalDescription.textContent = description;

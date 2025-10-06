@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title id="pageTitle">Galerie - Portfolio de Thibault</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Raleway:wght@300;400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <style>
+        :root {
+            --accent-color: #D4AF37;
+            --background-color: #0A0A0A; /* Un noir plus profond */
+            --text-color: #EAEAEA;
+            --faded-text-color: #A0A0A0;
+            --card-bg-color: #1A1A1A;
+            --font-title: 'Playfair Display', serif;
+            --font-body: 'Raleway', sans-serif;
+            --transition-speed: 0.8s;
+            --easing: cubic-bezier(0.25, 1, 0.5, 1);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        html { scroll-behavior: smooth; }
+
+        body {
+            font-family: var(--font-body);
+            color: var(--text-color);
+            background: var(--background-color);
+            overflow-x: hidden;
+        }
+        
+        /* ---- Flèche de retour et Overlay (Style amélioré) ---- */
+        .back-arrow {
+            position: fixed; top: 30px; left: 30px; font-size: 2rem; color: var(--text-color);
+            cursor: pointer; z-index: 2000;
+            transition: transform 0.3s, color 0.3s;
+        }
+        .back-arrow:hover { transform: scale(1.2); color: var(--accent-color); }
+        .overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100vh;
+            background: var(--background-color);
+            z-index: 1999; pointer-events: none;
+            transform: translateY(100%);
+            transition: transform 1s cubic-bezier(0.83, 0, 0.17, 1);
+        }
+        .overlay.active { transform: translateY(0); }
+
+
+        /* ---- HERO CINEMATIQUE AVEC PARALLAXE ---- */
+        .hero {
+            height: 100vh;
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+        .hero-background {
+            position: absolute; top: 0; left: 0;
+            width: 100%; height: 100%;
+            background-image: url('https://image.pollinations.ai/prompt/sunset%20over%20ocean%20with%20sunrays%2C%20calm%20water%2C%20cinematic%2C%20golden%20hour?width=1600&height=900&seed=234');
+            background-size: cover;
+            background-position: center;
+            filter: brightness(0.6);
+            transform: scale(1.1); /* Légèrement zoomé pour l'effet */
+            transition: transform 1s var(--easing);
+        }
+        .hero-content {
+            z-index: 2;
+            text-align: center;
+            transform: translateY(0);
+            transition: transform 1s var(--easing), opacity 1s var(--easing);
+        }
+        .hero h1 {
+            font-family: var(--font-title);
+            font-size: clamp(2.5rem, 8vw, 6rem); /* Responsive */
+            color: white;
+            text-transform: uppercase;
+            overflow: hidden; /* Pour l'animation d'apparition */
+            line-height: 1.2;
+        }
+        .hero h1 .line-inner {
+            display: block;
+            transform: translateY(110%);
+            transition: transform 1.5s cubic-bezier(0.83, 0, 0.17, 1) 0.3s;
+        }
+        .scroll-down-indicator {
+            position: absolute; bottom: 30px; z-index: 2; color: white;
+            font-size: 1rem; text-transform: uppercase; letter-spacing: 2px;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 1s 1.5s, transform 1s 1.5s;
+        }
+        /* ---- Animation au chargement de la page ---- */
+        body.loaded .hero h1 .line-inner { transform: translateY(0); }
+        body.loaded .scroll-down-indicator { opacity: 1; transform: translateY(0); }
+
+
+        /* ---- SECTIONS AVEC ANIMATIONS DE SCROLL COMPLEXES ---- */
+        .content-section {
+            padding: 8rem 5%;
+            max-width: 1200px;
+            margin: 0 auto;
+            position: relative;
+        }
+        .section-title {
+            font-family: var(--font-title);
+            font-size: clamp(2rem, 6vw, 3.5rem);
+            color: var(--accent-color);
+            margin-bottom: 3rem;
+            text-align: center;
+            opacity: 0;
+            transform: translateY(40px);
+            transition: opacity 1s, transform 1s;
+        }
+        .content-section.is-inview .section-title {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* ---- Section Présentation ---- */
+        .presentation-text {
+            font-size: clamp(1.1rem, 2.5vw, 1.4rem);
+            line-height: 1.8;
+            color: var(--faded-text-color);
+            text-align: center;
+            max-width: 800px;
+            margin: 0 auto;
+            opacity: 0;
+            transform: translateY(40px);
+            transition: opacity 1s 0.2s, transform 1s 0.2s;
+        }
+        .content-section.is-inview .presentation-text {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        /* ---- NOUVELLE SECTION HORIZONTALE "Matériel" ---- */
+        .horizontal-scroll-section {
+            height: 100vh;
+            position: relative;
+        }
+        .sticky-wrapper {
+            position: sticky;
+            top: 0;
+            height: 100vh;
+            width: 100%;
+            overflow: hidden;
+        }
+        .horizontal-content {
+            display: flex;
+            align-items: center;
+            height: 100%;
+            width: 300%; /* Ajuster selon le nombre d'éléments */
+            padding: 0 10%;
+            transform: translateX(0); /* Sera modifié par JS */
+        }
+        .gear-card {
+            flex: 0 0 33.33%;
+            padding: 2rem;
+            text-align: center;
+        }
+        .gear-card .fas {
+            font-size: 5rem;
+            color: var(--accent-color);
+            margin-bottom: 2rem;
+            transition: transform 0.5s;
+        }
+        .gear-card h3 {
+            font-family: var(--font-body);
+            font-weight: 400;
+            font-size: 1.5rem;
+            color: var(--text-color);
+        }
+        .gear-card p {
+            font-size: 1.1rem;
+            color: var(--faded-text-color);
+        }
+        /* Animation sur les cartes pendant le scroll horizontal */
+        .gear-card.is-active .fas {
+            transform: scale(1.2) rotate(-5deg);
+        }
+
+        /* ---- GALERIE PHOTO "WOW" ---- */
+        .gallery-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            padding-top: 4rem;
+        }
+        .gallery-item {
+            position: relative;
+            overflow: hidden;
+            border-radius: 5px;
+            cursor: pointer;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.7);
+            opacity: 0;
+            transform: translateY(80px) scale(0.95);
+            transition: transform 0.8s var(--easing), box-shadow 0.4s ease, opacity 0.8s var(--easing);
+        }
+        .content-section.is-inview .gallery-item {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+        }
+        /* Délai d'animation pour un effet de cascade */
+        .content-section.is-inview .gallery-item:nth-child(2) { transition-delay: 0.1s; }
+        .content-section.is-inview .gallery-item:nth-child(3) { transition-delay: 0.2s; }
+        .content-section.is-inview .gallery-item:nth-child(4) { transition-delay: 0.3s; }
+        .content-section.is-inview .gallery-item:nth-child(5) { transition-delay: 0.05s; }
+        .content-section.is-inview .gallery-item:nth-child(6) { transition-delay: 0.15s; }
+        .content-section.is-inview .gallery-item:nth-child(7) { transition-delay: 0.25s; }
+        .content-section.is-inview .gallery-item:nth-child(8) { transition-delay: 0.35s; }
+
+
+        .gallery-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+            transition: transform 0.6s var(--easing);
+        }
+        .gallery-item:hover {
+            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.9);
+            transform: translateY(-5px);
+        }
+        .gallery-item:hover img {
+            transform: scale(1.05);
+        }
+        .gallery-item .overlay-text {
+            position: absolute;
+            bottom: 0; left: 0; right: 0;
+            padding: 1.5rem;
+            background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
+            color: white;
+            transform: translateY(100%);
+            transition: transform 0.6s var(--easing);
+        }
+        .gallery-item:hover .overlay-text {
+            transform: translateY(0);
+        }
+
+        /* ---- LIGHTBOX (Style amélioré) ---- */
+        .lightbox { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 3000; display: flex; justify-content: center; align-items: center; opacity: 0; pointer-events: none; transition: opacity 0.4s ease; backdrop-filter: blur(5px); }
+        .lightbox.active { opacity: 1; pointer-events: auto; }
+        .lightbox img { max-width: 90%; max-height: 85%; border-radius: 5px; box-shadow: 0 0 60px rgba(212, 175, 55, 0.4); transform: scale(0.8); transition: transform 0.4s cubic-bezier(0.165, 0.84, 0.44, 1); }
+        .lightbox.active img { transform: scale(1); }
+        .lightbox-close { position: absolute; top: 30px; right: 40px; font-size: 3rem; color: white; cursor: pointer; transition: transform 0.3s, color 0.3s; }
+        .lightbox-close:hover { transform: rotate(90deg); color: var(--accent-color); }
+        
+        /* ---- LANGUES ---- */
+        .language-switcher { position: fixed; bottom: 20px; right: 20px; z-index: 100; display: flex; gap: 10px; }
+        .language-switcher img { width: 30px; height: 30px; border-radius: 50%; box-shadow: 0 0 8px rgba(0,0,0,0.5); cursor: pointer; transition: transform 0.2s ease, box-shadow 0.2s ease; border: 2px solid transparent; }
+        .language-switcher img:hover { transform: scale(1.1); box-shadow: 0 0 15px rgba(0,0,0,1); }
+        .language-switcher img.active-lang { border-color: var(--accent-color); box-shadow: 0 0 15px var(--accent-color); }
+
+        /* ---- RESPONSIVE ---- */
+        @media (max-width: 900px) {
+            .horizontal-content { width: 500%; } /* Moins d'éléments visibles à la fois */
+            .gear-card { flex: 0 0 20%; }
+        }
+        @media (max-width: 600px) {
+            .content-section { padding: 6rem 5%; }
+            .horizontal-content { flex-direction: column; width: 100%; height: auto; padding: 4rem 0; }
+            .horizontal-scroll-section, .sticky-wrapper { height: auto; }
+            .sticky-wrapper { position: static; }
+            .gear-card { padding: 3rem 1rem; }
+        }
+    </style>
+</head>
+<body>
+    <div class="back-arrow" id="backArrow">⬅</div>
+    <div class="overlay" id="page-transition-overlay"></div>
+
+    <header class="hero">
+        <div class="hero-background" id="hero-bg"></div>
+        <div class="hero-content" id="hero-content">
+            <h1 id="mainTitle"><span class="line-inner">Ma Passion : L'Image</span></h1>
+        </div>
+        <div class="scroll-down-indicator">
+            <span id="scrollText">SCROLL</span>
+        </div>
+    </header>
+
+    <main>
+        <section class="content-section" id="presentation">
+            <h2 class="section-title" id="presentationTitle">Présentation</h2>
+            <p class="presentation-text" id="presentationText">
+                Plus qu'un hobby, la photo et la vidéo sont mes terrains de jeu créatifs. J'aime capturer l'instant, raconter une histoire en image ou en montage. C'est un univers où la technique rencontre la créativité, et où chaque projet est une nouvelle aventure.
+            </p>
+        </section>
+
+        <section class="horizontal-scroll-section" id="gear">
+            <div class="sticky-wrapper">
+                <div class="horizontal-content">
+                    <div class="gear-card" data-index="0">
+                        <i class="fas fa-camera"></i>
+                        <h3 id="gearItem1_title">Boîtier</h3>
+                        <p id="gearItem1_desc">Sony Alpha 7 IV</p>
+                    </div>
+                    <div class="gear-card" data-index="1">
+                        <i class="fas fa-video"></i>
+                        <h3 id="gearItem2_title">Action Cam</h3>
+                        <p id="gearItem2_desc">GoPro Hero 11</p>
+                    </div>
+                    <div class="gear-card" data-index="2">
+                        <i class="fas fa-camera-retro"></i>
+                        <h3 id="gearItem3_title">Objectif</h3>
+                        <p id="gearItem3_desc">Sigma 24-70mm f/2.8</p>
+                    </div>
+                    <div class="gear-card" data-index="3">
+                        <i class="fas fa-rocket"></i>
+                        <h3 id="gearItem4_title">Drone</h3>
+                        <p id="gearItem4_desc">DJI Mavic Air 2S</p>
+                    </div>
+                    <div class="gear-card" data-index="4">
+                        <i class="fas fa-microphone-alt"></i>
+                        <h3 id="gearItem5_title">Audio</h3>
+                        <p id="gearItem5_desc">Rode VideoMic Pro+</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <section class="content-section" id="creations">
+            <h2 class="section-title" id="creationsTitle">Mes Créations</h2>
+            <div class="gallery-container">
+                <div class="gallery-item"><img src="https://images.unsplash.com/photo-1506748686214-e9df14d4d9d0?ixlib=rb-1.2.1&q=80&fm=jpg&crop=entropy&cs=tinysrgb&w=800" alt="Paysage de montagnes brumeuses"><div class="overlay-text">Montagnes Brumeuses</div></div>
+                <div class="gallery-item"><img src="https://images.unsplash.com/photo-1518173946687-a4c8892bbd9f?ixlib=rb-1.2.1&q=80&fm=jpg&crop=entropy&cs=tinysrgb&w=800" alt="Forêt dense avec rayons de soleil"><div class="overlay-text">Rayons Divins</div></div>
+                <div class="gallery-item"><img src="https://images.unsplash.com/photo-1470770841072-f978cf4d019e?ixlib=rb-1.2.1&q=80&fm=jpg&crop=entropy&cs=tinysrgb&w=800" alt="Maison au bord d'un lac alpin"><div class="overlay-text">Sérénité Alpine</div></div>
+                <div class="gallery-item"><img src="https://images.unsplash.com/photo-1505144808419-1957a94ca61e?ixlib=rb-1.2.1&q=80&fm=jpg&crop=entropy&cs=tinysrgb&w=800" alt="Personne sur une balançoire face à la mer"><div class="overlay-text">Liberté Océane</div></div>
+                <div class="gallery-item"><img src="https://images.unsplash.com/photo-1475924156734-496f6cac6ec1?ixlib=rb-1.2.1&q=80&fm=jpg&crop=entropy&cs=tinysrgb&w=800" alt="Plage au lever du soleil"><div class="overlay-text">Aube Dorée</div></div>
+                <div class="gallery-item"><img src="https://images.unsplash.com/photo-1447752875215-b2761acb3c5d?ixlib=rb-1.2.1&q=80&fm=jpg&crop=entropy&cs=tinysrgb&w=800" alt="Sentier forestier en automne"><div class="overlay-text">Sentier d'Automne</div></div>
+                <div class="gallery-item"><img src="https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?ixlib=rb-1.2.1&q=80&fm=jpg&crop=entropy&cs=tinysrgb&w=800" alt="Ciel nocturne étoilé sur des montagnes"><div class="overlay-text">Nuit Étoilée</div></div>
+                <div class="gallery-item"><img src="https://images.unsplash.com/photo-1501854140801-50d01698950b?ixlib=rb-1.2.1&q=80&fm=jpg&crop=entropy&cs=tinysrgb&w=800" alt="Paysage de rizières en terrasses"><div class="overlay-text">Champs en Terrasses</div></div>
+            </div>
+        </section>
+    </main>
+
+    <div class="lightbox" id="lightbox">
+        <span class="lightbox-close" id="lightbox-close">&times;</span>
+        <img src="" alt="Image agrandie" id="lightbox-img">
+    </div>
+
+    <div class="language-switcher">
+        <img src="../assets/fr.png" alt="Français" onclick="setLanguage('fr')" id="lang-fr">
+        <img src="../assets/en.png" alt="English" onclick="setLanguage('en')" id="lang-en">
+    </div>
+
+    <script>
+        const translations = {
+            fr: {
+                pageTitle: "Galerie - Portfolio de Thibault",
+                mainTitle: "<span class='line-inner'>Ma Passion : L'Image</span>",
+                scrollText: "DÉCOUVRIR",
+                presentationTitle: "Présentation",
+                presentationText: "Plus qu'un hobby, la photo et la vidéo sont mes terrains de jeu créatifs. J'aime capturer l'instant, raconter une histoire en image ou en montage. C'est un univers où la technique rencontre la créativité, et où chaque projet est une nouvelle aventure.",
+                gearItem1_title: "Boîtier", gearItem1_desc: "Sony Alpha 7 IV",
+                gearItem2_title: "Action Cam", gearItem2_desc: "GoPro Hero 11",
+                gearItem3_title: "Objectif", gearItem3_desc: "Sigma 24-70mm f/2.8",
+                gearItem4_title: "Drone", gearItem4_desc: "DJI Mavic Air 2S",
+                gearItem5_title: "Audio", gearItem5_desc: "Rode VideoMic Pro+",
+                creationsTitle: "Mes Créations"
+            },
+            en: {
+                pageTitle: "Gallery - Thibault's Portfolio",
+                mainTitle: "<span class='line-inner'>My Passion: The Image</span>",
+                scrollText: "SCROLL",
+                presentationTitle: "Introduction",
+                presentationText: "More than a hobby, photography and videography are my creative playgrounds. I love to capture the moment, tell a story in a single image or through a dynamic edit. It's a universe where technique meets creativity, and where every project is a new adventure.",
+                gearItem1_title: "Body", gearItem1_desc: "Sony Alpha 7 IV",
+                gearItem2_title: "Action Cam", gearItem2_desc: "GoPro Hero 11",
+                gearItem3_title: "Lens", gearItem3_desc: "Sigma 24-70mm f/2.8",
+                gearItem4_title: "Drone", gearItem4_desc: "DJI Mavic Air 2S",
+                gearItem5_title: "Audio", gearItem5_desc: "Rode VideoMic Pro+",
+                creationsTitle: "My Creations"
+            }
+        };
+
+        function setLanguage(lang) {
+            localStorage.setItem('lang', lang);
+            document.documentElement.lang = lang;
+            
+            Object.keys(translations[lang]).forEach(key => {
+                const element = document.getElementById(key);
+                if (element) {
+                    // Utiliser innerHTML pour les titres qui contiennent des balises span
+                    if (key === 'mainTitle') {
+                        element.innerHTML = translations[lang][key];
+                    } else {
+                        element.textContent = translations[lang][key];
+                    }
+                }
+            });
+
+            document.querySelectorAll('.language-switcher img').forEach(img => img.classList.remove('active-lang'));
+            document.getElementById(`lang-${lang}`).classList.add('active-lang');
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const savedLang = localStorage.getItem('lang') || 'fr';
+            setLanguage(savedLang);
+
+            // ---- ANIMATION D'ENTRÉE ----
+            setTimeout(() => {
+                document.body.classList.add('loaded');
+            }, 100);
+
+            // ---- EFFETS DE SCROLL ----
+            const heroBG = document.getElementById('hero-bg');
+            const heroContent = document.getElementById('hero-content');
+
+            const observer = new IntersectionObserver(entries => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add("is-inview");
+                    }
+                });
+            }, { threshold: 0.2, rootMargin: "0px 0px -50px 0px" });
+
+            document.querySelectorAll(".content-section").forEach(el => observer.observe(el));
+            
+            // ---- PARALLAXE HERO ----
+            window.addEventListener('scroll', () => {
+                const scrollY = window.scrollY;
+                heroBG.style.transform = `scale(1.1) translateY(${scrollY * 0.4}px)`;
+                heroContent.style.transform = `translateY(${scrollY * 0.6}px)`;
+                heroContent.style.opacity = 1 - (scrollY / (window.innerHeight * 0.7));
+            });
+
+            // ---- SCROLL HORIZONTAL ----
+            const horizontalSection = document.getElementById('gear');
+            const stickyWrapper = horizontalSection.querySelector('.sticky-wrapper');
+            const horizontalContent = horizontalSection.querySelector('.horizontal-content');
+            const gearCards = horizontalContent.querySelectorAll('.gear-card');
+            
+            function handleHorizontalScroll() {
+                if (window.innerWidth <= 600) return; // Désactiver sur mobile
+
+                const rect = horizontalSection.getBoundingClientRect();
+                const scrollableDistance = horizontalContent.offsetWidth - window.innerWidth;
+                
+                // Calcul du progrès du scroll vertical DANS la section
+                let progress = -rect.top / (horizontalSection.offsetHeight - window.innerHeight);
+                progress = Math.max(0, Math.min(1, progress));
+
+                horizontalContent.style.transform = `translateX(-${progress * scrollableDistance}px)`;
+
+                // Animation des cartes
+                const cardWidth = horizontalContent.offsetWidth / gearCards.length;
+                const activeCardIndex = Math.floor((progress * scrollableDistance + window.innerWidth / 2) / cardWidth);
+
+                gearCards.forEach((card, index) => {
+                    if (index === activeCardIndex) {
+                        card.classList.add('is-active');
+                    } else {
+                        card.classList.remove('is-active');
+                    }
+                });
+            }
+
+            window.addEventListener('scroll', handleHorizontalScroll);
+            window.addEventListener('resize', handleHorizontalScroll);
+
+
+            // ---- FLÈCHE DE RETOUR ----
+            document.getElementById("backArrow").addEventListener("click", (e) => {
+                e.preventDefault();
+                document.getElementById("page-transition-overlay").classList.add("active");
+                setTimeout(() => { window.location.href = "index.html"; }, 1000);
+            });
+
+            // ---- LIGHTBOX ----
+            const lightbox = document.getElementById('lightbox');
+            const lightboxImg = document.getElementById('lightbox-img');
+            const lightboxClose = document.getElementById('lightbox-close');
+            document.querySelectorAll('.gallery-item').forEach(item => {
+                item.addEventListener('click', () => {
+                    lightboxImg.src = item.querySelector('img').src;
+                    lightbox.classList.add('active');
+                });
+            });
+            function closeLightbox() { lightbox.classList.remove('active'); }
+            lightboxClose.addEventListener('click', closeLightbox);
+            lightbox.addEventListener('click', (e) => { if (e.target === lightbox) closeLightbox(); });
+        });
+    </script>
+</body>
+</html>
