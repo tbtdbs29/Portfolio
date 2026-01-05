@@ -1,310 +1,137 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title id="pageTitle">Portfolio Futuriste</title>
-  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600&display=swap" rel="stylesheet">
-  <style>
-    /* ---- Reset ---- */
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    html,body { height: 100%; }
-    body {
-      font-family: 'Orbitron', sans-serif;
-      height: 100vh;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      flex-direction: column;
-      background: linear-gradient(270deg, #0f0c29, #302b63, #24243e);
-      background-size: 600% 600%;
-      animation: gradientBG 15s ease infinite;
-      overflow: hidden;
-      color: white;
-      cursor: none; /* cache le curseur natif */
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thibault | Digital Experience</title>
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        /* Styles spécifiques pour l'intro */
+        body { overflow: hidden; height: 100vh; display: flex; flex-direction: column; }
+        
+        .split-screen {
+            display: flex;
+            height: 100%;
+            width: 100%;
+            position: relative;
+            z-index: 2;
+        }
 
-    @keyframes gradientBG {
-      0% {background-position: 0% 50%;}
-      50% {background-position: 100% 50%;}
-      100% {background-position: 0% 50%;}
-    }
+        .split-side {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            transition: flex 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+            border-right: 1px solid rgba(255,255,255,0.05);
+        }
 
-    h1 {
-      font-size: 3.6rem;
-      text-transform: uppercase;
-      margin-bottom: 2.6rem;
-      color: #00ffe5;
-      text-shadow: 0 0 10px #00ffe5, 0 0 20px #00ffe5;
-      animation: flicker 2s infinite;
-      z-index: 2;
-    }
-    @keyframes flicker {
-      0%,19%,21%,23%,25%,54%,56%,100% {opacity:1;}
-      20%,24%,55% {opacity:0.3;}
-    }
+        .split-side:hover {
+            flex: 1.5;
+            background: rgba(255,255,255,0.02);
+        }
 
-    .choices { display:flex; gap:2rem; z-index:2; }
+        .big-link {
+            text-decoration: none;
+            color: white;
+            text-align: center;
+            position: relative;
+            z-index: 10;
+        }
 
-    .card {
-      background: rgba(255,255,255,0.04);
-      border: 2px solid rgba(0,255,229,0.6);
-      padding: 2rem 3rem;
-      border-radius: 20px;
-      backdrop-filter: blur(10px);
-      transition: transform 0.28s cubic-bezier(.2,.9,.3,1), box-shadow .28s;
-      cursor: pointer;
-      text-align: center;
-      font-size: 1.15rem;
-      color: #fff;
-      min-width: 250px;
-      box-shadow: 0 0 15px rgba(0,255,229,0.18);
-    }
-    .card:hover {
-      transform: perspective(800px) rotateY(8deg) scale(1.05);
-      box-shadow: 0 0 30px rgba(0,255,229,0.55);
-    }
-    .card h2 { margin-bottom: 0.8rem; color: #00ffe5; text-shadow: 0 0 8px #00ffe5; }
-    .card p { font-size: 0.98rem; opacity: 0.85; }
+        .big-title {
+            font-size: clamp(3rem, 6vw, 8rem);
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 700;
+            text-transform: uppercase;
+            line-height: 0.9;
+            display: block;
+            transition: transform 0.5s;
+        }
 
-    /* stars background */
-    .stars { position:absolute; inset:0; z-index:0; overflow:hidden; }
-    .stars::before, .stars::after {
-      content:"";
-      position:absolute; top:-100%;
-      width:200%; height:200%;
-      background-image:
-        radial-gradient(2px 2px at 20px 30px, #fff, transparent),
-        radial-gradient(2px 2px at 40px 70px, #fff, transparent),
-        radial-gradient(2px 2px at 80px 130px, #fff, transparent),
-        radial-gradient(2px 2px at 120px 170px, #fff, transparent),
-        radial-gradient(2px 2px at 200px 300px, #fff, transparent);
-      background-size:200px 200px;
-      animation: moveStars 100s linear infinite;
-      opacity:0.45;
-    }
-    @keyframes moveStars { from { transform: translateY(0);} to { transform: translateY(1000px);} }
+        .subtitle {
+            font-family: 'Inter', sans-serif;
+            font-size: 1rem;
+            letter-spacing: 0.2em;
+            color: var(--accent);
+            margin-top: 20px;
+            display: block;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.5s;
+        }
 
-    /* ---- Curseur personnalisé ---- */
-    .cursor {
-      position: fixed;
-      top: 0; left: 0;
-      width: 26px; height: 26px;
-      border: 2px solid #00ffe5;
-      border-radius: 50%;
-      pointer-events: none;
-      transform: translate3d(0,0,0) translate(-50%,-50%);
-      transition: width .18s ease, height .18s ease, box-shadow .18s ease, border-color .18s;
-      z-index: 9999;
-      box-shadow: 0 0 10px #00ffe5, 0 0 22px rgba(0,255,229,0.18);
-      will-change: transform;
-      mix-blend-mode: screen;
-      backdrop-filter: blur(2px);
-    }
+        .split-side:hover .subtitle {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .split-side:hover .big-title {
+            transform: scale(1.05);
+        }
 
-    /* Glow halo */
-    .cursor::after {
-      content: "";
-      position: absolute;
-      left: 50%; top: 50%;
-      transform: translate(-50%,-50%);
-      width: 120%; height: 120%;
-      border-radius: 50%;
-      filter: blur(12px);
-      opacity: 0.5;
-      background: radial-gradient(circle, rgba(0,255,229,0.5) 0%, transparent 60%);
-      pointer-events:none;
-    }
+        /* Background Image Reveal */
+        .bg-reveal {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            object-fit: cover;
+            opacity: 0;
+            transition: opacity 0.6s ease;
+            z-index: 1;
+            filter: grayscale(100%) brightness(0.4);
+        }
 
-    /* hover state (on cards) */
-    .cursor.cursor--hover {
-      width: 64px; height: 64px;
-      border-color: #ff00ff;
-      box-shadow: 0 0 24px #ff00ff, 0 0 48px rgba(255,0,255,0.18);
-    }
-    .cursor.cursor--fast {
-      transform: scale(1.05) translate3d(0,0,0) translate(-50%,-50%);
-      box-shadow: 0 0 30px #00ffe5, 0 0 60px rgba(0,255,229,0.25);
-    }
-    .cursor.cursor--active {
-      transform: translate3d(0,0,0) translate(-50%,-50%) scale(0.85);
-      box-shadow: 0 0 6px rgba(0,0,0,0.2) inset;
-    }
-
-    .language-switcher {
-      position: fixed;
-      bottom: 20px;
-      right: 20px;
-      z-index: 100;
-      display: flex;
-      gap: 10px;
-    }
-
-    .language-switcher img {
-      width: 30px;
-      height: 30px;
-      border-radius: 50%;
-      box-shadow: 0 0 8px rgba(0,255,229,0.6);
-      cursor: pointer;
-      transition: transform 0.2s ease, box-shadow 0.2s ease;
-    }
-
-    .language-switcher img:hover {
-      transform: scale(1.1);
-      box-shadow: 0 0 15px rgba(0,255,229,1);
-    }
-
-    .language-switcher img.active-lang {
-      border: 2px solid #ff00ff;
-      box-shadow: 0 0 15px #ff00ff;
-    }
-
-
-    /* small responsive tweak */
-    @media (max-width:600px) {
-      h1 { font-size: 2.2rem; }
-      .choices { flex-direction: column; align-items:center; }
-    }
-  </style>
+        .split-side:hover .bg-reveal {
+            opacity: 0.6;
+        }
+        
+        /* Mobile */
+        @media (max-width: 768px) {
+            .split-screen { flex-direction: column; }
+            .split-side { border-right: none; border-bottom: 1px solid rgba(255,255,255,0.05); }
+        }
+    </style>
 </head>
 <body>
-  <div class="stars"></div>
+    <div class="noise-overlay"></div>
+    <div id="cursor"></div>
 
-  <h1 id="welcomeTitle">Bienvenue dans mon univers</h1>
+    <main class="split-screen">
+        
+        <div class="split-side hover-trigger">
+            <img src="assets/pdp.jpg" alt="Classic" class="bg-reveal">
+            <a href="classic/index.html" class="big-link">
+                <span class="big-title">Classic<br>Portfolio</span>
+                <span class="subtitle">Développement & Design</span>
+            </a>
+        </div>
 
-  <div class="choices">
-    <div class="card" onclick="window.location.href='chatbot/index.html'">
-      <h2 id="aiVersionTitle">💡 Version IA</h2>
-      <p id="aiVersionDesc">Discute avec mon IA et découvre mon parcours.</p>
-    </div>
-    <div class="card" onclick="window.location.href='classic/index.html'">
-      <h2 id="classicVersionTitle">🌐 Version Classique</h2>
-      <p id="classicVersionDesc">Explore mon portfolio traditionnel.</p>
-    </div>
-  </div>
+        <div class="split-side hover-trigger">
+            <img src="assets/ai.jpg" alt="ai" class="bg-reveal">
+            <a href="chatbot/index.html" class="big-link">
+                <span class="big-title">AI<br>Experience</span>
+                <span class="subtitle">Chatbot Interactif</span>
+            </a>
+        </div>
 
-  <div class="language-switcher">
-    <img src="assets/fr.png" alt="Français" onclick="setLanguage('fr')" id="lang-fr" class="active-lang">
-    <img src="assets/en.png" alt="English" onclick="setLanguage('en')" id="lang-en">
-    </div>
+    </main>
 
-  <script>
-    const translations = {
-      fr: {
-        pageTitle: "Portfolio Futuriste",
-        welcomeTitle: "Bienvenue dans mon univers",
-        aiVersionTitle: "💡 Version IA",
-        aiVersionDesc: "Discute avec mon IA et découvre mon parcours.",
-        classicVersionTitle: "🌐 Version Classique",
-        classicVersionDesc: "Explore mon portfolio traditionnel."
-      },
-      en: {
-        pageTitle: "Futuristic Portfolio",
-        welcomeTitle: "Welcome to my universe",
-        aiVersionTitle: "💡 AI Version",
-        aiVersionDesc: "Chat with my AI and discover my journey.",
-        classicVersionTitle: "🌐 Classic Version",
-        classicVersionDesc: "Explore my traditional portfolio."
-      }
-    };
+    <footer style="position: fixed; bottom: 30px; width: 100%; text-align: center; pointer-events: none; z-index: 10; color: #444; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.1em;">
+        Select your interface
+    </footer>
 
-    function setLanguage(lang) {
-      document.documentElement.lang = lang;
-      localStorage.setItem('lang', lang);
-
-      const elementsToTranslate = {
-        pageTitle: document.getElementById('pageTitle'),
-        welcomeTitle: document.getElementById('welcomeTitle'),
-        aiVersionTitle: document.getElementById('aiVersionTitle'),
-        aiVersionDesc: document.getElementById('aiVersionDesc'),
-        classicVersionTitle: document.getElementById('classicVersionTitle'),
-        classicVersionDesc: document.getElementById('classicVersionDesc')
-      };
-
-      for (const id in elementsToTranslate) {
-        if (elementsToTranslate[id]) {
-          elementsToTranslate[id].textContent = translations[lang][id];
-        }
-      }
-
-      // Gérer la classe active pour les drapeaux
-      document.querySelectorAll('.language-switcher img').forEach(img => {
-        img.classList.remove('active-lang');
-      });
-      document.getElementById('lang-' + lang).classList.add('active-lang');
-    }
-
-    // Détecter la langue au chargement de la page
-    document.addEventListener('DOMContentLoaded', () => {
-      const savedLang = localStorage.getItem('lang') || 'fr'; // 'fr' par défaut
-      setLanguage(savedLang);
-
-      // create cursor element
-      const cursor = document.createElement('div');
-      cursor.className = 'cursor';
-      document.body.appendChild(cursor);
-
-      // target mouse position
-      let mouseX = window.innerWidth / 2;
-      let mouseY = window.innerHeight / 2;
-      let posX = mouseX;
-      let posY = mouseY;
-
-      let lastMouseX = mouseX, lastMouseY = mouseY, lastMoveTime = performance.now();
-
-      window.addEventListener('mousemove', (e) => {
-        mouseX = e.clientX;
-        mouseY = e.clientY;
-        lastMoveTime = performance.now();
-      });
-
-      // smooth follow loop
-      function rafLoop() {
-        // interpolation (lerp)
-        posX += (mouseX - posX) * 0.15;
-        posY += (mouseY - posY) * 0.15;
-
-        // set position (centered)
-        cursor.style.transform = `translate3d(${posX}px, ${posY}px, 0) translate(-50%, -50%)`;
-
-        // speed detection for "trail/fast" effect
-        const dx = mouseX - lastMouseX;
-        const dy = mouseY - lastMouseY;
-        const dist = Math.hypot(dx, dy);
-        // threshold tuned for smooth feel
-        if (dist > 20) {
-          cursor.classList.add('cursor--fast');
-        } else {
-          cursor.classList.remove('cursor--fast');
-        }
-        lastMouseX = mouseX; lastMouseY = mouseY;
-
-        requestAnimationFrame(rafLoop);
-      }
-      requestAnimationFrame(rafLoop);
-
-      // hover on cards -> add class (robust vs CSS sibling selectors)
-      document.querySelectorAll('.card').forEach(card => {
-        card.addEventListener('mouseenter', () => cursor.classList.add('cursor--hover'));
-        card.addEventListener('mouseleave', () => cursor.classList.remove('cursor--hover'));
-        // optionally scale a bit on press inside card
-        card.addEventListener('mousedown', () => cursor.classList.add('cursor--active'));
-        card.addEventListener('mouseup', () => cursor.classList.remove('cursor--active'));
-      });
-
-      // global click / release effects
-      document.addEventListener('mousedown', () => cursor.classList.add('cursor--active'));
-      document.addEventListener('mouseup', () => cursor.classList.remove('cursor--active'));
-
-      // hide cursor on touch devices
-      function isTouch() {
-        return ('ontouchstart' in window) || navigator.maxTouchPoints > 0;
-      }
-      if (isTouch()) {
-        cursor.style.display = 'none';
-        document.body.style.cursor = 'auto';
-      }
-    });
-  </script>
+    <script>
+        // Curseur Magnétique Simple
+        const cursor = document.getElementById('cursor');
+        document.addEventListener('mousemove', (e) => {
+            cursor.style.left = e.clientX + 'px';
+            cursor.style.top = e.clientY + 'px';
+        });
+        document.querySelectorAll('.hover-trigger, a').forEach(el => {
+            el.addEventListener('mouseenter', () => cursor.classList.add('hovered'));
+            el.addEventListener('mouseleave', () => cursor.classList.remove('hovered'));
+        });
+    </script>
 </body>
 </html>

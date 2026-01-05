@@ -1,937 +1,837 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title id="pageTitle">Portfolio Futuriste</title>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
-  <style>
-    body {
-      margin: 0;
-      font-family: 'Arial', sans-serif;
-      color: white;
-      background: #0a0a0a;
-      overflow-x: hidden;
-    }
-
-    /* ==== Fond animé ==== */
-    #bgCanvas {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      z-index: -1;
-    }
-
-    header {
-      text-align: center;
-      padding: 5rem 2rem;
-    }
-
-    header h1 {
-      font-size: 3rem;
-      color: #00ffe5;
-      text-shadow: 0 0 15px #00ffe5;
-    }
-    header p {
-      font-size: 1.2rem;
-      color: #ccc;
-    }
-
-    section {
-      padding: 5rem 2rem;
-      text-align: center;
-      opacity: 0;
-      transform: translateY(50px);
-      transition: all 0.8s ease-out;
-    }
-    section.visible {
-      opacity: 1;
-      transform: translateY(0);
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thibault | Creative Developer</title>
     
-    h2 {
-        font-size: 2.5rem;
-        margin-bottom: 3rem;
-        color: #00ffe5;
-        text-shadow: 0 0 10px #00ffe5;
-    }
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css" />
 
-    /* ==== Présentation ==== */
-    .about {
-      max-width: 800px;
-      margin: auto;
-      font-size: 1.2rem;
-      line-height: 1.6;
-    }
+    <style>
+        /* --- STYLES EXISTANTS --- */
+        #cursor { z-index: 20000 !important; }
 
-    /* ==== Passions ==== */
-    .passions {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 2rem;
-      margin-top: 2rem;
-    }
-    .passion-card {
-      background: rgba(255,255,255,0.05);
-      border-radius: 15px;
-      padding: 2rem;
-      transition: transform 0.3s;
-      box-shadow: 0 0 20px rgba(0,255,229,0.3);
-      cursor: pointer;
-    }
-    .passion-card:hover {
-      transform: scale(1.05);
-    }
-    .passion-card a {
-        text-decoration: none;
-        color: inherit;
-        display: block; /* Rend toute la carte cliquable via le lien */
-    }
+        .modal-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.9); backdrop-filter: blur(10px);
+            z-index: 10005;
+            display: flex; align-items: center; justify-content: center;
+            opacity: 0; visibility: hidden; transition: all 0.4s ease;
+            cursor: auto !important;
+        }
+        .modal-overlay.active { opacity: 1; visibility: visible; }
+        
+        .modal {
+            background: #0a0a0a; border: 1px solid #333; padding: 50px;
+            max-width: 700px; width: 90%; border-radius: 20px;
+            position: relative; transform: translateY(50px);
+            transition: transform 0.4s cubic-bezier(0.19, 1, 0.22, 1);
+            box-shadow: 0 20px 50px rgba(0, 255, 229, 0.05);
+        }
+        .modal-overlay.active .modal { transform: translateY(0); }
 
-    /* ==== Projets ==== */
-    .projects {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-      gap: 2rem;
-      margin-top: 2rem;
-    }
-    .project-card {
-      background: rgba(255,255,255,0.05);
-      border-radius: 15px;
-      padding: 2rem;
-      transition: all 0.3s;
-      box-shadow: 0 0 20px rgba(255,0,255,0.3);
-      cursor: pointer;
-    }
-    .project-card:hover {
-      transform: translateY(-10px) scale(1.02);
-    }
+        .modal h2 { font-size: 2.5rem; color: var(--accent); margin-bottom: 20px; }
+        .modal p { color: #ccc; font-size: 1.1rem; line-height: 1.8; }
+        .modal-close {
+            position: absolute; top: 20px; right: 20px;
+            font-size: 2rem; color: #555; cursor: pointer; transition: color 0.3s;
+        }
+        .modal-close:hover { color: var(--accent); }
 
-    /* ==== Timeline ==== */
-    .timeline {
-      position: relative;
-      margin: 4rem auto;
-      padding: 2rem 0;
-      width: 80%;
-      max-width: 800px;
-    }
-    .timeline::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 4px;
-      height: 100%;
-      background: #00ffe5;
-      box-shadow: 0 0 10px #00ffe5;
-    }
-    .timeline-item {
-      position: relative;
-      width: 50%;
-      padding: 1.5rem;
-      background: rgba(255,255,255,0.05);
-      border-radius: 10px;
-      box-shadow: 0 0 15px rgba(0,255,229,0.2);
-      opacity: 0;
-      transform: translateY(50px);
-      transition: all 0.8s ease-out;
-    }
-    .timeline-item.visible {
-      opacity: 1;
-      transform: translateY(0);
-    }
-    .timeline-item.left {
-      left: 0;
-      transform: translateX(-120%) translateY(50px);
-    }
-    .timeline-item.right {
-      left: 50%;
-      transform: translateX(120%) translateY(50px);
-    }
-    .timeline-item.left.visible {
-      transform: translateX(-20px) translateY(0);
-    }
-    .timeline-item.right.visible {
-      transform: translateX(20px) translateY(0);
-    }
-    .timeline-item h3 {
-      margin-bottom: 0.5rem;
-      color: #00ffe5;
-    }
-    .timeline-item p {
-      font-size: 0.9rem;
-      color: #ccc;
-    }
+        /* --- LAYOUT & NAVIGATION --- */
+        .hero {
+            min-height: 90vh;
+            display: flex; align-items: center; justify-content: center;
+            position: relative; text-align: center; padding-top: 100px;
+            z-index: 10;
+        }
 
-    /* ================= SECTION COMPÉTENCES ================= */
-    .competences-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-      gap: 2.5rem;
-      max-width: 1200px;
-      margin: 0 auto;
-    }
+        .anim-text { display: inline-block; }
 
-    .competence-card {
-      background: rgba(255,255,255,0.05);
-      border: 1px solid rgba(0, 255, 229, 0.2);
-      padding: 2.5rem;
-      border-radius: 15px;
-      box-shadow: 0 0 20px rgba(0, 255, 229, 0.1);
-      text-align: left;
-      transition: transform 0.3s ease, box-shadow 0.3s ease;
-      opacity: 0;
-      transform: translateY(30px);
-    }
+        .top-nav {
+            position: fixed; top: 0; left: 0; width: 100%; 
+            padding: 30px 50px; 
+            display: flex; justify-content: space-between; align-items: center;
+            z-index: 9999; mix-blend-mode: exclusion; pointer-events: auto;
+        }
+        .nav-links { display: flex; gap: 30px; align-items: center; }
+        .nav-links a {
+            color: white; text-decoration: none; font-weight: 500; 
+            text-transform: uppercase; font-size: 0.9rem; letter-spacing: 0.05em;
+        }
 
-    .competence-card.visible {
-      opacity: 1;
-      transform: translateY(0);
-      transition: opacity 0.6s ease-out, transform 0.6s ease-out;
-    }
+        /* --- LANG SWITCHER (NOUVEAU) --- */
+        .lang-switch {
+            display: flex; gap: 15px; margin-left: 30px; border-left: 1px solid rgba(255,255,255,0.3); padding-left: 30px;
+        }
+        .lang-btn {
+            width: 24px; height: auto; cursor: pointer; opacity: 0.4; transition: all 0.3s; filter: grayscale(100%);
+        }
+        .lang-btn.active, .lang-btn:hover { opacity: 1; filter: grayscale(0%); transform: scale(1.1); }
 
-    .competence-card:hover {
-      transform: translateY(-10px);
-      box-shadow: 0 0 30px rgba(0, 255, 229, 0.4);
-    }
 
-    .competence-header {
-      display: flex;
-      align-items: center;
-      margin-bottom: 1.5rem;
-    }
+        /* --- SKILLS CARROUSEL --- */
+        .skills-section { padding: 100px 0; position: relative; z-index: 20; }
+        .skills-swiper { width: 100%; padding: 40px 0; overflow: visible; }
+        .skills-swiper .swiper-slide { width: 320px; height: auto; opacity: 1; transform: scale(1); transition: transform 0.3s ease; }
 
-    .competence-icon {
-      font-size: 2rem;
-      color: #00ffe5;
-      text-shadow: 0 0 10px #00ffe5;
-      margin-right: 1.5rem;
-      width: 40px;
-    }
+        .skill-box {
+            display: block; text-decoration: none;
+            background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 40px; border-radius: 16px; transition: all 0.3s ease;
+            position: relative; overflow: hidden; z-index: 25; height: 100%;
+        }
+        .skill-box:hover { background: rgba(255, 255, 255, 0.08); border-color: var(--accent); transform: translateY(-10px); }
+        .skill-box h3 { font-size: 1.5rem; margin-bottom: 15px; color: white; }
+        .skill-box p { color: #888; font-size: 0.95rem; line-height: 1.6; }
+        .skill-icon { font-size: 2rem; color: var(--accent); margin-bottom: 20px; }
+        .skill-link-indicator {
+            position: absolute; bottom: 20px; right: 20px;
+            font-size: 0.8rem; color: var(--accent); opacity: 0;
+            transform: translateX(10px); transition: all 0.3s;
+        }
+        .skill-box:hover .skill-link-indicator { opacity: 1; transform: translateX(0); }
 
-    .competence-card h3 {
-      font-size: 1.3rem;
-      color: #fff;
-      margin: 0;
-    }
+        /* --- CAROUSEL PROJETS --- */
+        .swiper-container.project-swiper { width: 100%; padding: 60px 50px; overflow: visible; position: relative; z-index: 30; }
+        .project-swiper .swiper-slide { width: 400px; height: 550px; transition: all 0.5s ease; opacity: 0.4; transform: scale(0.85); pointer-events: auto; }
+        .project-swiper .swiper-slide-active { opacity: 1; transform: scale(1); z-index: 40; }
+        
+        .project-card {
+            width: 100%; height: 100%; background: #0a0a0a;
+            border: 1px solid #333; border-radius: 20px; overflow: hidden;
+            position: relative; display: flex; flex-direction: column; justify-content: flex-end;
+            padding: 30px; cursor: pointer; user-select: none;
+            transition: border-color 0.3s, box-shadow 0.3s;
+        }
+        .project-card:hover { border-color: var(--accent); box-shadow: 0 0 30px rgba(0, 255, 229, 0.1); }
+        .project-card h3 { font-size: 2rem; z-index: 2; margin-bottom: 5px; color: white; }
+        .project-card p { color: #aaa; z-index: 2; }
+        .project-card .card-bg { 
+            position: absolute; top:0; left:0; width:100%; height:100%; 
+            opacity: 0.5; transition: opacity 0.5s, transform 0.5s; 
+            background-size: cover; background-position: center; pointer-events: none;
+        }
+        .project-card:hover .card-bg { opacity: 0.7; transform: scale(1.05); }
 
-    .competence-card p {
-      font-size: 1rem;
-      color: #ccc;
-      line-height: 1.6;
-      margin-bottom: 2rem;
-    }
+        .swiper-button-prev, .swiper-button-next {
+            color: white; width: 60px; height: 60px; border-radius: 50%;
+            background: rgba(0,0,0,0.8); border: 1px solid rgba(255,255,255,0.2); 
+            z-index: 100; cursor: pointer;
+        }
+        .swiper-button-prev:hover, .swiper-button-next:hover {
+            background: var(--accent); border-color: var(--accent); color: black;
+        }
 
-    .btn-projet {
-      display: inline-block;
-      border: 2px solid #00ffe5;
-      color: #00ffe5;
-      padding: 0.75rem 1.5rem;
-      border-radius: 30px;
-      text-decoration: none;
-      font-weight: bold;
-      transition: background-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease;
-    }
+        /* --- PASSIONS --- */
+        .passions-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 40px; }
+        .passion-card {
+            background: #0f0f0f; border: 1px solid #222; padding: 40px 30px;
+            text-align: center; border-radius: 20px; position: relative;
+            transition: all 0.4s ease; overflow: hidden;
+        }
+        .passion-card::before {
+            content: ''; position: absolute; top:0; left:0; width:100%; height: 4px;
+            background: var(--accent); transform: scaleX(0); transition: transform 0.4s ease; transform-origin: left;
+        }
+        .passion-card:hover { transform: translateY(-10px); border-color: #333; }
+        .passion-card:hover::before { transform: scaleX(1); }
+        .passion-icon { font-size: 3rem; color: white; margin-bottom: 25px; transition: color 0.3s; }
+        .passion-card:hover .passion-icon { color: var(--accent); }
+        .passion-card h3 { font-size: 1.5rem; margin-bottom: 15px; color: white; }
+        .passion-card p { color: #777; font-size: 0.95rem; line-height: 1.6; }
 
-    .btn-projet:hover {
-      background-color: #00ffe5;
-      color: #0a0a0a;
-      box-shadow: 0 0 20px #00ffe5;
-    }
-    
-    /* Délais d'animation */
-    .competence-card:nth-child(2).visible { transition-delay: 0.1s; }
-    .competence-card:nth-child(3).visible { transition-delay: 0.2s; }
-    .competence-card:nth-child(4).visible { transition-delay: 0.3s; }
-    .competence-card:nth-child(5).visible { transition-delay: 0.4s; }
-    .competence-card:nth-child(6).visible { transition-delay: 0.5s; }
+        /* --- PHOTO --- */
+        .photo-section {
+            display: flex; text-decoration: none;
+            position: relative; width: 100%; height: 70vh;
+            align-items: center; justify-content: center;
+            overflow: hidden; margin: 100px 0; z-index: 20;
+        }
+        .photo-bg {
+            position: absolute; top: 0; left: 0; width: 100%; height: 120%;
+            background-image: url('../assets/voyage/7FE24F9B-2405-4DD8-A57C-960BE1C8F411_1_105_c.jpeg');
+            background-size: cover; background-position: center;
+            filter: grayscale(100%) brightness(0.5); transition: filter 0.5s;
+        }
+        .photo-section:hover .photo-bg { filter: grayscale(0%) brightness(0.7); }
+        .photo-content { z-index: 2; text-align: center; }
 
-    /* ==== Formulaire ==== */
-    form {
-      max-width: 600px;
-      margin: auto;
-      display: flex;
-      flex-direction: column;
-      gap: 1rem;
-    }
-    input, textarea {
-      padding: 1rem;
-      border: 1px solid rgba(255,255,255,0.2);
-      border-radius: 8px;
-      font-size: 1rem;
-      background: rgba(255,255,255,0.05);
-      color: white;
-    }
-    button {
-      padding: 1rem;
-      border: none;
-      border-radius: 8px;
-      background: linear-gradient(90deg, #00ffe5, #ff00ff);
-      color: white;
-      font-size: 1rem;
-      cursor: pointer;
-      transition: 0.3s;
-    }
-    button:hover {
-      transform: scale(1.05);
-      box-shadow: 0 0 20px #00ffe5;
-    }
+        /* --- ABOUT & TIMELINE --- */
+        .about-wrapper {
+            display: flex; align-items: center; justify-content: space-between; gap: 80px; margin-bottom: 100px;
+        }
+        .about-image { flex: 1; position: relative; height: 600px; border-radius: 20px; overflow: hidden; }
+        .about-image img { width: 100%; height: 100%; object-fit: cover; filter: grayscale(100%); transition: filter 0.5s ease, transform 0.7s ease; }
+        .about-image:hover img { filter: grayscale(0%); transform: scale(1.05); }
+        .about-text { flex: 1.2; }
+        .about-text h2 { font-size: 3.5rem; margin-bottom: 30px; color: white; }
+        .about-text p { font-size: 1.1rem; line-height: 1.8; color: #aaa; margin-bottom: 25px; }
+        .about-stats { display: flex; gap: 50px; margin-top: 40px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 30px; }
+        .stat-item h4 { font-size: 2.5rem; color: var(--accent); margin-bottom: 5px; font-family: 'Space Grotesk', sans-serif; }
+        .stat-item span { font-size: 0.9rem; text-transform: uppercase; letter-spacing: 0.1em; color: #666; }
 
-    footer {
-      text-align: center;
-      padding: 2rem;
-      background: #111;
-      color: #888;
-    }
-    .profile-pic-container {
-      position: relative;
-      width: 250px;
-      height: 250px;
-      border-radius: 50%;
-      margin: 0 auto 2rem;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-    }
+        .timeline-section { position: relative; padding: 100px 0; z-index: 20; }
+        .timeline-line { position: absolute; left: 50%; top: 0; bottom: 0; width: 4px; background: rgba(255,255,255,0.05); transform: translateX(-50%); z-index: 1; border-radius: 4px; }
+        .timeline-progress { position: absolute; left: 50%; top: 0; width: 4px; height: 0%; background: var(--accent); transform: translateX(-50%); z-index: 2; box-shadow: 0 0 20px var(--accent); border-radius: 4px; }
+        .timeline-row { display: flex; justify-content: space-between; margin-bottom: 100px; width: 100%; position: relative; z-index: 10; }
+        .timeline-row.right { flex-direction: row-reverse; }
+        
+        a.timeline-content { 
+            display: block; text-decoration: none; width: 45%; padding: 40px; 
+            border: 1px solid rgba(255,255,255,0.1); border-radius: 15px; 
+            background: #0a0a0a; position: relative; 
+            transition: transform 0.3s, border-color 0.3s, box-shadow 0.3s; z-index: 100;
+        }
+        a.timeline-content:hover { transform: translateY(-5px); border-color: var(--accent); box-shadow: 0 10px 30px rgba(0, 255, 229, 0.15); }
+        .timeline-content h3 { margin: 10px 0; color: white; }
+        .timeline-content p { color: #888; margin: 0; }
+        .timeline-dot {
+            position: absolute; top: 50%; width: 16px; height: 16px;
+            background: #000; border: 2px solid #555; border-radius: 50%;
+            transition: all 0.3s; z-index: 5; box-shadow: 0 0 0 5px #050505;
+        }
+        .timeline-row .timeline-dot { left: calc(50% - 9px); transform: translateY(-50%); }
+        .timeline-row.active .timeline-dot { background: var(--accent); border-color: white; box-shadow: 0 0 20px var(--accent); transform: translateY(-50%) scale(1.5); }
 
-    .profile-pic {
-      width: 100%;
-      height: 100%;
-      border-radius: 50%;
-      object-fit: cover;
-      z-index: 1;
-      position: relative;
-      transition: transform 0.4s ease;
-    }
+        /* --- CONTACT --- */
+        .form-input { width: 100%; background: transparent; border: none; border-bottom: 1px solid #333; padding: 15px 0; color: white; font-size: 1.1rem; outline: none; transition: border-color 0.3s; }
+        .form-input:focus { border-bottom-color: var(--accent); }
 
-    .profile-pic-container::before {
-      content: "";
-      position: absolute;
-      top: -5px; 
-      left: -5px;
-      width: calc(100% + 10px);
-      height: calc(100% + 10px);
-      border-radius: 50%;
-      background: conic-gradient(#0ff, #ff00ff, #0ff, #ff00ff);
-      z-index: 0;
-      filter: blur(15px);
-      opacity: 0;
-      transition: opacity 0.3s;
-      animation: rotateNeon 3s linear infinite;
-    }
-
-    .profile-pic-container:hover::before {
-      opacity: 1;
-    }
-
-    .profile-pic-container:hover .profile-pic {
-      transform: scale(1.1) rotate(3deg);
-    }
-
-    @keyframes rotateNeon {
-      0% { transform: rotate(0deg); }
-      100% { transform: rotate(360deg); }
-    }
-
-    .back-arrow {
-      position: fixed;
-      top: 20px;
-      left: 20px;
-      font-size: 2rem;
-      color: #00ffe5;
-      text-shadow: 0 0 10px #00ffe5, 0 0 20px #00ffe5;
-      cursor: pointer;
-      z-index: 1001;
-      transition: transform 0.3s, color 0.3s;
-    }
-    .back-arrow:hover {
-      transform: scale(1.2) rotate(-10deg);
-      color: #ff00ff;
-    }
-
-    .overlay {
-      position: fixed;
-      top: 50%;
-      left: 50%;
-      width: 0;
-      height: 0;
-      background: radial-gradient(circle, #00ffe5 0%, #ff00ff 70%);
-      border-radius: 50%;
-      z-index: 1000;
-      pointer-events: none;
-      transition: width 1.5s ease, height 1.5s ease, top 1.5s ease, left 1.5s ease;
-    }
-    .overlay.active {
-      width: 300vw;
-      height: 300vw;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-    }
-
-    /* ==== STYLES POUR LA MODALE ==== */
-    .modal-overlay {
-      position: fixed;
-      inset: 0;
-      background: rgba(0, 0, 0, 0.7);
-      backdrop-filter: blur(8px);
-      z-index: 2000;
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity 0.4s ease-in-out;
-    }
-    .modal-overlay.active {
-      opacity: 1;
-      pointer-events: auto;
-    }
-
-    .modal {
-      position: fixed;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -30%);
-      background: rgba(10, 10, 10, 0.8);
-      border: 1px solid #00ffe5;
-      border-radius: 20px;
-      box-shadow: 0 0 40px rgba(0, 255, 229, 0.5);
-      width: 90%;
-      max-width: 600px;
-      padding: 3rem;
-      z-index: 2001;
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity 0.4s ease-in-out, transform 0.4s ease-in-out;
-    }
-    .modal.active {
-      opacity: 1;
-      pointer-events: auto;
-      transform: translate(-50%, -50%);
-    }
-
-    .modal-close {
-      position: absolute;
-      top: 15px;
-      right: 20px;
-      font-size: 2.5rem;
-      color: #fff;
-      cursor: pointer;
-      transition: transform 0.3s, color 0.3s;
-    }
-    .modal-close:hover {
-      color: #ff00ff;
-      transform: rotate(90deg);
-    }
-
-    .modal h3 {
-      font-size: 2rem;
-      color: #00ffe5;
-      margin-top: 0;
-      margin-bottom: 1.5rem;
-      text-shadow: 0 0 10px #00ffe5;
-    }
-    .modal p {
-      font-size: 1.1rem;
-      color: #ccc;
-      line-height: 1.6;
-    }
-
-    .language-switcher {
-      position: fixed;
-      bottom: 20px;
-      right: 20px;
-      z-index: 100;
-      display: flex;
-      gap: 10px;
-    }
-
-    .language-switcher img {
-      width: 30px;
-      height: 30px;
-      border-radius: 50%;
-      box-shadow: 0 0 8px rgba(0,255,229,0.6);
-      cursor: pointer;
-      transition: transform 0.2s ease, box-shadow 0.2s ease;
-    }
-
-    .language-switcher img:hover {
-      transform: scale(1.1);
-      box-shadow: 0 0 15px rgba(0,255,229,1);
-    }
-
-    .language-switcher img.active-lang {
-      border: 2px solid #ff00ff;
-      box-shadow: 0 0 15px #ff00ff;
-    }
-  </style>
+        @media (max-width: 900px) {
+            .about-wrapper { flex-direction: column; }
+            .about-image { width: 100%; height: 400px; }
+            .about-text h2 { font-size: 2.5rem; }
+        }
+        @media (max-width: 768px) {
+            .nav-links { display: none; }
+            .lang-switch { margin-left: auto; border: none; }
+            .timeline-row { flex-direction: column; padding-left: 60px; }
+            .timeline-row.right { flex-direction: column; }
+            .timeline-content { width: 100%; margin-bottom: 20px; }
+            .project-swiper .swiper-slide { width: 85%; height: 450px; }
+            .swiper-button-prev, .swiper-button-next { display: none; }
+            .swiper-container { padding: 60px 0; }
+            .timeline-line, .timeline-progress { left: 20px; }
+            .timeline-row .timeline-dot { left: 11px; }
+        }
+    </style>
 </head>
 <body>
-  <div class="back-arrow" id="backArrow">⬅</div>
-  <div class="overlay" id="overlay"></div>
+    <div class="noise-overlay" style="pointer-events: none;"></div>
+    <div id="cursor" style="pointer-events: none;"></div>
 
-  <canvas id="bgCanvas"></canvas>
-
-  <header>
-    <div class="profile-pic-container">
-      <img src="../assets/pdp.jpg" alt="Moi" class="profile-pic">
-    </div>
-    <h1 id="headerTitle">🚀 Portfolio de Thibault</h1>
-    <p id="headerSubtitle">Développeur • Créatif • Passionné d'IA</p>
-  </header>
-
-  <section class="about">
-    <h2 id="aboutTitle">À propos de moi</h2>
-    <p id="aboutText">
-      Je m'appelle Thibault, passionné par le développement web, l'IA et l'innovation.  
-      J'aime créer des projets qui mélangent technologie et créativité, et je suis toujours en quête 
-      de nouveaux défis à relever.
-    </p>
-  </section>
-
-  <section>
-    <h2 id="passionsTitle">Mes Passions</h2>
-    <div class="passions">
-      <div class="passion-card" id="passionWeb">💻 Développement Web</div>
-      <div class="passion-card" id="passionAI">🤖 Intelligence Artificielle</div>
-      <div class="passion-card"><a href="gallery.html" style="text-decoration: none; color: inherit;" id="passionPhoto">📸 Photo & Vidéo</a></div>
-      <div class="passion-card" id="passionTech">🚀 Nouvelles Technologies</div>
-    </div>
-  </section>
-
-  <section id="competences">
-    <h2 id="skillsTitle">Mes Compétences</h2>
-    <div class="competences-grid">
-      <div class="competence-card">
-        <div class="competence-header">
-          <i class="fas fa-code competence-icon"></i>
-          <h3 id="skill1Title">Réaliser un développement d'application</h3>
+    <nav class="top-nav">
+        <a href="../index.html" class="hover-trigger" style="font-weight: 900; font-size: 1.2rem;">THIBAULT.</a>
+        
+        <div class="nav-links">
+            <a href="#skills" class="hover-trigger" data-i18n="nav_skills">Compétences</a>
+            <a href="#projects" class="hover-trigger" data-i18n="nav_projects">Projets</a>
+            <a href="#passions" class="hover-trigger" data-i18n="nav_lifestyle">Lifestyle</a>
+            <a href="#photo" class="hover-trigger" data-i18n="nav_photos">Photos</a>
+            <a href="#about" class="hover-trigger" data-i18n="nav_about">Parcours</a>
+            
+            <div class="lang-switch">
+                <img src="../assets/fr.png" onclick="setLanguage('fr')" class="lang-btn hover-trigger active" id="btn-fr" alt="FR">
+                <img src="../assets/en.png" onclick="setLanguage('en')" class="lang-btn hover-trigger" id="btn-en" alt="EN">
+            </div>
         </div>
-        <p id="skill1Desc">Conception, développement, et déploiement de solutions logicielles robustes et performantes.</p>
-        <a href="#projet1" class="btn-projet" id="skill1Btn">Voir le projet</a>
-      </div>
-      <div class="competence-card">
-        <div class="competence-header">
-          <i class="fas fa-cogs competence-icon"></i>
-          <h3 id="skill2Title">Optimiser des applications</h3>
+        </nav>
+
+    <canvas id="bgCanvas" style="position: fixed; top: 0; left: 0; z-index: -1; opacity: 0.2; pointer-events: none;"></canvas>
+
+    <main id="smooth-wrapper">
+        <div id="smooth-content">
+            
+            <section class="hero container">
+                <div>
+                    <h1 class="anim-text" style="font-size: clamp(3rem, 9vw, 8rem); line-height: 1;">CREATIVE<br>DEVELOPER</h1>
+                    <p style="text-align: right; color: var(--accent); margin-top: 20px; letter-spacing: 0.2em;">WEB • DATA • AI</p>
+                </div>
+            </section>
+
+            <section id="skills" class="container skills-section">
+                <h2 class="anim-text" style="font-size: 3rem; margin-bottom: 20px;" data-i18n="skills_title">COMPÉTENCES</h2>
+                <p style="color: #666; max-width: 600px; margin-bottom: 40px;" data-i18n="skills_subtitle">Expertise technique et méthodologique (BUT Informatique).</p>
+                
+                <div class="swiper-container skills-swiper">
+                    <div class="swiper-wrapper">
+                        <div class="swiper-slide">
+                            <a href="javascript:void(0)" class="skill-box hover-trigger" onclick="scrollToProject(3)">
+                                <div class="skill-icon"><i class="fas fa-laptop-code"></i></div>
+                                <h3 data-i18n="skill_realise">Réaliser</h3>
+                                <p data-i18n="skill_realise_desc">Développement d’applications complexes (SaaS, Fullstack) de la conception au déploiement.</p>
+                                <div class="skill-link-indicator" data-i18n="link_saas">Voir le SaaS ➔</div>
+                            </a>
+                        </div>
+                        <div class="swiper-slide">
+                            <a href="javascript:void(0)" class="skill-box hover-trigger" onclick="scrollToProject(4)">
+                                <div class="skill-icon"><i class="fas fa-rocket"></i></div>
+                                <h3 data-i18n="skill_optimize">Optimiser</h3>
+                                <p data-i18n="skill_optimize_desc">Analyse de performance, refactoring et optimisation algorithmique.</p>
+                                <div class="skill-link-indicator" data-i18n="link_app">Voir l'App Mobile ➔</div>
+                            </a>
+                        </div>
+                        <div class="swiper-slide">
+                            <a href="javascript:void(0)" class="skill-box hover-trigger" onclick="scrollToProject(1)">
+                                <div class="skill-icon"><i class="fas fa-database"></i></div>
+                                <h3 data-i18n="skill_data">Gérer les données</h3>
+                                <p data-i18n="skill_data_desc">Conception de BDD, pipelines Data et visualisation interactive (D3.js).</p>
+                                <div class="skill-link-indicator" data-i18n="link_dash">Voir le Dashboard ➔</div>
+                            </a>
+                        </div>
+                        <div class="swiper-slide">
+                            <a href="javascript:void(0)" class="skill-box hover-trigger" onclick="openModal('skill_manage')">
+                                <div class="skill-icon"><i class="fas fa-tasks"></i></div>
+                                <h3 data-i18n="skill_manage">Conduire</h3>
+                                <p data-i18n="skill_manage_desc">Gestion de projet Agile, relation client et lancement de produits.</p>
+                                <div class="skill-link-indicator" data-i18n="link_details">Détails ➔</div>
+                            </a>
+                        </div>
+                        <div class="swiper-slide">
+                            <a href="javascript:void(0)" class="skill-box hover-trigger" onclick="openModal('skill_collaborate')">
+                                <div class="skill-icon"><i class="fas fa-users"></i></div>
+                                <h3 data-i18n="skill_collab">Collaborer</h3>
+                                <p data-i18n="skill_collab_desc">Intégration en équipe R&D, Code Reviews et processus industriels.</p>
+                                <div class="skill-link-indicator" data-i18n="link_details">Détails ➔</div>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="passions" class="container section-padding">
+                <div style="margin-bottom: 60px;">
+                    <span style="color: var(--accent); letter-spacing: 0.2em; text-transform: uppercase; font-size: 0.9rem;" data-i18n="passions_pre">Behind the code</span>
+                    <h2 class="anim-text" style="font-size: 3rem; margin-top: 10px;">LIFESTYLE & DRIVE</h2>
+                </div>
+                
+                <div class="passions-grid">
+                    <div class="passion-card hover-trigger">
+                        <div class="passion-icon"><i class="fas fa-camera"></i></div>
+                        <h3 data-i18n="passion_photo">Photographie</h3>
+                        <p data-i18n="passion_photo_desc">Plus qu'un hobby, une discipline du regard. Capturer l'instant exige patience et précision, deux qualités que je transpose dans mon code.</p>
+                    </div>
+                    <div class="passion-card hover-trigger">
+                        <div class="passion-icon"><i class="fas fa-motorcycle"></i></div>
+                        <h3 data-i18n="passion_moto">Moto</h3>
+                        <p data-i18n="passion_moto_desc">La liberté et la responsabilité. Sur la route comme dans un projet, tout est question d'anticipation, de trajectoire et de gestion du risque.</p>
+                    </div>
+                    <div class="passion-card hover-trigger">
+                        <div class="passion-icon"><i class="fas fa-dumbbell"></i></div>
+                        <h3 data-i18n="passion_gym">Musculation</h3>
+                        <p data-i18n="passion_gym_desc">La preuve que l'effort constant paie. Pas de raccourcis. Juste de la discipline, de la répétition et une volonté de fer pour progresser.</p>
+                    </div>
+                </div>
+            </section>
+
+            <section id="projects" class="section-padding" style="background: #050505; position: relative; z-index: 5;">
+                <div class="container" style="margin-bottom: 30px;">
+                    <h2 class="anim-text" style="font-size: 3rem;" data-i18n="projects_title">SELECTED WORKS</h2>
+                </div>
+
+                <div class="swiper-container project-swiper">
+                    <div class="swiper-wrapper">
+                        <div class="swiper-slide">
+                            <div class="project-card" onclick="openModal('proj_ia')">
+                                <div class="card-bg" style="background-image: url('../assets/pdp.jpg');"></div>
+                                <h3>Portfolio IA</h3>
+                                <p>Interactive Chatbot</p>
+                            </div>
+                        </div>
+                        <div class="swiper-slide">
+                            <div class="project-card" onclick="openModal('proj_dash')">
+                                <div class="card-bg" style="background: #222;"></div>
+                                <h3>Dashboard Data</h3>
+                                <p>Data Science</p>
+                            </div>
+                        </div>
+                        <div class="swiper-slide">
+                            <div class="project-card" onclick="openModal('proj_agents')">
+                                <div class="card-bg" style="background: #1a1a1a;"></div>
+                                <h3>Chatbot Agents</h3>
+                                <p>Advanced AI</p>
+                            </div>
+                        </div>
+                        <div class="swiper-slide">
+                            <div class="project-card" onclick="openModal('proj_saas')">
+                                <div class="card-bg" style="background: #333;"></div>
+                                <h3>SaaS Immo</h3>
+                                <p>Fullstack & AI</p>
+                            </div>
+                        </div>
+                        <div class="swiper-slide">
+                            <div class="project-card" onclick="openModal('proj_app')">
+                                <div class="card-bg" style="background: #111;"></div>
+                                <h3>App Annonces</h3>
+                                <p>Web Development</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="swiper-button-prev hover-trigger"></div>
+                    <div class="swiper-button-next hover-trigger"></div>
+                    <div class="swiper-pagination"></div>
+                </div>
+            </section>
+
+            <a href="gallery.html" id="photo" class="photo-section hover-trigger">
+                <div class="photo-bg" id="parallax-bg"></div>
+                <div class="photo-content">
+                    <span style="color: var(--accent); letter-spacing: 0.2em; text-transform: uppercase; font-size: 0.9rem; display: block; margin-bottom: 10px;">Creative Studio</span>
+                    <h2 style="font-size: 4rem; color: white; margin-bottom: 20px;">PHOTOGRAPHY</h2>
+                    <div class="btn-magnetic" style="border-color: white; color: white; display: inline-block; padding: 15px 40px; border-radius: 50px;" data-i18n="btn_gallery">
+                        Explorer la Galerie
+                    </div>
+                </div>
+            </a>
+
+            <section id="about" class="container" style="padding: 100px 0;">
+                
+                <div class="about-wrapper">
+                    <div class="about-image hover-trigger">
+                        <img src="../assets/pdp2.jpg" alt="Thibault Dubois Portrait">
+                    </div>
+                    
+                    <div class="about-text">
+                        <span style="color: var(--accent); letter-spacing: 0.2em; text-transform: uppercase; font-size: 0.9rem;" data-i18n="about_pre">Vision & Parcours</span>
+                        <h2 data-i18n="about_title">L'HUMAIN DERRIÈRE LE CODE</h2>
+                        <p data-i18n="about_p1">
+                            Développeur ne suffit pas. Je suis un créateur de solutions obsédé par l'optimisation.
+                        </p>
+                        <p data-i18n="about_p2">
+                            Mon approche du code est forgée par ma discipline sportive : la répétition mène à la perfection. Que je sois sur une moto à calculer une trajectoire ou devant un IDE à architecturer une IA, l'objectif reste le même : <strong>la performance sans compromis.</strong>
+                        </p>
+                        <p data-i18n="about_p3">
+                            Aujourd'hui en 3ème année de BUT Informatique et alternant chez Alcatel-Lucent, je combine rigueur académique et réalité du terrain. Mon ambition ? Rejoindre une école d'ingénieur (ISEN) pour pousser les limites de l'Intelligence Artificielle.
+                        </p>
+
+                        <div class="about-stats">
+                            <div class="stat-item">
+                                <h4>03</h4>
+                                <span data-i18n="stat_xp">Années d'XP</span>
+                            </div>
+                            <div class="stat-item">
+                                <h4>+20</h4>
+                                <span data-i18n="stat_proj">Projets Livrés</span>
+                            </div>
+                            <div class="stat-item">
+                                <h4>100%</h4>
+                                <span data-i18n="stat_focus">Engagement</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="timeline-section" style="padding-top: 50px;">
+                    <h3 style="text-align: center; font-size: 2rem; margin-bottom: 80px; color: #444;" data-i18n="timeline_title">CHRONOLOGIE</h3>
+                    
+                    <div class="timeline-line"></div>
+                    <div class="timeline-progress"></div>
+                    
+                    <div class="timeline-row">
+                        <div class="timeline-dot"></div>
+                        <a href="javascript:void(0)" class="timeline-content hover-trigger" onclick="openModal('time_freelance')">
+                            <span style="color:var(--accent);">2025</span>
+                            <h3>Freelance</h3>
+                            <p data-i18n="time_freelance_sub">Lancement d'activité.</p>
+                        </a>
+                    </div>
+                    
+                    <div class="timeline-row right">
+                        <div class="timeline-dot"></div>
+                        <a href="javascript:void(0)" class="timeline-content hover-trigger" onclick="openModal('time_ale')">
+                            <span style="color:var(--accent);">2024</span>
+                            <h3 data-i18n="time_ale_title">Alternance IA</h3>
+                            <p data-i18n="time_ale_sub">Développeur IA & Data chez ALE.</p>
+                        </a>
+                    </div>
+                    
+                    <div class="timeline-row">
+                        <div class="timeline-dot"></div>
+                        <a href="javascript:void(0)" class="timeline-content hover-trigger" onclick="openModal('time_iut')">
+                            <span style="color:var(--accent);">2023</span>
+                            <h3>IUT Lannion</h3>
+                            <p data-i18n="time_iut_sub">Cursus Informatique.</p>
+                        </a>
+                    </div>
+
+                    <div class="timeline-row right">
+                         <div class="timeline-dot"></div>
+                        <a href="javascript:void(0)" class="timeline-content hover-trigger" onclick="openModal('time_s3p')">
+                            <span style="color:var(--accent);">2020</span>
+                            <h3>Stage S3Pweb</h3>
+                            <p data-i18n="time_s3p_sub">Première expérience Web.</p>
+                        </a>
+                    </div>
+                </div>
+            </section>
+
+            <section id="contact" class="section-padding container">
+                <h2 style="font-size: 3rem; margin-bottom: 50px; text-align: center;" data-i18n="contact_title">LET'S TALK</h2>
+                <form action="https://formsubmit.co/td29460@gmail.com" method="POST" style="max-width: 600px; margin: 0 auto;">
+                    <div class="form-group"><input type="text" name="name" class="form-input" data-i18n-placeholder="ph_name" placeholder="Votre Nom" required></div>
+                    <div class="form-group"><input type="email" name="email" class="form-input" data-i18n-placeholder="ph_email" placeholder="Votre Email" required></div>
+                    <div class="form-group"><textarea name="message" class="form-input" rows="4" data-i18n-placeholder="ph_msg" placeholder="Votre Message..." required></textarea></div>
+                    <div style="text-align: center; margin-top: 40px;">
+                        <button type="submit" class="btn-magnetic hover-trigger" style="background: white; color: black; border: none; padding: 15px 40px; border-radius: 50px; font-weight: bold; cursor: pointer;" data-i18n="btn_send">ENVOYER</button>
+                    </div>
+                </form>
+            </section>
+
+            <footer style="padding: 50px; text-align: center; color: #333; font-size: 0.8rem;">&copy; 2026 Thibault Dubois.</footer>
         </div>
-        <p id="skill2Desc">Analyse et amélioration des performances, de la consommation mémoire et de la rapidité des applications.</p>
-        <a href="#projet2" class="btn-projet" id="skill2Btn">Voir le projet</a>
-      </div>
-      <div class="competence-card">
-        <div class="competence-header">
-          <i class="fas fa-tasks competence-icon"></i>
-          <h3 id="skill3Title">Administrer des systèmes</h3>
+    </main>
+
+    <div class="modal-overlay" id="modalOverlay">
+        <div class="modal">
+            <span class="modal-close" id="closeModal">&times;</span>
+            <h2 id="modalTitle">Titre</h2>
+            <p id="modalDesc">Description...</p>
+            <a id="modalLink" href="#" target="_blank" class="btn-magnetic" style="display:inline-block; margin-top:30px; border-color:var(--accent); color: var(--accent); padding: 12px 35px;">
+                Voir sur GitHub <i class="fab fa-github" style="margin-left: 10px;"></i>
+            </a>
         </div>
-        <p id="skill3Desc">Gestion d'infrastructures informatiques, déploiement et maintenance de services réseaux et systèmes.</p>
-        <a href="#projet3" class="btn-projet" id="skill3Btn">Voir le projet</a>
-      </div>
-      <div class="competence-card">
-        <div class="competence-header">
-          <i class="fas fa-database competence-icon"></i> <h3 id="skill4Title">Gérer des données</h3>
-        </div>
-        <p id="skill4Desc">Modélisation, création et administration de bases de données pour garantir l'intégrité et la sécurité.</p>
-        <a href="#projet4" class="btn-projet" id="skill4Btn">Voir le projet</a>
-      </div>
-      <div class="competence-card">
-        <div class="competence-header">
-          <i class="fas fa-sitemap competence-icon"></i> <h3 id="skill5Title">Conduire un projet</h3>
-        </div>
-        <p id="skill5Desc">Maîtrise des méthodologies agiles, planification, suivi et livraison de projets informatiques.</p>
-        <a href="#projet5" class="btn-projet" id="skill5Btn">Voir le projet</a>
-      </div>
-      <div class="competence-card">
-        <div class="competence-header">
-          <i class="fas fa-users competence-icon"></i>
-          <h3 id="skill6Title">Travailler en équipe</h3>
-        </div>
-        <p id="skill6Desc">Collaboration, communication et utilisation d'outils collaboratifs pour la réussite des projets.</p>
-        <a href="#projet6" class="btn-projet" id="skill6Btn">Voir le projet</a>
-      </div>
-    </div>
-  </section>
-
-  <section>
-    <h2 id="projectsTitle">Mes Projets</h2>
-    <div class="projects">
-       <div class="project-card" data-description-fr="Ce portfolio a été conçu pour être interactif et futuriste, utilisant un chatbot avec l'IA de Cohere pour une expérience utilisateur unique et engageante." data-description-en="This portfolio was designed to be interactive and futuristic, using a chatbot with Cohere's AI for a unique and engaging user experience.">
-        <h3 id="project1Title">🌐 Portfolio IA</h3>
-        <p id="project1Desc">Un site interactif avec chatbot intégré pour présenter mes compétences.</p>
-      </div>
-      <div class="project-card" data-description-fr="Développement d'une application web pour visualiser des données complexes en temps réel. Utilisation de bibliothèques JavaScript modernes pour des graphiques dynamiques et interactifs." data-description-en="Development of a web application to visualize complex data in real-time. Using modern JavaScript libraries for dynamic and interactive charts.">
-        <h3 id="project2Title">📊 Dashboard Data</h3>
-        <p id="project2Desc">Application de visualisation de données en temps réel.</p>
-      </div>
-      <div class="project-card" data-description-fr="Création d'un bot pour la plateforme Discord. Il est capable de modérer les discussions, de jouer de la musique et de répondre à des commandes personnalisées grâce à des APIs externes." data-description-en="Creation of a bot for the Discord platform. It can moderate discussions, play music, and respond to custom commands using external APIs.">
-        <h3 id="project3Title">🤖 Bot Discord</h3>
-        <p id="project3Desc">Un assistant intelligent qui répond aux commandes des utilisateurs.</p>
-      </div>
-    </div>
-  </section>
-
-  <section>
-    <h2 id="journeyTitle">Mon Parcours</h2>
-    <div class="timeline">
-      <div class="timeline-item left">
-        <h3 id="timeline2020Title">2020</h3>
-        <p id="timeline2020Desc">Début de mes études en informatique.</p>
-      </div>
-      <div class="timeline-item right">
-        <h3 id="timeline2022Title">2022</h3>
-        <p id="timeline2022Desc">Premier stage en développement web.</p>
-      </div>
-      <div class="timeline-item left">
-        <h3 id="timeline2023Title">2023</h3>
-        <p id="timeline2023Desc">Création de mes premiers projets personnels IA.</p>
-      </div>
-      <div class="timeline-item right">
-        <h3 id="timeline2025Title">2025</h3>
-        <p id="timeline2025Desc">Portfolio futuriste lancé 🚀</p>
-      </div>
-    </div>
-  </section>
-
-  <section>
-    <h2 id="contactTitle">Contact</h2>
-    <form>
-      <input type="text" id="contactName" placeholder="Votre nom" required>
-      <input type="email" id="contactEmail" placeholder="Votre email" required>
-      <textarea rows="5" id="contactMessage" placeholder="Votre message"></textarea>
-      <button type="submit" id="contactBtn">Envoyer</button>
-    </form>
-  </section>
-
-  <footer>
-    <p id="footerText">© 2025 - Thibault Dubois | Tous droits réservés</p>
-  </footer>
-
-  <div class="modal-overlay" id="modalOverlay">
-    <div class="modal" id="projectModal">
-      <span class="modal-close" id="modalClose">&times;</span>
-      <h3 id="modalTitle">Titre du projet</h3>
-      <p id="modalDescription">Description détaillée du projet...</p>
-    </div>
-  </div>
-
-  <div class="language-switcher">
-    <img src="../assets/fr.png" alt="Français" onclick="setLanguage('fr')" id="lang-fr" class="active-lang">
-    <img src="../assets/en.png" alt="English" onclick="setLanguage('en')" id="lang-en">
     </div>
 
-  <script>
-    const translations = {
-      fr: {
-        pageTitle: "Portfolio Futuriste",
-        headerTitle: "🚀 Portfolio de Thibault",
-        headerSubtitle: "Développeur • Créatif • Passionné d'IA",
-        aboutTitle: "À propos de moi",
-        aboutText: "Je m'appelle Thibault, passionné par le développement web, l'IA et l'innovation. J'aime créer des projets qui mélangent technologie et créativité, et je suis toujours en quête de nouveaux défis à relever.",
-        passionsTitle: "Mes Passions",
-        passionWeb: "💻 Développement Web",
-        passionAI: "🤖 Intelligence Artificielle",
-        passionPhoto: "📸 Photo & Vidéo",
-        passionTech: "🚀 Nouvelles Technologies",
-        skillsTitle: "Mes Compétences",
-        skill1Title: "Réaliser un développement d'application",
-        skill1Desc: "Conception, développement, et déploiement de solutions logicielles robustes et performantes.",
-        skill1Btn: "Voir le projet",
-        skill2Title: "Optimiser des applications",
-        skill2Desc: "Analyse et amélioration des performances, de la consommation mémoire et de la rapidité des applications.",
-        skill2Btn: "Voir le projet",
-        skill3Title: "Administrer des systèmes",
-        skill3Desc: "Gestion d'infrastructures informatiques, déploiement et maintenance de services réseaux et systèmes.",
-        skill3Btn: "Voir le projet",
-        skill4Title: "Gérer des données",
-        skill4Desc: "Modélisation, création et administration de bases de données pour garantir l'intégrité et la sécurité.",
-        skill4Btn: "Voir le projet",
-        skill5Title: "Conduire un projet",
-        skill5Desc: "Maîtrise des méthodologies agiles, planification, suivi et livraison de projets informatiques.",
-        skill5Btn: "Voir le projet",
-        skill6Title: "Travailler en équipe",
-        skill6Desc: "Collaboration, communication et utilisation d'outils collaboratifs pour la réussite des projets.",
-        skill6Btn: "Voir le projet",
-        projectsTitle: "Mes Projets",
-        project1Title: "🌐 Portfolio IA",
-        project1Desc: "Un site interactif avec chatbot intégré pour présenter mes compétences.",
-        project2Title: "📊 Dashboard Data",
-        project2Desc: "Application de visualisation de données en temps réel.",
-        project3Title: "🤖 Bot Discord",
-        project3Desc: "Un assistant intelligent qui répond aux commandes des utilisateurs.",
-        journeyTitle: "Mon Parcours",
-        timeline2020Title: "2020",
-        timeline2020Desc: "Début de mes études en informatique.",
-        timeline2022Title: "2022",
-        timeline2022Desc: "Premier stage en développement web.",
-        timeline2023Title: "2023",
-        timeline2023Desc: "Création de mes premiers projets personnels IA.",
-        timeline2025Title: "2025",
-        timeline2025Desc: "Portfolio futuriste lancé 🚀",
-        contactTitle: "Contact",
-        contactNamePlaceholder: "Votre nom",
-        contactEmailPlaceholder: "Votre email",
-        contactMessagePlaceholder: "Votre message",
-        contactBtn: "Envoyer",
-        footerText: "© 2025 - Thibault Dubois | Tous droits réservés",
-        modalTitle: "Titre du projet", // Default for modal
-        modalDescription: "Description détaillée du projet...", // Default for modal
-      },
-      en: {
-        pageTitle: "Futuristic Portfolio",
-        headerTitle: "🚀 Thibault's Portfolio",
-        headerSubtitle: "Developer • Creative • AI Enthusiast",
-        aboutTitle: "About Me",
-        aboutText: "My name is Thibault, passionate about web development, AI, and innovation. I love creating projects that blend technology and creativity, and I am always looking for new challenges to tackle.",
-        passionsTitle: "My Passions",
-        passionWeb: "💻 Web Development",
-        passionAI: "🤖 Artificial Intelligence",
-        passionPhoto: "📸 Photo & Video",
-        passionTech: "🚀 New Technologies",
-        skillsTitle: "My Skills",
-        skill1Title: "Application Development",
-        skill1Desc: "Design, develop, and deploy robust and high-performing software solutions.",
-        skill1Btn: "View project",
-        skill2Title: "Application Optimization",
-        skill2Desc: "Analyze and improve performance, memory consumption, and application speed.",
-        skill2Btn: "View project",
-        skill3Title: "System Administration",
-        skill3Desc: "Manage IT infrastructures, deploy and maintain network and system services.",
-        skill3Btn: "View project",
-        skill4Title: "Data Management",
-        skill4Desc: "Model, create, and administer databases to ensure integrity and security.",
-        skill4Btn: "View project",
-        skill5Title: "Project Management",
-        skill5Desc: "Master agile methodologies, plan, monitor, and deliver IT projects.",
-        skill5Btn: "View project",
-        skill6Title: "Teamwork",
-        skill6Desc: "Collaborate, communicate, and use collaborative tools for project success.",
-        skill6Btn: "View project",
-        projectsTitle: "My Projects",
-        project1Title: "🌐 AI Portfolio",
-        project1Desc: "An interactive website with an integrated chatbot to showcase my skills.",
-        project2Title: "📊 Data Dashboard",
-        project2Desc: "Real-time data visualization application.",
-        project3Title: "🤖 Discord Bot",
-        project3Desc: "An intelligent assistant that responds to user commands.",
-        journeyTitle: "My Journey",
-        timeline2020Title: "2020",
-        timeline2020Desc: "Started my computer science studies.",
-        timeline2022Title: "2022",
-        timeline2022Desc: "First web development internship.",
-        timeline2023Title: "2023",
-        timeline2023Desc: "Created my first personal AI projects.",
-        timeline2025Title: "2025",
-        timeline2025Desc: "Futuristic portfolio launched 🚀",
-        contactTitle: "Contact",
-        contactNamePlaceholder: "Your name",
-        contactEmailPlaceholder: "Your email",
-        contactMessagePlaceholder: "Your message",
-        contactBtn: "Send",
-        footerText: "© 2025 - Thibault Dubois | All rights reserved",
-        modalTitle: "Project Title", // Default for modal
-        modalDescription: "Detailed project description...", // Default for modal
-      }
-    };
+    <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/studio-freight/lenis@1.0.29/bundled/lenis.min.js"></script>
 
-    function setLanguage(lang) {
-      document.documentElement.lang = lang;
-      localStorage.setItem('lang', lang);
+    <script>
+        // --- GESTION DES TRADUCTIONS ---
+        const translations = {
+            fr: {
+                nav_skills: "Compétences",
+                nav_projects: "Projets",
+                nav_lifestyle: "Lifestyle",
+                nav_photos: "Photos",
+                nav_about: "Parcours",
+                skills_title: "COMPÉTENCES",
+                skills_subtitle: "Expertise technique et méthodologique (BUT Informatique).",
+                skill_realise: "Réaliser",
+                skill_realise_desc: "Développement d’applications complexes (SaaS, Fullstack) de la conception au déploiement.",
+                link_saas: "Voir le SaaS ➔",
+                skill_optimize: "Optimiser",
+                skill_optimize_desc: "Analyse de performance, refactoring et optimisation algorithmique.",
+                link_app: "Voir l'App Mobile ➔",
+                skill_data: "Gérer les données",
+                skill_data_desc: "Conception de BDD, pipelines Data et visualisation interactive (D3.js).",
+                link_dash: "Voir le Dashboard ➔",
+                skill_manage: "Conduire",
+                skill_manage_desc: "Gestion de projet Agile, relation client et lancement de produits.",
+                link_details: "Détails ➔",
+                skill_collab: "Collaborer",
+                skill_collab_desc: "Intégration en équipe R&D, Code Reviews et processus industriels.",
+                passions_pre: "Behind the code",
+                passion_photo: "Photographie",
+                passion_photo_desc: "Plus qu'un hobby, une discipline du regard. Capturer l'instant exige patience et précision, deux qualités que je transpose dans mon code.",
+                passion_moto: "Moto",
+                passion_moto_desc: "La liberté et la responsabilité. Sur la route comme dans un projet, tout est question d'anticipation, de trajectoire et de gestion du risque.",
+                passion_gym: "Musculation",
+                passion_gym_desc: "La preuve que l'effort constant paie. Pas de raccourcis. Juste de la discipline, de la répétition et une volonté de fer pour progresser.",
+                projects_title: "SELECTED WORKS",
+                btn_gallery: "Explorer la Galerie",
+                about_pre: "Vision & Parcours",
+                about_title: "L'HUMAIN DERRIÈRE LE CODE",
+                about_p1: "Développeur ne suffit pas. Je suis un créateur de solutions obsédé par l'optimisation.",
+                about_p2: "Mon approche du code est forgée par ma discipline sportive : la répétition mène à la perfection. Que je sois sur une moto à calculer une trajectoire ou devant un IDE à architecturer une IA, l'objectif reste le même : <strong>la performance sans compromis.</strong>",
+                about_p3: "Aujourd'hui en 3ème année de BUT Informatique et alternant chez Alcatel-Lucent, je combine rigueur académique et réalité du terrain. Mon ambition ? Rejoindre une école d'ingénieur (ISEN) pour pousser les limites de l'Intelligence Artificielle.",
+                stat_xp: "Années d'XP",
+                stat_proj: "Projets Livrés",
+                stat_focus: "Engagement",
+                timeline_title: "CHRONOLOGIE",
+                time_freelance_sub: "Lancement d'activité.",
+                time_ale_title: "Alternance IA",
+                time_ale_sub: "Développeur IA & Data chez ALE.",
+                time_iut_sub: "Cursus Informatique.",
+                time_s3p_sub: "Première expérience Web.",
+                contact_title: "LET'S TALK",
+                ph_name: "Votre Nom",
+                ph_email: "Votre Email",
+                ph_msg: "Votre Message...",
+                btn_send: "ENVOYER"
+            },
+            en: {
+                nav_skills: "Skills",
+                nav_projects: "Projects",
+                nav_lifestyle: "Lifestyle",
+                nav_photos: "Photos",
+                nav_about: "Journey",
+                skills_title: "SKILLS",
+                skills_subtitle: "Technical and methodological expertise (CS Degree).",
+                skill_realise: "Build",
+                skill_realise_desc: "Development of complex applications (SaaS, Fullstack) from concept to deployment.",
+                link_saas: "See SaaS ➔",
+                skill_optimize: "Optimize",
+                skill_optimize_desc: "Performance analysis, refactoring, and algorithmic optimization.",
+                link_app: "See Mobile App ➔",
+                skill_data: "Manage Data",
+                skill_data_desc: "DB Design, Data Pipelines, and interactive visualization (D3.js).",
+                link_dash: "See Dashboard ➔",
+                skill_manage: "Lead",
+                skill_manage_desc: "Agile Project Management, client relations, and product launches.",
+                link_details: "Details ➔",
+                skill_collab: "Collaborate",
+                skill_collab_desc: "R&D Team integration, Code Reviews, and industrial processes.",
+                passions_pre: "Behind the code",
+                passion_photo: "Photography",
+                passion_photo_desc: "More than a hobby, a discipline of observation. Capturing the moment requires patience and precision, qualities I apply to my code.",
+                passion_moto: "Motorcycles",
+                passion_moto_desc: "Freedom and responsibility. On the road as in a project, it's all about anticipation, trajectory, and risk management.",
+                passion_gym: "Bodybuilding",
+                passion_gym_desc: "Proof that constant effort pays off. No shortcuts. Just discipline, repetition, and iron will to progress.",
+                projects_title: "SELECTED WORKS",
+                btn_gallery: "Explore Gallery",
+                about_pre: "Vision & Journey",
+                about_title: "THE HUMAN BEHIND THE CODE",
+                about_p1: "Being a developer isn't enough. I am a solution creator obsessed with optimization.",
+                about_p2: "My coding approach is forged by my athletic discipline: repetition leads to perfection. Whether calculating a trajectory on a motorcycle or architecting an AI in an IDE, the goal remains the same: <strong>uncompromised performance.</strong>",
+                about_p3: "Currently in my 3rd year of CS Degree and apprentice at Alcatel-Lucent, I combine academic rigor with field reality. My ambition? Join an engineering school (ISEN) to push the boundaries of Artificial Intelligence.",
+                stat_xp: "Years XP",
+                stat_proj: "Shipped Projects",
+                stat_focus: "Commitment",
+                timeline_title: "TIMELINE",
+                time_freelance_sub: "Business Launch.",
+                time_ale_title: "AI Apprenticeship",
+                time_ale_sub: "AI & Data Developer at ALE.",
+                time_iut_sub: "Computer Science Degree.",
+                time_s3p_sub: "First Web Experience.",
+                contact_title: "LET'S TALK",
+                ph_name: "Your Name",
+                ph_email: "Your Email",
+                ph_msg: "Your Message...",
+                btn_send: "SEND"
+            }
+        };
 
-      const elementsToTranslate = {
-        pageTitle: document.getElementById('pageTitle'),
-        headerTitle: document.getElementById('headerTitle'),
-        headerSubtitle: document.getElementById('headerSubtitle'),
-        aboutTitle: document.getElementById('aboutTitle'),
-        aboutText: document.getElementById('aboutText'),
-        passionsTitle: document.getElementById('passionsTitle'),
-        passionWeb: document.getElementById('passionWeb'),
-        passionAI: document.getElementById('passionAI'),
-        passionPhoto: document.getElementById('passionPhoto'),
-        passionTech: document.getElementById('passionTech'),
-        skillsTitle: document.getElementById('skillsTitle'),
-        skill1Title: document.getElementById('skill1Title'),
-        skill1Desc: document.getElementById('skill1Desc'),
-        skill1Btn: document.getElementById('skill1Btn'),
-        skill2Title: document.getElementById('skill2Title'),
-        skill2Desc: document.getElementById('skill2Desc'),
-        skill2Btn: document.getElementById('skill2Btn'),
-        skill3Title: document.getElementById('skill3Title'),
-        skill3Desc: document.getElementById('skill3Desc'),
-        skill3Btn: document.getElementById('skill3Btn'),
-        skill4Title: document.getElementById('skill4Title'),
-        skill4Desc: document.getElementById('skill4Desc'),
-        skill4Btn: document.getElementById('skill4Btn'),
-        skill5Title: document.getElementById('skill5Title'),
-        skill5Desc: document.getElementById('skill5Desc'),
-        skill5Btn: document.getElementById('skill5Btn'),
-        skill6Title: document.getElementById('skill6Title'),
-        skill6Desc: document.getElementById('skill6Desc'),
-        skill6Btn: document.getElementById('skill6Btn'),
-        projectsTitle: document.getElementById('projectsTitle'),
-        project1Title: document.getElementById('project1Title'),
-        project1Desc: document.getElementById('project1Desc'),
-        project2Title: document.getElementById('project2Title'),
-        project2Desc: document.getElementById('project2Desc'),
-        project3Title: document.getElementById('project3Title'),
-        project3Desc: document.getElementById('project3Desc'),
-        journeyTitle: document.getElementById('journeyTitle'),
-        timeline2020Title: document.getElementById('timeline2020Title'),
-        timeline2020Desc: document.getElementById('timeline2020Desc'),
-        timeline2022Title: document.getElementById('timeline2022Title'),
-        timeline2022Desc: document.getElementById('timeline2022Desc'),
-        timeline2023Title: document.getElementById('timeline2023Title'),
-        timeline2023Desc: document.getElementById('timeline2023Desc'),
-        timeline2025Title: document.getElementById('timeline2025Title'),
-        timeline2025Desc: document.getElementById('timeline2025Desc'),
-        contactTitle: document.getElementById('contactTitle'),
-        contactBtn: document.getElementById('contactBtn'),
-        footerText: document.getElementById('footerText'),
-      };
+        // Données des Modales (Projets + Timeline + Skills)
+        const modalData = {
+            // PROJETS
+            proj_ia: {
+                fr: { title: 'Portfolio IA', desc: "Développement d'un chatbot interactif utilisant la technologie RAG (Retrieval-Augmented Generation).<br><br>Stack : Python, LangChain, OpenAI API.<br>Objectif : Rendre statique dynamique." },
+                en: { title: 'AI Portfolio', desc: "Development of an interactive chatbot using RAG (Retrieval-Augmented Generation) technology.<br><br>Stack: Python, LangChain, OpenAI API.<br>Goal: Make static dynamic." },
+                link: 'https://github.com/tonuser/portfolio-ia'
+            },
+            proj_dash: {
+                fr: { title: 'Dashboard Data', desc: "Plateforme de visualisation de données financières en temps réel.<br><br>Stack : React, D3.js, Python FastAPI.<br>Fonctionnalités : Analyse prédictive, graphiques dynamiques." },
+                en: { title: 'Data Dashboard', desc: "Real-time financial data visualization platform.<br><br>Stack: React, D3.js, Python FastAPI.<br>Features: Predictive analysis, dynamic charts." },
+                link: 'https://github.com/tonuser/dashboard'
+            },
+            proj_agents: {
+                fr: { title: 'Chatbot Agents', desc: "Orchestration d'agents autonomes pour automatiser des tâches complexes.<br><br>Concept : Multi-Agent Systems.<br>Résultat : +40% de productivité sur les tâches répétitives." },
+                en: { title: 'Agent Chatbot', desc: "Orchestration of autonomous agents to automate complex tasks.<br><br>Concept: Multi-Agent Systems.<br>Result: +40% productivity on repetitive tasks." },
+                link: 'https://github.com/tonuser/agents'
+            },
+            proj_saas: {
+                fr: { title: 'SaaS Immo', desc: "Plateforme SaaS B2B pour les agences immobilières incluant une IA de génération de description.<br><br>Stack : Next.js, Supabase, Stripe." },
+                en: { title: 'Real Estate SaaS', desc: "B2B SaaS platform for real estate agencies including AI description generation.<br><br>Stack: Next.js, Supabase, Stripe." },
+                link: 'https://github.com/tonuser/saas-immo'
+            },
+            proj_app: {
+                fr: { title: 'App Annonces', desc: "Marketplace complète type LeBonCoin repensée pour le mobile.<br><br>Focus : UX/UI et performance." },
+                en: { title: 'Classifieds App', desc: "Complete marketplace app rethought for mobile.<br><br>Focus: UX/UI and performance." },
+                link: 'https://github.com/tonuser/marketplace'
+            },
+            // TIMELINE
+            time_freelance: {
+                fr: { title: 'Freelance', desc: "<strong>2025 - Présent</strong><br><br>Lancement de mon activité indépendante. Je propose mon expertise technique aux startups et entreprises ambitieuses.<br><br>Services : Développement Web, Intégration IA, Stratégie Digitale." },
+                en: { title: 'Freelance', desc: "<strong>2025 - Present</strong><br><br>Launch of my independent activity. I offer technical expertise to ambitious startups and companies.<br><br>Services: Web Development, AI Integration, Digital Strategy." },
+                link: null
+            },
+            time_ale: {
+                fr: { title: 'Alternance IA', desc: "<strong>2024 - Alcatel-Lucent Enterprise</strong><br><br>Développeur au sein de l'équipe R&D.<br><br>Missions : <br>- Développement de pipelines de données.<br>- Intégration de modèles prédictifs.<br>- Création de dashboards décisionnels." },
+                en: { title: 'AI Apprenticeship', desc: "<strong>2024 - Alcatel-Lucent Enterprise</strong><br><br>Developer within the R&D team.<br><br>Missions: <br>- Data pipeline development.<br>- Predictive model integration.<br>- Creation of decision-making dashboards." },
+                link: null
+            },
+            time_iut: {
+                fr: { title: 'IUT Lannion', desc: "<strong>2021 - 2024</strong><br><br>BUT Informatique - Parcours Réalisation d'Applications.<br><br>Acquisition des fondamentaux solides :<br>- Algorithmique & Structures de données.<br>- Développement Web & Mobile.<br>- Gestion de projet Agile." },
+                en: { title: 'IUT Lannion', desc: "<strong>2021 - 2024</strong><br><br>Computer Science Degree - Application Development Track.<br><br>Acquisition of solid fundamentals:<br>- Algorithms & Data Structures.<br>- Web & Mobile Development.<br>- Agile Project Management." },
+                link: null
+            },
+            time_s3p: {
+                fr: { title: 'Stage S3Pweb', desc: "<strong>2020 - Stage Découverte</strong><br><br>Première immersion dans le monde professionnel du web.<br>Découverte des enjeux du développement frontend et de l'UX Design." },
+                en: { title: 'Internship S3Pweb', desc: "<strong>2020 - Discovery Internship</strong><br><br>First immersion in the professional web world.<br>Discovery of frontend development and UX Design challenges." },
+                link: null
+            },
+            // SKILLS MODALS
+            skill_manage: {
+                fr: { title: 'Conduire un projet', desc: "<strong>Méthodologies & Stratégie</strong><br><br>Pilotage de projet agile, de l'expression du besoin jusqu'à la livraison finale.<br><br>Expérience : Lancement d'activité Freelance et gestion de produits SaaS." },
+                en: { title: 'Project Leadership', desc: "<strong>Methodologies & Strategy</strong><br><br>Agile project management, from requirements to final delivery.<br><br>Experience: Freelance launch and SaaS product management." },
+                link: null
+            },
+            skill_collaborate: {
+                fr: { title: 'Collaborer', desc: "<strong>Travail d'équipe</strong><br><br>Intégration au sein d'équipes techniques (R&D).<br><br>Pratiques : Code Review, Git Flow, Documentation et communication technique efficace." },
+                en: { title: 'Collaboration', desc: "<strong>Teamwork</strong><br><br>Integration within technical teams (R&D).<br><br>Practices: Code Review, Git Flow, Documentation, and effective technical communication." },
+                link: null
+            }
+        };
 
-      for (const id in elementsToTranslate) {
-        if (elementsToTranslate[id]) {
-          elementsToTranslate[id].textContent = translations[lang][id];
+        let currentLang = localStorage.getItem('lang') || 'fr';
+
+        function setLanguage(lang) {
+            currentLang = lang;
+            localStorage.setItem('lang', lang);
+
+            // Update Text
+            document.querySelectorAll('[data-i18n]').forEach(el => {
+                const key = el.getAttribute('data-i18n');
+                if (translations[lang][key]) {
+                    // Check if it contains HTML tags
+                    if (translations[lang][key].includes('<')) {
+                        el.innerHTML = translations[lang][key];
+                    } else {
+                        el.textContent = translations[lang][key];
+                    }
+                }
+            });
+
+            // Update Placeholders
+            document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
+                const key = el.getAttribute('data-i18n-placeholder');
+                if (translations[lang][key]) {
+                    el.placeholder = translations[lang][key];
+                }
+            });
+
+            // Update Buttons State
+            document.querySelectorAll('.lang-btn').forEach(btn => btn.classList.remove('active'));
+            document.getElementById('btn-' + lang).classList.add('active');
         }
-      }
 
-      // Handle placeholders
-      document.getElementById('contactName').placeholder = translations[lang].contactNamePlaceholder;
-      document.getElementById('contactEmail').placeholder = translations[lang].contactEmailPlaceholder;
-      document.getElementById('contactMessage').placeholder = translations[lang].contactMessagePlaceholder;
+        // Init Language on Load
+        setLanguage(currentLang);
 
-      // Update project modal description based on selected card's data-description attribute
-      // This will be handled when the modal is opened, but we need to ensure the attribute is correct
-      document.querySelectorAll('.project-card').forEach(card => {
-        card.addEventListener('click', () => {
-          modalDescription.textContent = card.dataset['description-' + lang];
-          modalTitle.textContent = card.querySelector('h3').textContent; // Title is updated from its own textContent
+
+        // 1. LENIS (SCROLL)
+        const lenis = new Lenis();
+        function raf(time) { lenis.raf(time); requestAnimationFrame(raf); }
+        requestAnimationFrame(raf);
+
+        // 2. FONCTION MODALE (Mise à jour pour gérer les ID de langue)
+        const modal = document.getElementById('modalOverlay');
+        const modalTitle = document.getElementById('modalTitle');
+        const modalDesc = document.getElementById('modalDesc');
+        const modalLink = document.getElementById('modalLink');
+
+        window.openModal = function(key) {
+            // On récupère les données basées sur la clé et la langue actuelle
+            const data = modalData[key];
+            if (!data) return;
+
+            const content = data[currentLang]; // fr ou en
+
+            modalTitle.textContent = content.title;
+            modalDesc.innerHTML = content.desc;
+            
+            if (data.link && data.link !== '') {
+                modalLink.href = data.link; 
+                modalLink.style.display = 'inline-block';
+            } else { 
+                modalLink.style.display = 'none'; 
+            }
+            modal.classList.add('active');
+        };
+
+        document.getElementById('closeModal').addEventListener('click', () => modal.classList.remove('active'));
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) modal.classList.remove('active');
         });
-      });
 
-      // Gérer la classe active pour les drapeaux
-      document.querySelectorAll('.language-switcher img').forEach(img => {
-        img.classList.remove('active-lang');
-      });
-      document.getElementById('lang-' + lang).classList.add('active-lang');
-    }
-
-    // On attend que tout le contenu de la page soit chargé avant d'exécuter le script
-    document.addEventListener('DOMContentLoaded', () => {
-      const savedLang = localStorage.getItem('lang') || 'fr'; // 'fr' par défaut
-      setLanguage(savedLang);
-
-      /* === Fond animé avec particules interactives === */
-      const canvas = document.getElementById("bgCanvas");
-      const ctx = canvas.getContext("2d");
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
-
-      let particles = Array.from({length: 120}, () => ({
-        x: Math.random() * canvas.width,
-        y: Math.random() * canvas.height,
-        radius: Math.random() * 2 + 1,
-        dx: (Math.random() - 0.5) * 0.3,
-        dy: (Math.random() - 0.5) * 0.3
-      }));
-
-      let mouse = { x: canvas.width / 2, y: canvas.height / 2 };
-
-      window.addEventListener("mousemove", e => {
-        mouse.x = e.clientX;
-        mouse.y = e.clientY;
-      });
-
-      function animate() {
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-        particles.forEach(p => {
-          let dx = mouse.x - p.x;
-          let dy = mouse.y - p.y;
-          let dist = Math.sqrt(dx*dx + dy*dy);
-          if (dist < 150) {
-            p.x -= dx * 0.005;
-            p.y -= dy * 0.005;
-          }
-
-          ctx.beginPath();
-          ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
-          ctx.fillStyle = "#00ffe5";
-          ctx.shadowColor = "#00ffe5";
-          ctx.shadowBlur = 15;
-          ctx.fill();
-
-          p.x += p.dx;
-          p.y += p.dy;
-          if (p.x < 0 || p.x > canvas.width) p.dx *= -1;
-          if (p.y < 0 || p.y > canvas.height) p.dy *= -1;
+        // 3. SWIPER (PROJETS)
+        const swiper = new Swiper('.project-swiper', {
+            effect: 'coverflow',
+            grabCursor: true,
+            centeredSlides: true,
+            slidesPerView: 'auto',
+            loop: false,
+            speed: 600,
+            keyboard: { enabled: true },
+            mousewheel: { forceToAxis: true },
+            navigation: { nextEl: '.swiper-button-next', prevEl: '.swiper-button-prev' },
+            coverflowEffect: { rotate: 0, stretch: 0, depth: 150, modifier: 1.5, slideShadows: true },
+            pagination: { el: '.swiper-pagination', clickable: true }
         });
-        requestAnimationFrame(animate);
-      }
-      animate();
 
-      /* === Animations au défilement (UN SEUL OBSERVER) === */
-      const animatedElements = document.querySelectorAll("section, .timeline-item, .competence-card");
-
-      const observer = new IntersectionObserver(entries => {
-        entries.forEach(entry => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add("visible");
-            // Ne pas unobserve si on veut que les éléments réapparaissent en scrollant de nouveau
-            // observer.unobserve(entry.target); 
-          } else {
-            // Optionnel: remove 'visible' if scrolling away
-            entry.target.classList.remove("visible");
-          }
+        // 4. SWIPER (COMPETENCES)
+        const skillsSwiper = new Swiper('.skills-swiper', {
+            slidesPerView: 'auto',
+            spaceBetween: 30,
+            grabCursor: true,
+            freeMode: true,
+            mousewheel: { forceToAxis: true },
         });
-      }, {threshold: 0.15});
 
-      animatedElements.forEach(el => observer.observe(el));
+        // 5. SCROLL TO PROJECT
+        window.scrollToProject = function(index) {
+            const projectsSection = document.getElementById('projects');
+            lenis.scrollTo(projectsSection, { offset: -50 });
+            swiper.slideTo(index);
+        };
 
-      /* === Flèche de retour === */
-      const backArrow = document.getElementById("backArrow");
-      const overlay = document.getElementById("overlay");
-
-      backArrow.addEventListener("click", () => {
-        overlay.classList.add("active");
-        setTimeout(() => {
-          window.location.href = "../index.html";
-        }, 1500);
-      });
-
-
-      /* ==== SCRIPT POUR LA MODALE ==== */
-      const projectCards = document.querySelectorAll('.project-card');
-      const modalOverlay = document.getElementById('modalOverlay');
-      const projectModal = document.getElementById('projectModal');
-      const modalClose = document.getElementById('modalClose');
-      const modalTitle = document.getElementById('modalTitle');
-      const modalDescription = document.getElementById('modalDescription');
-
-      projectCards.forEach(card => {
-        card.addEventListener('click', () => {
-          const currentLang = localStorage.getItem('lang') || 'fr';
-          const title = card.querySelector('h3').textContent;
-          const description = card.dataset['description-' + currentLang];
-
-          modalTitle.textContent = title;
-          modalDescription.textContent = description;
-
-          modalOverlay.classList.add('active');
-          projectModal.classList.add('active');
+        // 6. GSAP ANIMATIONS
+        gsap.registerPlugin(ScrollTrigger);
+        gsap.to(".timeline-progress", {
+            height: "100%", ease: "none",
+            scrollTrigger: { trigger: ".timeline-section", start: "top center", end: "bottom center", scrub: true }
         });
-      });
 
-      function closeModal() {
-        modalOverlay.classList.remove('active');
-        projectModal.classList.remove('active');
-      }
+        gsap.utils.toArray('.timeline-row').forEach(row => {
+            const isRight = row.classList.contains('right');
+            gsap.from(row.querySelector('.timeline-content'), {
+                x: isRight ? 100 : -100, opacity: 0, duration: 1, ease: "power3.out",
+                scrollTrigger: { trigger: row, start: "top 80%", toggleActions: "play none none reverse" }
+            });
+            ScrollTrigger.create({
+                trigger: row, start: "top 60%", end: "bottom 60%",
+                onEnter: () => row.classList.add('active'),
+                onLeave: () => row.classList.remove('active'),
+                onEnterBack: () => row.classList.add('active'),
+                onLeaveBack: () => row.classList.remove('active')
+            });
+        });
 
-      modalClose.addEventListener('click', closeModal);
-      modalOverlay.addEventListener('click', (e) => {
-          if (e.target === modalOverlay) {
-              closeModal();
-          }
-      });
-    });
-  </script>
+        gsap.from(".hero h1", { y: 100, opacity: 0, duration: 1.5, ease: "power4.out", delay: 0.5 });
+        gsap.to("#parallax-bg", {
+            y: "20%", ease: "none",
+            scrollTrigger: { trigger: ".photo-section", start: "top bottom", end: "bottom top", scrub: true }
+        });
+
+        // 7. CURSOR
+        const cursor = document.getElementById('cursor');
+        document.addEventListener('mousemove', e => {
+            gsap.to(cursor, { x: e.clientX, y: e.clientY, duration: 0.1 });
+        });
+        const interactives = '.hover-trigger, a, button, .project-card, .timeline-content, .swiper-button-prev, .swiper-button-next, .skill-box, .passion-card, .skills-swiper, .about-image';
+        document.querySelectorAll(interactives).forEach(el => {
+            el.addEventListener('mouseenter', () => cursor.classList.add('hovered'));
+            el.addEventListener('mouseleave', () => cursor.classList.remove('hovered'));
+        });
+
+        // 8. PARTICLES
+        const canvas = document.getElementById("bgCanvas");
+        const ctx = canvas.getContext("2d");
+        const resize = () => { canvas.width = window.innerWidth; canvas.height = window.innerHeight; };
+        window.addEventListener('resize', resize); resize();
+        let particles = Array.from({length: 40}, () => ({
+            x: Math.random() * canvas.width, y: Math.random() * canvas.height,
+            vx: (Math.random() - 0.5) * 0.5, vy: (Math.random() - 0.5) * 0.5
+        }));
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            particles.forEach(p => {
+                p.x += p.vx; p.y += p.vy;
+                if(p.x < 0 || p.x > canvas.width) p.vx *= -1;
+                if(p.y < 0 || p.y > canvas.height) p.vy *= -1;
+                ctx.beginPath(); ctx.arc(p.x, p.y, 1.5, 0, Math.PI*2);
+                ctx.fillStyle = "rgba(255,255,255,0.5)"; ctx.fill();
+            });
+            requestAnimationFrame(animate);
+        }
+        animate();
+    </script>
 </body>
 </html>

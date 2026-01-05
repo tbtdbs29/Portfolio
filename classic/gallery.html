@@ -3,489 +3,359 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title id="pageTitle">Galerie - Portfolio de Thibault</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <title>Thibault - Galerie Automatique</title>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Raleway:wght@300;400&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <style>
         :root {
             --accent-color: #D4AF37;
-            --background-color: #0A0A0A; /* Un noir plus profond */
+            --background-color: #0A0A0A;
             --text-color: #EAEAEA;
-            --faded-text-color: #A0A0A0;
-            --card-bg-color: #1A1A1A;
             --font-title: 'Playfair Display', serif;
             --font-body: 'Raleway', sans-serif;
-            --transition-speed: 0.8s;
-            --easing: cubic-bezier(0.25, 1, 0.5, 1);
+            --v-transition: 1.2s;
+            --h-transition: 1s;
         }
-
         * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { background: var(--background-color); color: var(--text-color); font-family: var(--font-body); overflow: hidden; }
 
-        html { scroll-behavior: smooth; }
+        /* --- ÉCRAN DE CHARGEMENT --- */
+        #loader-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background-color: #050505; z-index: 9999;
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
+            transition: opacity 0.8s ease-out, visibility 0.8s;
+        }
+        .loader-spinner {
+            width: 50px; height: 50px; border: 3px solid rgba(212, 175, 55, 0.3);
+            border-radius: 50%; border-top-color: var(--accent-color);
+            animation: spin 1s ease-in-out infinite; margin-bottom: 20px;
+        }
+        .loader-text { font-family: var(--font-body); font-size: 1.1rem; color: #ccc; animation: pulse 2s infinite; }
+        .loader-logs { font-size: 0.8rem; color: #666; margin-top: 15px; font-family: monospace; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        @keyframes pulse { 50% { opacity: 0.5; } }
 
-        body {
-            font-family: var(--font-body);
-            color: var(--text-color);
-            background: var(--background-color);
-            overflow-x: hidden;
-        }
-        
-        /* ---- Flèche de retour et Overlay (Style amélioré) ---- */
-        .back-arrow {
-            position: fixed; top: 30px; left: 30px; font-size: 2rem; color: var(--text-color);
-            cursor: pointer; z-index: 2000;
-            transition: transform 0.3s, color 0.3s;
-        }
-        .back-arrow:hover { transform: scale(1.2); color: var(--accent-color); }
-        .overlay {
+        /* --- CONTAINER --- */
+        #immersive-container {
             position: fixed; top: 0; left: 0; width: 100%; height: 100vh;
-            background: var(--background-color);
-            z-index: 1999; pointer-events: none;
-            transform: translateY(100%);
-            transition: transform 1s cubic-bezier(0.83, 0, 0.17, 1);
+            opacity: 0; transition: opacity 1s ease;
         }
-        .overlay.active { transform: translateY(0); }
+        #immersive-container.loaded { opacity: 1; }
 
+        /* --- STYLES GALERIE --- */
+        .category-slide {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            opacity: 0; transform: scale(1.1); pointer-events: none; background: #000;
+            transition: transform var(--v-transition), opacity var(--v-transition);
+        }
+        .category-slide.active { opacity: 1; transform: scale(1); z-index: 2; pointer-events: auto; }
+        .category-slide.previous { opacity: 1; z-index: 1; }
+        .category-slide.is-leaving { transform: scale(0.95); opacity: 0; }
 
-        /* ---- HERO CINEMATIQUE AVEC PARALLAXE ---- */
-        .hero {
-            height: 100vh;
-            position: relative;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            overflow: hidden;
+        .gallery-slide {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            opacity: 0; transform: translateX(100px); z-index: 1;
+            display: flex; justify-content: center; align-items: center; overflow: hidden;
+            transition: transform var(--h-transition), opacity var(--h-transition);
         }
-        .hero-background {
-            position: absolute; top: 0; left: 0;
-            width: 100%; height: 100%;
-            background-image: url('https://image.pollinations.ai/prompt/sunset%20over%20ocean%20with%20sunrays%2C%20calm%20water%2C%20cinematic%2C%20golden%20hour?width=1600&height=900&seed=234');
-            background-size: cover;
-            background-position: center;
-            filter: brightness(0.6);
-            transform: scale(1.1); /* Légèrement zoomé pour l'effet */
-            transition: transform 1s var(--easing);
-        }
-        .hero-content {
-            z-index: 2;
-            text-align: center;
-            transform: translateY(0);
-            transition: transform 1s var(--easing), opacity 1s var(--easing);
-        }
-        .hero h1 {
-            font-family: var(--font-title);
-            font-size: clamp(2.5rem, 8vw, 6rem); /* Responsive */
-            color: white;
-            text-transform: uppercase;
-            overflow: hidden; /* Pour l'animation d'apparition */
-            line-height: 1.2;
-        }
-        .hero h1 .line-inner {
-            display: block;
-            transform: translateY(110%);
-            transition: transform 1.5s cubic-bezier(0.83, 0, 0.17, 1) 0.3s;
-        }
-        .scroll-down-indicator {
-            position: absolute; bottom: 30px; z-index: 2; color: white;
-            font-size: 1rem; text-transform: uppercase; letter-spacing: 2px;
-            opacity: 0;
-            transform: translateY(20px);
-            transition: opacity 1s 1.5s, transform 1s 1.5s;
-        }
-        /* ---- Animation au chargement de la page ---- */
-        body.loaded .hero h1 .line-inner { transform: translateY(0); }
-        body.loaded .scroll-down-indicator { opacity: 1; transform: translateY(0); }
+        .gallery-slide.active { opacity: 1; transform: translateX(0); z-index: 2; }
+        .gallery-slide.is-leaving-left { transform: translateX(-100px); opacity: 0; }
+        .gallery-slide.is-leaving-right { transform: translateX(100px); opacity: 0; }
 
-
-        /* ---- SECTIONS AVEC ANIMATIONS DE SCROLL COMPLEXES ---- */
-        .content-section {
-            padding: 8rem 5%;
-            max-width: 1200px;
-            margin: 0 auto;
-            position: relative;
-        }
-        .section-title {
-            font-family: var(--font-title);
-            font-size: clamp(2rem, 6vw, 3.5rem);
-            color: var(--accent-color);
-            margin-bottom: 3rem;
-            text-align: center;
-            opacity: 0;
-            transform: translateY(40px);
-            transition: opacity 1s, transform 1s;
-        }
-        .content-section.is-inview .section-title {
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        /* ---- Section Présentation ---- */
-        .presentation-text {
-            font-size: clamp(1.1rem, 2.5vw, 1.4rem);
-            line-height: 1.8;
-            color: var(--faded-text-color);
-            text-align: center;
-            max-width: 800px;
-            margin: 0 auto;
-            opacity: 0;
-            transform: translateY(40px);
-            transition: opacity 1s 0.2s, transform 1s 0.2s;
-        }
-        .content-section.is-inview .presentation-text {
-            opacity: 1;
-            transform: translateY(0);
-        }
+        /* Modes d'affichage */
+        .landscape-mode { background-size: cover; background-position: center; width: 100%; height: 100%; }
         
-        /* ---- NOUVELLE SECTION HORIZONTALE "Matériel" ---- */
-        .horizontal-scroll-section {
-            height: 100vh;
-            position: relative;
+        .portrait-grid {
+            display: flex; flex-direction: row; justify-content: center; align-items: center; gap: 2vw;
+            width: 100%; height: 100%; padding: 5%;
+            background: radial-gradient(circle at center, #1a1a1a 0%, #000 100%);
         }
-        .sticky-wrapper {
-            position: sticky;
-            top: 0;
-            height: 100vh;
-            width: 100%;
-            overflow: hidden;
+        .portrait-img {
+            height: 70vh; width: auto; max-width: 30vw; object-fit: cover;
+            border-radius: 4px; box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            transition: transform 0.4s ease;
         }
-        .horizontal-content {
-            display: flex;
-            align-items: center;
-            height: 100%;
-            width: 300%; /* Ajuster selon le nombre d'éléments */
-            padding: 0 10%;
-            transform: translateX(0); /* Sera modifié par JS */
-        }
-        .gear-card {
-            flex: 0 0 33.33%;
-            padding: 2rem;
-            text-align: center;
-        }
-        .gear-card .fas {
-            font-size: 5rem;
-            color: var(--accent-color);
-            margin-bottom: 2rem;
-            transition: transform 0.5s;
-        }
-        .gear-card h3 {
-            font-family: var(--font-body);
-            font-weight: 400;
-            font-size: 1.5rem;
-            color: var(--text-color);
-        }
-        .gear-card p {
-            font-size: 1.1rem;
-            color: var(--faded-text-color);
-        }
-        /* Animation sur les cartes pendant le scroll horizontal */
-        .gear-card.is-active .fas {
-            transform: scale(1.2) rotate(-5deg);
-        }
+        .portrait-img:hover { transform: scale(1.05); z-index: 10; }
 
-        /* ---- GALERIE PHOTO "WOW" ---- */
-        .gallery-container {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 2rem;
-            padding-top: 4rem;
+        /* Textes */
+        .category-content {
+            position: absolute; bottom: 5%; left: 50%; transform: translateX(-50%);
+            z-index: 10; text-align: center; color: white; opacity: 0; pointer-events: none;
+            transition: opacity 1s 0.5s ease;
         }
-        .gallery-item {
-            position: relative;
-            overflow: hidden;
-            border-radius: 5px;
-            cursor: pointer;
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.7);
-            opacity: 0;
-            transform: translateY(80px) scale(0.95);
-            transition: transform 0.8s var(--easing), box-shadow 0.4s ease, opacity 0.8s var(--easing);
-        }
-        .content-section.is-inview .gallery-item {
-            opacity: 1;
-            transform: translateY(0) scale(1);
-        }
-        /* Délai d'animation pour un effet de cascade */
-        .content-section.is-inview .gallery-item:nth-child(2) { transition-delay: 0.1s; }
-        .content-section.is-inview .gallery-item:nth-child(3) { transition-delay: 0.2s; }
-        .content-section.is-inview .gallery-item:nth-child(4) { transition-delay: 0.3s; }
-        .content-section.is-inview .gallery-item:nth-child(5) { transition-delay: 0.05s; }
-        .content-section.is-inview .gallery-item:nth-child(6) { transition-delay: 0.15s; }
-        .content-section.is-inview .gallery-item:nth-child(7) { transition-delay: 0.25s; }
-        .content-section.is-inview .gallery-item:nth-child(8) { transition-delay: 0.35s; }
+        .category-slide.active .category-content { opacity: 1; }
+        .category-title { font-family: var(--font-title); font-size: 4rem; margin-bottom: 0.5rem; text-shadow: 0 5px 15px rgba(0,0,0,0.8); }
+        .category-subtitle { font-family: var(--font-body); letter-spacing: 3px; color: var(--accent-color); text-transform: uppercase; }
+        .paginator { margin-top:10px; font-size: 1.2rem; }
 
-
-        .gallery-item img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            display: block;
-            transition: transform 0.6s var(--easing);
+        /* Navigation */
+        .nav-arrow {
+            position: fixed; top: 50%; transform: translateY(-50%);
+            z-index: 100; font-size: 2.5rem; color: rgba(255,255,255,0.6);
+            opacity: 0; cursor: pointer; padding: 15px; border-radius: 50%;
+            background: rgba(0,0,0,0.2); transition: 0.3s;
         }
-        .gallery-item:hover {
-            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.9);
-            transform: translateY(-5px);
-        }
-        .gallery-item:hover img {
-            transform: scale(1.05);
-        }
-        .gallery-item .overlay-text {
-            position: absolute;
-            bottom: 0; left: 0; right: 0;
-            padding: 1.5rem;
-            background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
-            color: white;
-            transform: translateY(100%);
-            transition: transform 0.6s var(--easing);
-        }
-        .gallery-item:hover .overlay-text {
-            transform: translateY(0);
-        }
-
-        /* ---- LIGHTBOX (Style amélioré) ---- */
-        .lightbox { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 3000; display: flex; justify-content: center; align-items: center; opacity: 0; pointer-events: none; transition: opacity 0.4s ease; backdrop-filter: blur(5px); }
-        .lightbox.active { opacity: 1; pointer-events: auto; }
-        .lightbox img { max-width: 90%; max-height: 85%; border-radius: 5px; box-shadow: 0 0 60px rgba(212, 175, 55, 0.4); transform: scale(0.8); transition: transform 0.4s cubic-bezier(0.165, 0.84, 0.44, 1); }
-        .lightbox.active img { transform: scale(1); }
-        .lightbox-close { position: absolute; top: 30px; right: 40px; font-size: 3rem; color: white; cursor: pointer; transition: transform 0.3s, color 0.3s; }
-        .lightbox-close:hover { transform: rotate(90deg); color: var(--accent-color); }
+        .nav-arrow:hover { background: rgba(255,255,255,0.2); color: #fff; }
+        .nav-arrow.left { left: 30px; }
+        .nav-arrow.right { right: 30px; }
+        .category-slide.active.has-multiple-slides ~ .nav-arrow { opacity: 1; }
         
-        /* ---- LANGUES ---- */
-        .language-switcher { position: fixed; bottom: 20px; right: 20px; z-index: 100; display: flex; gap: 10px; }
-        .language-switcher img { width: 30px; height: 30px; border-radius: 50%; box-shadow: 0 0 8px rgba(0,0,0,0.5); cursor: pointer; transition: transform 0.2s ease, box-shadow 0.2s ease; border: 2px solid transparent; }
-        .language-switcher img:hover { transform: scale(1.1); box-shadow: 0 0 15px rgba(0,0,0,1); }
-        .language-switcher img.active-lang { border-color: var(--accent-color); box-shadow: 0 0 15px var(--accent-color); }
-
-        /* ---- RESPONSIVE ---- */
-        @media (max-width: 900px) {
-            .horizontal-content { width: 500%; } /* Moins d'éléments visibles à la fois */
-            .gear-card { flex: 0 0 20%; }
-        }
-        @media (max-width: 600px) {
-            .content-section { padding: 6rem 5%; }
-            .horizontal-content { flex-direction: column; width: 100%; height: auto; padding: 4rem 0; }
-            .horizontal-scroll-section, .sticky-wrapper { height: auto; }
-            .sticky-wrapper { position: static; }
-            .gear-card { padding: 3rem 1rem; }
-        }
+        .back-btn { position: fixed; top: 30px; left: 30px; z-index: 200; color: white; text-decoration: none; font-size: 1.2rem; opacity: 0.7; }
+        
+        .error-msg { color: red; font-size: 1.5rem; text-align: center; margin-top: 20px; }
     </style>
 </head>
 <body>
-    <div class="back-arrow" id="backArrow">⬅</div>
-    <div class="overlay" id="page-transition-overlay"></div>
 
-    <header class="hero">
-        <div class="hero-background" id="hero-bg"></div>
-        <div class="hero-content" id="hero-content">
-            <h1 id="mainTitle"><span class="line-inner">Ma Passion : L'Image</span></h1>
-        </div>
-        <div class="scroll-down-indicator">
-            <span id="scrollText">SCROLL</span>
-        </div>
-    </header>
-
-    <main>
-        <section class="content-section" id="presentation">
-            <h2 class="section-title" id="presentationTitle">Présentation</h2>
-            <p class="presentation-text" id="presentationText">
-                Plus qu'un hobby, la photo et la vidéo sont mes terrains de jeu créatifs. J'aime capturer l'instant, raconter une histoire en image ou en montage. C'est un univers où la technique rencontre la créativité, et où chaque projet est une nouvelle aventure.
-            </p>
-        </section>
-
-        <section class="horizontal-scroll-section" id="gear">
-            <div class="sticky-wrapper">
-                <div class="horizontal-content">
-                    <div class="gear-card" data-index="0">
-                        <i class="fas fa-camera"></i>
-                        <h3 id="gearItem1_title">Boîtier</h3>
-                        <p id="gearItem1_desc">Sony Alpha 7 IV</p>
-                    </div>
-                    <div class="gear-card" data-index="1">
-                        <i class="fas fa-video"></i>
-                        <h3 id="gearItem2_title">Action Cam</h3>
-                        <p id="gearItem2_desc">GoPro Hero 11</p>
-                    </div>
-                    <div class="gear-card" data-index="2">
-                        <i class="fas fa-camera-retro"></i>
-                        <h3 id="gearItem3_title">Objectif</h3>
-                        <p id="gearItem3_desc">Sigma 24-70mm f/2.8</p>
-                    </div>
-                    <div class="gear-card" data-index="3">
-                        <i class="fas fa-rocket"></i>
-                        <h3 id="gearItem4_title">Drone</h3>
-                        <p id="gearItem4_desc">DJI Mavic Air 2S</p>
-                    </div>
-                    <div class="gear-card" data-index="4">
-                        <i class="fas fa-microphone-alt"></i>
-                        <h3 id="gearItem5_title">Audio</h3>
-                        <p id="gearItem5_desc">Rode VideoMic Pro+</p>
-                    </div>
-                </div>
-            </div>
-        </section>
-        
-        <section class="content-section" id="creations">
-            <h2 class="section-title" id="creationsTitle">Mes Créations</h2>
-            <div class="gallery-container">
-                <div class="gallery-item"><img src="https://images.unsplash.com/photo-1506748686214-e9df14d4d9d0?ixlib=rb-1.2.1&q=80&fm=jpg&crop=entropy&cs=tinysrgb&w=800" alt="Paysage de montagnes brumeuses"><div class="overlay-text">Montagnes Brumeuses</div></div>
-                <div class="gallery-item"><img src="https://images.unsplash.com/photo-1518173946687-a4c8892bbd9f?ixlib=rb-1.2.1&q=80&fm=jpg&crop=entropy&cs=tinysrgb&w=800" alt="Forêt dense avec rayons de soleil"><div class="overlay-text">Rayons Divins</div></div>
-                <div class="gallery-item"><img src="https://images.unsplash.com/photo-1470770841072-f978cf4d019e?ixlib=rb-1.2.1&q=80&fm=jpg&crop=entropy&cs=tinysrgb&w=800" alt="Maison au bord d'un lac alpin"><div class="overlay-text">Sérénité Alpine</div></div>
-                <div class="gallery-item"><img src="https://images.unsplash.com/photo-1505144808419-1957a94ca61e?ixlib=rb-1.2.1&q=80&fm=jpg&crop=entropy&cs=tinysrgb&w=800" alt="Personne sur une balançoire face à la mer"><div class="overlay-text">Liberté Océane</div></div>
-                <div class="gallery-item"><img src="https://images.unsplash.com/photo-1475924156734-496f6cac6ec1?ixlib=rb-1.2.1&q=80&fm=jpg&crop=entropy&cs=tinysrgb&w=800" alt="Plage au lever du soleil"><div class="overlay-text">Aube Dorée</div></div>
-                <div class="gallery-item"><img src="https://images.unsplash.com/photo-1447752875215-b2761acb3c5d?ixlib=rb-1.2.1&q=80&fm=jpg&crop=entropy&cs=tinysrgb&w=800" alt="Sentier forestier en automne"><div class="overlay-text">Sentier d'Automne</div></div>
-                <div class="gallery-item"><img src="https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?ixlib=rb-1.2.1&q=80&fm=jpg&crop=entropy&cs=tinysrgb&w=800" alt="Ciel nocturne étoilé sur des montagnes"><div class="overlay-text">Nuit Étoilée</div></div>
-                <div class="gallery-item"><img src="https://images.unsplash.com/photo-1501854140801-50d01698950b?ixlib=rb-1.2.1&q=80&fm=jpg&crop=entropy&cs=tinysrgb&w=800" alt="Paysage de rizières en terrasses"><div class="overlay-text">Champs en Terrasses</div></div>
-            </div>
-        </section>
-    </main>
-
-    <div class="lightbox" id="lightbox">
-        <span class="lightbox-close" id="lightbox-close">&times;</span>
-        <img src="" alt="Image agrandie" id="lightbox-img">
+    <div id="loader-overlay">
+        <div class="loader-spinner"></div>
+        <div class="loader-text">Analyse et chargement des photos...</div>
+        <div id="loader-logs" class="loader-logs">Connexion au serveur...</div>
     </div>
 
-    <div class="language-switcher">
-        <img src="../assets/fr.png" alt="Français" onclick="setLanguage('fr')" id="lang-fr">
-        <img src="../assets/en.png" alt="English" onclick="setLanguage('en')" id="lang-en">
-    </div>
+    <a href="index.html" class="back-btn">← Retour</a>
+
+    <div id="immersive-container"></div>
+    
+    <div class="nav-arrow left" id="btnLeft">&#10094;</div>
+    <div class="nav-arrow right" id="btnRight">&#10095;</div>
 
     <script>
-        const translations = {
-            fr: {
-                pageTitle: "Galerie - Portfolio de Thibault",
-                mainTitle: "<span class='line-inner'>Ma Passion : L'Image</span>",
-                scrollText: "DÉCOUVRIR",
-                presentationTitle: "Présentation",
-                presentationText: "Plus qu'un hobby, la photo et la vidéo sont mes terrains de jeu créatifs. J'aime capturer l'instant, raconter une histoire en image ou en montage. C'est un univers où la technique rencontre la créativité, et où chaque projet est une nouvelle aventure.",
-                gearItem1_title: "Boîtier", gearItem1_desc: "Sony Alpha 7 IV",
-                gearItem2_title: "Action Cam", gearItem2_desc: "GoPro Hero 11",
-                gearItem3_title: "Objectif", gearItem3_desc: "Sigma 24-70mm f/2.8",
-                gearItem4_title: "Drone", gearItem4_desc: "DJI Mavic Air 2S",
-                gearItem5_title: "Audio", gearItem5_desc: "Rode VideoMic Pro+",
-                creationsTitle: "Mes Créations"
-            },
-            en: {
-                pageTitle: "Gallery - Thibault's Portfolio",
-                mainTitle: "<span class='line-inner'>My Passion: The Image</span>",
-                scrollText: "SCROLL",
-                presentationTitle: "Introduction",
-                presentationText: "More than a hobby, photography and videography are my creative playgrounds. I love to capture the moment, tell a story in a single image or through a dynamic edit. It's a universe where technique meets creativity, and where every project is a new adventure.",
-                gearItem1_title: "Body", gearItem1_desc: "Sony Alpha 7 IV",
-                gearItem2_title: "Action Cam", gearItem2_desc: "GoPro Hero 11",
-                gearItem3_title: "Lens", gearItem3_desc: "Sigma 24-70mm f/2.8",
-                gearItem4_title: "Drone", gearItem4_desc: "DJI Mavic Air 2S",
-                gearItem5_title: "Audio", gearItem5_desc: "Rode VideoMic Pro+",
-                creationsTitle: "My Creations"
-            }
-        };
+        const API_URL = "http://localhost:3000"; // Adresse de ton serveur Node.js
 
-        function setLanguage(lang) {
-            localStorage.setItem('lang', lang);
-            document.documentElement.lang = lang;
-            
-            Object.keys(translations[lang]).forEach(key => {
-                const element = document.getElementById(key);
-                if (element) {
-                    // Utiliser innerHTML pour les titres qui contiennent des balises span
-                    if (key === 'mainTitle') {
-                        element.innerHTML = translations[lang][key];
-                    } else {
-                        element.textContent = translations[lang][key];
-                    }
-                }
+        // Configuration des catégories
+        const categoriesConfig = [
+            { id: 'voyage', title: 'Voyages', subtitle: 'Exploration' },
+            { id: 'evt', title: 'Événements', subtitle: 'Moments Capturés' }
+        ];
+
+        const container = document.getElementById('immersive-container');
+        const loaderLogs = document.getElementById('loader-logs');
+        let generatedCategories = [];
+
+        // Fonction utilitaire pour charger une image et récupérer ses dimensions
+        function getImageMeta(url) {
+            return new Promise((resolve, reject) => {
+                const img = new Image();
+                img.onload = () => resolve({ url, width: img.naturalWidth, height: img.naturalHeight, orientation: img.naturalWidth > img.naturalHeight ? 'landscape' : 'portrait' });
+                img.onerror = () => { console.warn("Image échec:", url); resolve(null); }; // On ignore les erreurs pour ne pas bloquer
+                img.src = url;
             });
-
-            document.querySelectorAll('.language-switcher img').forEach(img => img.classList.remove('active-lang'));
-            document.getElementById(`lang-${lang}`).classList.add('active-lang');
         }
 
-        document.addEventListener('DOMContentLoaded', () => {
-            const savedLang = localStorage.getItem('lang') || 'fr';
-            setLanguage(savedLang);
-
-            // ---- ANIMATION D'ENTRÉE ----
-            setTimeout(() => {
-                document.body.classList.add('loaded');
-            }, 100);
-
-            // ---- EFFETS DE SCROLL ----
-            const heroBG = document.getElementById('hero-bg');
-            const heroContent = document.getElementById('hero-content');
-
-            const observer = new IntersectionObserver(entries => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        entry.target.classList.add("is-inview");
+        async function initGallery() {
+            try {
+                for (let catConfig of categoriesConfig) {
+                    loaderLogs.textContent = `Récupération dossier : ${catConfig.title}...`;
+                    
+                    // 1. Demander la liste des fichiers au serveur
+                    const res = await fetch(`${API_URL}/api/photos/${catConfig.id}`);
+                    if (!res.ok) throw new Error(`Erreur serveur pour ${catConfig.id}`);
+                    const data = await res.json();
+                    
+                    if (!data.images || data.images.length === 0) {
+                        console.log(`Aucune image dans ${catConfig.id}`);
+                        continue;
                     }
-                });
-            }, { threshold: 0.2, rootMargin: "0px 0px -50px 0px" });
 
-            document.querySelectorAll(".content-section").forEach(el => observer.observe(el));
-            
-            // ---- PARALLAXE HERO ----
-            window.addEventListener('scroll', () => {
-                const scrollY = window.scrollY;
-                heroBG.style.transform = `scale(1.1) translateY(${scrollY * 0.4}px)`;
-                heroContent.style.transform = `translateY(${scrollY * 0.6}px)`;
-                heroContent.style.opacity = 1 - (scrollY / (window.innerHeight * 0.7));
-            });
+                    // 2. Analyser les images (dimensions) pour le tri
+                    loaderLogs.textContent = `Tri automatique : ${catConfig.title} (${data.images.length} photos)...`;
+                    
+                    const imagePromises = data.images.map(filename => {
+                        // On utilise l'URL statique servie par le serveur
+                        return getImageMeta(`${API_URL}/assets/${catConfig.id}/${filename}`);
+                    });
 
-            // ---- SCROLL HORIZONTAL ----
-            const horizontalSection = document.getElementById('gear');
-            const stickyWrapper = horizontalSection.querySelector('.sticky-wrapper');
-            const horizontalContent = horizontalSection.querySelector('.horizontal-content');
-            const gearCards = horizontalContent.querySelectorAll('.gear-card');
-            
-            function handleHorizontalScroll() {
-                if (window.innerWidth <= 600) return; // Désactiver sur mobile
+                    const loadedImages = (await Promise.all(imagePromises)).filter(img => img !== null);
 
-                const rect = horizontalSection.getBoundingClientRect();
-                const scrollableDistance = horizontalContent.offsetWidth - window.innerWidth;
+                    // 3. Construire les slides (Logique de tri intelligente)
+                    let slides = [];
+                    let portraitBuffer = [];
+
+                    loadedImages.forEach((img) => {
+                        if (img.orientation === 'landscape') {
+                            // Si on a des portraits en attente, on crée d'abord un slide pour eux
+                            if (portraitBuffer.length > 0) {
+                                slides.push({ type: 'portrait', images: [...portraitBuffer] });
+                                portraitBuffer = [];
+                            }
+                            // Puis on ajoute le paysage
+                            slides.push({ type: 'landscape', images: [img] });
+                        } else {
+                            // C'est un portrait
+                            portraitBuffer.push(img);
+                            // Si on en a 3, on crée un slide
+                            if (portraitBuffer.length >= 3) {
+                                slides.push({ type: 'portrait', images: [...portraitBuffer] });
+                                portraitBuffer = [];
+                            }
+                        }
+                    });
+                    // S'il reste des portraits à la fin
+                    if (portraitBuffer.length > 0) {
+                        slides.push({ type: 'portrait', images: [...portraitBuffer] });
+                    }
+
+                    generatedCategories.push({
+                        ...catConfig,
+                        slides: slides
+                    });
+                }
+
+                // 4. Générer le HTML
+                renderHTML();
+
+                // 5. Cacher le loader
+                loaderLogs.textContent = "Prêt !";
+                setTimeout(() => {
+                    document.getElementById('loader-overlay').style.opacity = '0';
+                    document.getElementById('loader-overlay').style.visibility = 'hidden';
+                    container.classList.add('loaded');
+                    initNavigation(); // Lancer la logique de navigation
+                }, 800);
+
+            } catch (err) {
+                console.error(err);
+                loaderLogs.textContent = "Erreur : Vérifiez que 'node server.js' est lancé !";
+                loaderLogs.style.color = "red";
+                document.querySelector('.loader-spinner').style.borderColor = "red";
+            }
+        }
+
+        function renderHTML() {
+            container.innerHTML = '';
+            generatedCategories.forEach((cat, index) => {
+                const catDiv = document.createElement('div');
+                catDiv.className = `category-slide ${index === 0 ? 'active' : ''}`;
                 
-                // Calcul du progrès du scroll vertical DANS la section
-                let progress = -rect.top / (horizontalSection.offsetHeight - window.innerHeight);
-                progress = Math.max(0, Math.min(1, progress));
-
-                horizontalContent.style.transform = `translateX(-${progress * scrollableDistance}px)`;
-
-                // Animation des cartes
-                const cardWidth = horizontalContent.offsetWidth / gearCards.length;
-                const activeCardIndex = Math.floor((progress * scrollableDistance + window.innerWidth / 2) / cardWidth);
-
-                gearCards.forEach((card, index) => {
-                    if (index === activeCardIndex) {
-                        card.classList.add('is-active');
+                cat.slides.forEach((slide, sIndex) => {
+                    const slideDiv = document.createElement('div');
+                    slideDiv.className = `gallery-slide ${sIndex === 0 ? 'active' : ''}`;
+                    
+                    if (slide.type === 'landscape') {
+                        slideDiv.classList.add('landscape-mode');
+                        slideDiv.style.backgroundImage = `url('${slide.images[0].url}')`;
                     } else {
-                        card.classList.remove('is-active');
+                        const grid = document.createElement('div');
+                        grid.className = 'portrait-grid';
+                        slide.images.forEach(imgData => {
+                            const img = document.createElement('img');
+                            img.src = imgData.url;
+                            img.className = 'portrait-img';
+                            grid.appendChild(img);
+                        });
+                        slideDiv.appendChild(grid);
+                    }
+                    catDiv.appendChild(slideDiv);
+                });
+
+                // Texte
+                const contentDiv = document.createElement('div');
+                contentDiv.className = 'category-content';
+                contentDiv.innerHTML = `
+                    <span class="category-subtitle">${cat.subtitle}</span>
+                    <h2 class="category-title">${cat.title}</h2>
+                    <p class="paginator"><span class="current">1</span> / <span class="total">${cat.slides.length}</span></p>
+                `;
+                catDiv.appendChild(contentDiv);
+                container.appendChild(catDiv);
+            });
+        }
+
+        // --- NAVIGATION (Similaire à avant mais adaptée au dynamique) ---
+        function initNavigation() {
+            const categoriesEls = document.querySelectorAll('.category-slide');
+            const btnLeft = document.getElementById('btnLeft');
+            const btnRight = document.getElementById('btnRight');
+            let categoryIndex = 0;
+            let slideIndexes = new Array(categoriesEls.length).fill(0);
+            let isAnimating = false;
+
+            function updateUI() {
+                btnLeft.style.opacity = '0'; btnRight.style.opacity = '0';
+                btnLeft.style.pointerEvents = 'none'; btnRight.style.pointerEvents = 'none';
+
+                categoriesEls.forEach((cat, idx) => {
+                    const slides = cat.querySelectorAll('.gallery-slide');
+                    const paginatorCurrent = cat.querySelector('.paginator .current');
+                    if(paginatorCurrent) paginatorCurrent.textContent = slideIndexes[idx] + 1;
+
+                    if (idx === categoryIndex) {
+                        if (slides.length > 1) {
+                            cat.classList.add('has-multiple-slides');
+                            btnLeft.style.opacity = '1'; btnRight.style.opacity = '1';
+                            btnLeft.style.pointerEvents = 'auto'; btnRight.style.pointerEvents = 'auto';
+                        }
                     }
                 });
             }
 
-            window.addEventListener('scroll', handleHorizontalScroll);
-            window.addEventListener('resize', handleHorizontalScroll);
+            function moveSlide(dir) {
+                if (isAnimating) return;
+                const cat = categoriesEls[categoryIndex];
+                const slides = cat.querySelectorAll('.gallery-slide');
+                const current = slideIndexes[categoryIndex];
+                let next = current + dir;
 
+                if (next < 0) next = slides.length - 1;
+                if (next >= slides.length) next = 0;
+                if (next === current) return;
 
-            // ---- FLÈCHE DE RETOUR ----
-            document.getElementById("backArrow").addEventListener("click", (e) => {
-                e.preventDefault();
-                document.getElementById("page-transition-overlay").classList.add("active");
-                setTimeout(() => { window.location.href = "index.html"; }, 1000);
+                isAnimating = true;
+                slides[current].classList.add(dir > 0 ? 'is-leaving-left' : 'is-leaving-right');
+                slides[current].classList.remove('active');
+                
+                slides[next].classList.add('active');
+                slides[next].classList.remove('is-leaving-left', 'is-leaving-right');
+                
+                slideIndexes[categoryIndex] = next;
+                updateUI();
+                setTimeout(() => { 
+                    slides[current].classList.remove('is-leaving-left', 'is-leaving-right');
+                    isAnimating = false; 
+                }, 1000);
+            }
+
+            function moveCategory(dir) {
+                if (isAnimating) return;
+                let next = categoryIndex + dir;
+                if (next < 0 || next >= categoriesEls.length) return;
+
+                isAnimating = true;
+                categoriesEls[categoryIndex].classList.add('previous', 'is-leaving');
+                categoriesEls[categoryIndex].classList.remove('active');
+                
+                categoriesEls[next].classList.add('active');
+                categoryIndex = next;
+                updateUI();
+                setTimeout(() => {
+                    categoriesEls[categoryIndex - dir].classList.remove('previous', 'is-leaving');
+                    isAnimating = false;
+                }, 1200);
+            }
+
+            btnLeft.onclick = () => moveSlide(-1);
+            btnRight.onclick = () => moveSlide(1);
+            
+            window.addEventListener('keydown', (e) => {
+                if(e.key === 'ArrowRight') moveSlide(1);
+                if(e.key === 'ArrowLeft') moveSlide(-1);
+                if(e.key === 'ArrowDown') moveCategory(1);
+                if(e.key === 'ArrowUp') moveCategory(-1);
+            });
+            
+            window.addEventListener('wheel', (e) => {
+                if(isAnimating) return;
+                if(Math.abs(e.deltaY) > 20) moveCategory(Math.sign(e.deltaY));
+                else if(Math.abs(e.deltaX) > 20) moveSlide(Math.sign(e.deltaX));
             });
 
-            // ---- LIGHTBOX ----
-            const lightbox = document.getElementById('lightbox');
-            const lightboxImg = document.getElementById('lightbox-img');
-            const lightboxClose = document.getElementById('lightbox-close');
-            document.querySelectorAll('.gallery-item').forEach(item => {
-                item.addEventListener('click', () => {
-                    lightboxImg.src = item.querySelector('img').src;
-                    lightbox.classList.add('active');
-                });
-            });
-            function closeLightbox() { lightbox.classList.remove('active'); }
-            lightboxClose.addEventListener('click', closeLightbox);
-            lightbox.addEventListener('click', (e) => { if (e.target === lightbox) closeLightbox(); });
-        });
+            updateUI();
+        }
+
+        // Lancement !
+        initGallery();
+
     </script>
 </body>
 </html>
