@@ -10,7 +10,7 @@
     <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css" />
 
     <style>
-        /* --- STYLES EXISTANTS --- */
+        /* --- STYLES EXISTANTS CONSERVÉS --- */
         #cursor { z-index: 20000 !important; }
 
         .modal-overlay {
@@ -54,7 +54,9 @@
             position: fixed; top: 0; left: 0; width: 100%; 
             padding: 30px 50px; 
             display: flex; justify-content: space-between; align-items: center;
-            z-index: 9999; mix-blend-mode: exclusion; pointer-events: auto;
+            z-index: 9999; 
+            mix-blend-mode: exclusion; 
+            pointer-events: auto;
         }
         .nav-links { display: flex; gap: 30px; align-items: center; }
         .nav-links a {
@@ -62,7 +64,7 @@
             text-transform: uppercase; font-size: 0.9rem; letter-spacing: 0.05em;
         }
 
-        /* --- LANG SWITCHER (NOUVEAU) --- */
+        /* --- LANG SWITCHER --- */
         .lang-switch {
             display: flex; gap: 15px; margin-left: 30px; border-left: 1px solid rgba(255,255,255,0.3); padding-left: 30px;
         }
@@ -83,6 +85,7 @@
             padding: 40px; border-radius: 16px; transition: all 0.3s ease;
             position: relative; overflow: hidden; z-index: 25; height: 100%;
         }
+        /* Hover effect standard */
         .skill-box:hover { background: rgba(255, 255, 255, 0.08); border-color: var(--accent); transform: translateY(-10px); }
         .skill-box h3 { font-size: 1.5rem; margin-bottom: 15px; color: white; }
         .skill-box p { color: #888; font-size: 0.95rem; line-height: 1.6; }
@@ -123,6 +126,39 @@
         }
         .swiper-button-prev:hover, .swiper-button-next:hover {
             background: var(--accent); border-color: var(--accent); color: black;
+        }
+
+        /* --- FILTRES PROJETS --- */
+        .filter-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 40px;
+            flex-wrap: wrap;
+            position: relative;
+            z-index: 35;
+        }
+
+        .filter-btn {
+            background: transparent;
+            border: 1px solid rgba(255,255,255,0.2);
+            color: #888;
+            padding: 10px 25px;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            font-family: 'Space Grotesk', sans-serif;
+        }
+
+        .filter-btn:hover, .filter-btn.active {
+            border-color: var(--accent);
+            color: white;
+            background: rgba(0, 255, 229, 0.05);
+            transform: translateY(-2px);
         }
 
         /* --- PASSIONS --- */
@@ -216,6 +252,9 @@
             .swiper-container { padding: 60px 0; }
             .timeline-line, .timeline-progress { left: 20px; }
             .timeline-row .timeline-dot { left: 11px; }
+            .filter-container { gap: 10px; }
+            .filter-btn { padding: 8px 15px; font-size: 0.8rem; }
+            .custom-dropdown { width: 100%; max-width: 300px; }
         }
     </style>
 </head>
@@ -224,7 +263,10 @@
     <div id="cursor" style="pointer-events: none;"></div>
 
     <nav class="top-nav">
-        <a href="../index.html" class="hover-trigger" style="font-weight: 900; font-size: 1.2rem;">THIBAULT.</a>
+        <a href="../index.html" class="brand-logo hover-trigger" style="mix-blend-mode: normal;">
+            <span class="brand-text">Back</span>
+            <span class="brand-dot"></span>
+        </a>
         
         <div class="nav-links">
             <a href="#skills" class="hover-trigger" data-i18n="nav_skills">Compétences</a>
@@ -232,13 +274,16 @@
             <a href="#passions" class="hover-trigger" data-i18n="nav_lifestyle">Lifestyle</a>
             <a href="#photo" class="hover-trigger" data-i18n="nav_photos">Photos</a>
             <a href="#about" class="hover-trigger" data-i18n="nav_about">Parcours</a>
-            
+            <a href="../assets/cv_thibault.pdf" target="_blank" class="btn-cv hover-trigger">
+            <span data-i18n="nav_cv">Mon CV</span>
+                <i class="fas fa-arrow-down" style="font-size: 0.8em;"></i>
+            </a>
             <div class="lang-switch">
                 <img src="../assets/fr.png" onclick="setLanguage('fr')" class="lang-btn hover-trigger active" id="btn-fr" alt="FR">
                 <img src="../assets/en.png" onclick="setLanguage('en')" class="lang-btn hover-trigger" id="btn-en" alt="EN">
             </div>
         </div>
-        </nav>
+    </nav>
 
     <canvas id="bgCanvas" style="position: fixed; top: 0; left: 0; z-index: -1; opacity: 0.2; pointer-events: none;"></canvas>
 
@@ -259,43 +304,56 @@
                 <div class="swiper-container skills-swiper">
                     <div class="swiper-wrapper">
                         <div class="swiper-slide">
-                            <a href="javascript:void(0)" class="skill-box hover-trigger" onclick="scrollToProject(3)">
+                            <a href="javascript:void(0)" class="skill-box core-skill hover-trigger" onclick="openModal('comp_realiser')">
                                 <div class="skill-icon"><i class="fas fa-laptop-code"></i></div>
                                 <h3 data-i18n="skill_realise">Réaliser</h3>
-                                <p data-i18n="skill_realise_desc">Développement d’applications complexes (SaaS, Fullstack) de la conception au déploiement.</p>
-                                <div class="skill-link-indicator" data-i18n="link_saas">Voir le SaaS ➔</div>
+                                <p data-i18n="skill_realise_desc">Développer des applications informatiques complexes.</p>
+                                <div class="skill-link-indicator">Voir les preuves ➔</div>
                             </a>
                         </div>
+                    
                         <div class="swiper-slide">
-                            <a href="javascript:void(0)" class="skill-box hover-trigger" onclick="scrollToProject(4)">
-                                <div class="skill-icon"><i class="fas fa-rocket"></i></div>
+                            <a href="javascript:void(0)" class="skill-box core-skill hover-trigger" onclick="openModal('comp_optimiser')">
+                                <div class="skill-icon"><i class="fas fa-tachometer-alt"></i></div>
                                 <h3 data-i18n="skill_optimize">Optimiser</h3>
-                                <p data-i18n="skill_optimize_desc">Analyse de performance, refactoring et optimisation algorithmique.</p>
-                                <div class="skill-link-indicator" data-i18n="link_app">Voir l'App Mobile ➔</div>
+                                <p data-i18n="skill_optimize_desc">Analyser et optimiser des applications (algo, perf).</p>
+                                <div class="skill-link-indicator">Voir les preuves ➔</div>
                             </a>
                         </div>
+                    
                         <div class="swiper-slide">
-                            <a href="javascript:void(0)" class="skill-box hover-trigger" onclick="scrollToProject(1)">
+                            <a href="javascript:void(0)" class="skill-box core-skill hover-trigger" onclick="openModal('comp_administrer')">
+                                <div class="skill-icon"><i class="fas fa-server"></i></div>
+                                <h3 data-i18n="skill_admin">Administrer</h3>
+                                <p data-i18n="skill_admin_desc">Installation, configuration et déploiement de services.</p>
+                                <div class="skill-link-indicator">Voir les preuves ➔</div>
+                            </a>
+                        </div>
+                        
+                        <div class="swiper-slide">
+                            <a href="javascript:void(0)" class="skill-box hover-trigger" onclick="openModal('comp_gerer')">
                                 <div class="skill-icon"><i class="fas fa-database"></i></div>
-                                <h3 data-i18n="skill_data">Gérer les données</h3>
-                                <p data-i18n="skill_data_desc">Conception de BDD, pipelines Data et visualisation interactive (D3.js).</p>
-                                <div class="skill-link-indicator" data-i18n="link_dash">Voir le Dashboard ➔</div>
+                                <h3 data-i18n="skill_data">Gérer</h3>
+                                <p data-i18n="skill_data_desc">Conception et exploitation de bases de données.</p>
+                                <div class="skill-link-indicator">Voir les preuves ➔</div>
                             </a>
                         </div>
+                    
                         <div class="swiper-slide">
-                            <a href="javascript:void(0)" class="skill-box hover-trigger" onclick="openModal('skill_manage')">
+                            <a href="javascript:void(0)" class="skill-box hover-trigger" onclick="openModal('comp_conduire')">
                                 <div class="skill-icon"><i class="fas fa-tasks"></i></div>
                                 <h3 data-i18n="skill_manage">Conduire</h3>
-                                <p data-i18n="skill_manage_desc">Gestion de projet Agile, relation client et lancement de produits.</p>
-                                <div class="skill-link-indicator" data-i18n="link_details">Détails ➔</div>
+                                <p data-i18n="skill_manage_desc">Gestion de projet, identification des besoins.</p>
+                                <div class="skill-link-indicator">Voir les preuves ➔</div>
                             </a>
                         </div>
+                    
                         <div class="swiper-slide">
-                            <a href="javascript:void(0)" class="skill-box hover-trigger" onclick="openModal('skill_collaborate')">
+                            <a href="javascript:void(0)" class="skill-box hover-trigger" onclick="openModal('comp_collaborer')">
                                 <div class="skill-icon"><i class="fas fa-users"></i></div>
                                 <h3 data-i18n="skill_collab">Collaborer</h3>
-                                <p data-i18n="skill_collab_desc">Intégration en équipe R&D, Code Reviews et processus industriels.</p>
-                                <div class="skill-link-indicator" data-i18n="link_details">Détails ➔</div>
+                                <p data-i18n="skill_collab_desc">Travail en équipe, communication professionnelle.</p>
+                                <div class="skill-link-indicator">Voir les preuves ➔</div>
                             </a>
                         </div>
                     </div>
@@ -332,41 +390,107 @@
                     <h2 class="anim-text" style="font-size: 3rem;" data-i18n="projects_title">SELECTED WORKS</h2>
                 </div>
 
+                <div class="filter-container">
+                    <button class="filter-btn active hover-trigger" data-filter="all">Tout</button>
+                    <button class="filter-btn hover-trigger" data-filter="en-cours">En cours</button>
+                    <button class="filter-btn hover-trigger" data-filter="fini">Terminé</button>
+                    <button class="filter-btn hover-trigger" data-filter="ale">Ale</button>
+                    <button class="filter-btn hover-trigger" data-filter="but">BUT</button>
+
+                    <div class="custom-dropdown" id="skillDropdown">
+                        <div class="dropdown-selected hover-trigger">
+                            <span id="currentSkillText">Filtrer par compétence</span>
+                            <i class="fas fa-chevron-down" style="font-size: 0.7rem;"></i>
+                        </div>
+                        <div class="dropdown-options">
+                            <div class="dropdown-option hover-trigger" data-skill-filter="all">Toutes compétences</div>
+                            <div class="dropdown-option hover-trigger" data-skill-filter="realiser">Réaliser</div>
+                            <div class="dropdown-option hover-trigger" data-skill-filter="optimiser">Optimiser</div>
+                            <div class="dropdown-option hover-trigger" data-skill-filter="administrer">Administrer</div>
+                            <div class="dropdown-option hover-trigger" data-skill-filter="gerer">Gérer</div>
+                            <div class="dropdown-option hover-trigger" data-skill-filter="conduire">Conduire</div>
+                            <div class="dropdown-option hover-trigger" data-skill-filter="collaborer">Collaborer</div>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="swiper-container project-swiper">
                     <div class="swiper-wrapper">
-                        <div class="swiper-slide">
+                        <div class="swiper-slide" data-categories="fini but perso" data-skills="realiser optimiser">
                             <div class="project-card" onclick="openModal('proj_ia')">
-                                <div class="card-bg" style="background-image: url('../assets/pdp.jpg');"></div>
+                                <div class="card-bg" style="background-image: url('../assets/proj/istockphoto-2058507417-612x612.jpg');"></div>
                                 <h3>Portfolio IA</h3>
                                 <p>Interactive Chatbot</p>
                             </div>
                         </div>
-                        <div class="swiper-slide">
+                        <div class="swiper-slide" data-categories="fini ale" data-skills="gerer optimiser">
                             <div class="project-card" onclick="openModal('proj_dash')">
-                                <div class="card-bg" style="background: #222;"></div>
+                                <div class="card-bg" style="background-image: url('../assets/proj/ALE-Cloud.jpeg');"></div>
                                 <h3>Dashboard Data</h3>
                                 <p>Data Science</p>
                             </div>
                         </div>
-                        <div class="swiper-slide">
+                        <div class="swiper-slide" data-categories="en-cours perso" data-skills="realiser optimiser">
                             <div class="project-card" onclick="openModal('proj_agents')">
-                                <div class="card-bg" style="background: #1a1a1a;"></div>
+                                <div class="card-bg" style="background-image: url('../assets/proj/what-is-an-AI-agent-1.png');"></div>
                                 <h3>Chatbot Agents</h3>
                                 <p>Advanced AI</p>
                             </div>
                         </div>
-                        <div class="swiper-slide">
+                        <div class="swiper-slide" data-categories="en-cours perso" data-skills="realiser conduire">
                             <div class="project-card" onclick="openModal('proj_saas')">
-                                <div class="card-bg" style="background: #333;"></div>
+                                <div class="card-bg" style="background-image: url('../assets/proj/agent_immobilier-1.jpeg');"></div>
                                 <h3>SaaS Immo</h3>
                                 <p>Fullstack & AI</p>
                             </div>
                         </div>
-                        <div class="swiper-slide">
+                        <div class="swiper-slide" data-categories="fini but" data-skills="realiser gerer">
+                            <div class="project-card" onclick="openModal('proj_10heures')">
+                                <div class="card-bg" style="background-image: url('../assets/proj/Flyer_10Heures1.png');"></div>
+                                <h3>10heures</h3>
+                                <p>Recommendation application</p>
+                            </div>
+                        </div>
+                        <div class="swiper-slide" data-categories="fini but" data-skills="gerer optimiser">
+                            <div class="project-card" onclick="openModal('proj_decision_analysis')">
+                                <div class="card-bg" style="background-image: url('../assets/proj/decision_analysis.png');"></div>
+                                <h3>Decision_analysis</h3>
+                                <p>Decision-making analysis of sports data</p>
+                            </div>
+                        </div>
+                        <div class="swiper-slide" data-categories="fini but" data-skills="realiser">
                             <div class="project-card" onclick="openModal('proj_app')">
-                                <div class="card-bg" style="background: #111;"></div>
+                                <div class="card-bg" style="background-image: url('../assets/proj/image.png');"></div>
                                 <h3>App Annonces</h3>
                                 <p>Web Development</p>
+                            </div>
+                        </div>
+                        <div class="swiper-slide" data-categories="fini but" data-skills="collaborer">
+                            <div class="project-card" onclick="openModal('proj_psycho')">
+                                <div class="card-bg" style="background-image: url('../assets/proj/mqdefault.jpg');"></div>
+                                <h3>Sweeded American Psycho</h3>
+                                <p>Content Creation & Design</p>
+                            </div>
+                        </div>
+                        <div class="swiper-slide" data-categories="fini but" data-skills="collaborer conduire">
+                            <div class="project-card" onclick="openModal('proj_trivinfo')">
+                                <div class="card-bg" style="background-image: url('../assets/proj/trivinfo.png');"></div>
+                                <h3>Triv'info Pursuit</h3>
+                                <p>Physical play</p>
+                            </div>
+                        </div>
+                        <div class="swiper-slide" data-categories="fini but" data-skills="realiser optimiser">
+                            <div class="project-card" onclick="openModal('proj_sudoku')">
+                                <div class="card-bg" style="background-image: url('../assets/proj/sudoku.jpeg');"></div>
+                                <h3>Sudoku</h3>
+                                <p>C Development</p>
+                            </div>
+                        </div>
+                        <div class="swiper-slide" data-categories="fini but" data-skills="optimiser">
+                            <div class="project-card" onclick="openModal('proj_n_dames')">
+                                <div class="card-bg" style="background-image: url('../assets/proj/ndames.jpg');"></div>
+                                <h3>N-Dames</h3>
+                                <p>Python Development & Optimization</p>
                             </div>
                         </div>
                     </div>
@@ -414,7 +538,7 @@
                                 <span data-i18n="stat_xp">Années d'XP</span>
                             </div>
                             <div class="stat-item">
-                                <h4>+20</h4>
+                                <h4>+15</h4>
                                 <span data-i18n="stat_proj">Projets Livrés</span>
                             </div>
                             <div class="stat-item">
@@ -433,9 +557,9 @@
                     
                     <div class="timeline-row">
                         <div class="timeline-dot"></div>
-                        <a href="javascript:void(0)" class="timeline-content hover-trigger" onclick="openModal('time_freelance')">
+                        <a href="javascript:void(0)" class="timeline-content hover-trigger" onclick="openModal('proj_saas')">
                             <span style="color:var(--accent);">2025</span>
-                            <h3>Freelance</h3>
+                            <h3>Lancement ImmoAI</h3>
                             <p data-i18n="time_freelance_sub">Lancement d'activité.</p>
                         </a>
                     </div>
@@ -508,24 +632,27 @@
                 nav_skills: "Compétences",
                 nav_projects: "Projets",
                 nav_lifestyle: "Lifestyle",
+                nav_cv: "Mon CV",
                 nav_photos: "Photos",
                 nav_about: "Parcours",
                 skills_title: "COMPÉTENCES",
                 skills_subtitle: "Expertise technique et méthodologique (BUT Informatique).",
+                
+                // Compétences BUT
                 skill_realise: "Réaliser",
-                skill_realise_desc: "Développement d’applications complexes (SaaS, Fullstack) de la conception au déploiement.",
-                link_saas: "Voir le SaaS ➔",
+                skill_realise_desc: "Développer des applications informatiques complexes.",
                 skill_optimize: "Optimiser",
-                skill_optimize_desc: "Analyse de performance, refactoring et optimisation algorithmique.",
-                link_app: "Voir l'App Mobile ➔",
-                skill_data: "Gérer les données",
-                skill_data_desc: "Conception de BDD, pipelines Data et visualisation interactive (D3.js).",
-                link_dash: "Voir le Dashboard ➔",
+                skill_optimize_desc: "Analyser et optimiser des applications (algo, perf).",
+                skill_admin: "Administrer",
+                skill_admin_desc: "Installation, configuration et déploiement de services.",
+                skill_data: "Gérer",
+                skill_data_desc: "Conception et exploitation de bases de données.",
                 skill_manage: "Conduire",
-                skill_manage_desc: "Gestion de projet Agile, relation client et lancement de produits.",
-                link_details: "Détails ➔",
+                skill_manage_desc: "Gestion de projet, identification des besoins.",
                 skill_collab: "Collaborer",
-                skill_collab_desc: "Intégration en équipe R&D, Code Reviews et processus industriels.",
+                skill_collab_desc: "Travail en équipe, communication professionnelle.",
+                link_details: "Détails ➔",
+
                 passions_pre: "Behind the code",
                 passion_photo: "Photographie",
                 passion_photo_desc: "Plus qu'un hobby, une discipline du regard. Capturer l'instant exige patience et précision, deux qualités que je transpose dans mon code.",
@@ -559,24 +686,27 @@
                 nav_skills: "Skills",
                 nav_projects: "Projects",
                 nav_lifestyle: "Lifestyle",
+                nav_cv: "Resume",
                 nav_photos: "Photos",
                 nav_about: "Journey",
                 skills_title: "SKILLS",
                 skills_subtitle: "Technical and methodological expertise (CS Degree).",
-                skill_realise: "Build",
-                skill_realise_desc: "Development of complex applications (SaaS, Fullstack) from concept to deployment.",
-                link_saas: "See SaaS ➔",
+
+                // Compétences BUT (EN)
+                skill_realise: "Develop",
+                skill_realise_desc: "Developing complex computer applications.",
                 skill_optimize: "Optimize",
-                skill_optimize_desc: "Performance analysis, refactoring, and algorithmic optimization.",
-                link_app: "See Mobile App ➔",
+                skill_optimize_desc: "Analyzing and optimizing applications (algo, perf).",
+                skill_admin: "Administer",
+                skill_admin_desc: "Installation, configuration and deployment of services.",
                 skill_data: "Manage Data",
-                skill_data_desc: "DB Design, Data Pipelines, and interactive visualization (D3.js).",
-                link_dash: "See Dashboard ➔",
+                skill_data_desc: "Design and operation of databases.",
                 skill_manage: "Lead",
-                skill_manage_desc: "Agile Project Management, client relations, and product launches.",
-                link_details: "Details ➔",
+                skill_manage_desc: "Project management, needs identification.",
                 skill_collab: "Collaborate",
-                skill_collab_desc: "R&D Team integration, Code Reviews, and industrial processes.",
+                skill_collab_desc: "Team work, professional communication.",
+                link_details: "Details ➔",
+
                 passions_pre: "Behind the code",
                 passion_photo: "Photography",
                 passion_photo_desc: "More than a hobby, a discipline of observation. Capturing the moment requires patience and precision, qualities I apply to my code.",
@@ -608,40 +738,66 @@
             }
         };
 
-        // Données des Modales (Projets + Timeline + Skills)
+        // Données des Modales
         const modalData = {
             // PROJETS
             proj_ia: {
-                fr: { title: 'Portfolio IA', desc: "Développement d'un chatbot interactif utilisant la technologie RAG (Retrieval-Augmented Generation).<br><br>Stack : Python, LangChain, OpenAI API.<br>Objectif : Rendre statique dynamique." },
-                en: { title: 'AI Portfolio', desc: "Development of an interactive chatbot using RAG (Retrieval-Augmented Generation) technology.<br><br>Stack: Python, LangChain, OpenAI API.<br>Goal: Make static dynamic." },
-                link: 'https://github.com/tonuser/portfolio-ia'
+                fr: { title: 'Portfolio IA', desc: "Développement d'un chatbot interactif utilisant l'API OpenAI.<br><br>Stack : Python, LangChain, OpenAI API.<br>Objectif : Rendre statique dynamique." },
+                en: { title: 'AI Portfolio', desc: "Development of an interactive chatbot using OpenAI API.<br><br>Stack: Python, LangChain, OpenAI API.<br>Goal: Make static dynamic." },
+                link: 'https://github.com/tbtdbs29/Portfolio'
             },
             proj_dash: {
-                fr: { title: 'Dashboard Data', desc: "Plateforme de visualisation de données financières en temps réel.<br><br>Stack : React, D3.js, Python FastAPI.<br>Fonctionnalités : Analyse prédictive, graphiques dynamiques." },
-                en: { title: 'Data Dashboard', desc: "Real-time financial data visualization platform.<br><br>Stack: React, D3.js, Python FastAPI.<br>Features: Predictive analysis, dynamic charts." },
-                link: 'https://github.com/tonuser/dashboard'
+                fr: { title: 'Dashboard Data', desc: "Plateforme de visualisation et d'analyse de données de réseau en temps réel. Mise en place de modeles probalistique afin de detecter des anomalies.<br><br>Stack : Python restAPI postgres SQL Timesquale Kafka.<br>Fonctionnalités : Analyse prédictive, graphiques dynamiques. <br> Pas de lien GitHub car projet Pro" },
+                en: { title: 'Data Dashboard', desc: "Real-time network data visualization and analysis platform. Implementation of probabilistic models to detect anomalies.<br><br>Stack: Python restAPI Postgres timesquale kafka.<br>Features: Predictive analysis, dynamic charts. <br> No GitHub link due to project confidentiality." },
+                link: null
             },
             proj_agents: {
-                fr: { title: 'Chatbot Agents', desc: "Orchestration d'agents autonomes pour automatiser des tâches complexes.<br><br>Concept : Multi-Agent Systems.<br>Résultat : +40% de productivité sur les tâches répétitives." },
-                en: { title: 'Agent Chatbot', desc: "Orchestration of autonomous agents to automate complex tasks.<br><br>Concept: Multi-Agent Systems.<br>Result: +40% productivity on repetitive tasks." },
-                link: 'https://github.com/tonuser/agents'
+                fr: { title: 'Chatbot Agents', desc: "Développement d'un chatbot multi-agent pour OVNA(Omnivista network advisor), webscrapper, vectorisation, base de données vectoriser ... <br><br>Concept : Multi-Agent Systems. <br> Pas de lien GitHub car projet Pro" },
+                en: { title: 'Agent Chatbot', desc: "Development of a multi-agent chatbot for OVNA (Omnivista network advisor), webscrapper, vectorization, vector database ... <br><br>Concept: Multi-Agent Systems. <br> No GitHub link due to project confidentiality." },
+                link: null
             },
             proj_saas: {
                 fr: { title: 'SaaS Immo', desc: "Plateforme SaaS B2B pour les agences immobilières incluant une IA de génération de description.<br><br>Stack : Next.js, Supabase, Stripe." },
                 en: { title: 'Real Estate SaaS', desc: "B2B SaaS platform for real estate agencies including AI description generation.<br><br>Stack: Next.js, Supabase, Stripe." },
-                link: 'https://github.com/tonuser/saas-immo'
+                link: 'https://github.com/tbtdbs29/ImmoAI'
+            },
+            proj_10heures: {
+                fr: { title: '10heures', desc: "Application de recommandation de musique. Récupération des besoins utilisateurs à travers un questionnaire, créations de graph, analyse de tendance, de corrélation ...<br><br>Stack : Python, google forms." },
+                en: { title: '10heures', desc: "Music recommendation application. User needs retrieval through a questionnaire, graph creation, trend and correlation analysis ...<br><br>Stack: Next.js, Supabase, Stripe." },
+                link: 'https://github.com/tbtdbs29/10heures'
+            },
+            proj_decision_analysis: {
+                fr: { title: 'Decision Analysis', desc: "Analyse de données sportives pour prise de décision.<br><br>Stack : Python, pandas, matplotlib." },
+                en: { title: 'Decision Analysis', desc: "Sports data analysis for decision-making.<br><br>Stack: Python, pandas, matplotlib." },
+                link: 'https://github.com/tbtdbs29/decision_analysis'
             },
             proj_app: {
-                fr: { title: 'App Annonces', desc: "Marketplace complète type LeBonCoin repensée pour le mobile.<br><br>Focus : UX/UI et performance." },
-                en: { title: 'Classifieds App', desc: "Complete marketplace app rethought for mobile.<br><br>Focus: UX/UI and performance." },
-                link: 'https://github.com/tonuser/marketplace'
+                fr: { title: 'App Annonces', desc: "Application web avec front-office et back-office dans le but de repertorier des activitées dans la régions PACA<br><br>Focus : UX/UI et performance." },
+                en: { title: 'Classifieds App', desc: "Web application with front-office and back-office to list activities in the PACA region<br><br>Focus: UX/UI and performance." },
+                link: 'https://github.com/tbtdbs2/Xx_TregorIndustries_xX'
             },
-            // TIMELINE
-            time_freelance: {
-                fr: { title: 'Freelance', desc: "<strong>2025 - Présent</strong><br><br>Lancement de mon activité indépendante. Je propose mon expertise technique aux startups et entreprises ambitieuses.<br><br>Services : Développement Web, Intégration IA, Stratégie Digitale." },
-                en: { title: 'Freelance', desc: "<strong>2025 - Present</strong><br><br>Launch of my independent activity. I offer technical expertise to ambitious startups and companies.<br><br>Services: Web Development, AI Integration, Digital Strategy." },
+            proj_psycho: {
+                fr: { title: 'Sweeded American psycho', desc: "Nous avons réalisé un sweeded film d'american psycho en anglais<br><br>Focus : création de contenu et design. <a href='https://youtu.be/BgZtwG82gr0' target='_blank' style='color:var(--accent)'>Lien Youtube</a>" },
+                en: { title: 'Sweeded American psycho', desc: "We have created a sweeded version of the American Psycho film in English<br><br>Focus: content creation and design." },
                 link: null
             },
+            proj_trivinfo: {
+                fr: { title: 'Triv\'info Pursuit', desc: "Jeu de questions-réponses en physique afin de présenter les compétences du BUT informatique à Lannion avec plateau de jeu, cartes, pions ect <br><br>Focus : jeu physique. <a href='../assets/proj/Trivinfo.pdf' target='_blank' style='color:var(--accent)'>Lien PDF</a>" },
+                en: { title: 'Triv\'info Pursuit', desc: "Quiz game in physics, to present BUT information to Lannion with a game board, cards, pawns etc <br><br>Focus: physical play." },
+                link: null
+            },
+            proj_sudoku: {
+                fr: { title: 'Sudoku', desc: "Jeu de Sudoku en C avec interface graphique, menu ect<br><br>Technologies : C, SDL2. <br> Pas de lien GitHub car projet perdu..." },
+                en: { title: 'Sudoku', desc: "Sudoku game in C with GUI and menu.<br><br>Technologies: C, SDL2. <br> No GitHub link due to loose project..." },
+                link: null
+            },
+            proj_n_dames: {
+                fr: { title: 'N-Dames', desc: "Problème des N-dames résolu avec optimisation de performance.<br><br>Technologies : Python, Optimisation. <br> Pas de lien GitHub car projet perdu..." },
+                en: { title: 'N-Queens', desc: "N-Queens problem solved with performance optimization.<br><br>Technologies: Python, Optimization. <br> No GitHub link due to loose project..." },
+                link: null
+            },
+            
+            // TIMELINE
             time_ale: {
                 fr: { title: 'Alternance IA', desc: "<strong>2024 - Alcatel-Lucent Enterprise</strong><br><br>Développeur au sein de l'équipe R&D.<br><br>Missions : <br>- Développement de pipelines de données.<br>- Intégration de modèles prédictifs.<br>- Création de dashboards décisionnels." },
                 en: { title: 'AI Apprenticeship', desc: "<strong>2024 - Alcatel-Lucent Enterprise</strong><br><br>Developer within the R&D team.<br><br>Missions: <br>- Data pipeline development.<br>- Predictive model integration.<br>- Creation of decision-making dashboards." },
@@ -657,15 +813,54 @@
                 en: { title: 'Internship S3Pweb', desc: "<strong>2020 - Discovery Internship</strong><br><br>First immersion in the professional web world.<br>Discovery of frontend development and UX Design challenges." },
                 link: null
             },
-            // SKILLS MODALS
-            skill_manage: {
-                fr: { title: 'Conduire un projet', desc: "<strong>Méthodologies & Stratégie</strong><br><br>Pilotage de projet agile, de l'expression du besoin jusqu'à la livraison finale.<br><br>Expérience : Lancement d'activité Freelance et gestion de produits SaaS." },
-                en: { title: 'Project Leadership', desc: "<strong>Methodologies & Strategy</strong><br><br>Agile project management, from requirements to final delivery.<br><br>Experience: Freelance launch and SaaS product management." },
+
+            // --- COMPÉTENCES BUT ---
+            comp_realiser: {
+                fr: { 
+                    title: 'C1 - Réaliser', 
+                    desc: "<strong>Développer des applications informatiques.</strong><br><br>Cette compétence valide ma capacité à partir d'un besoin client pour livrer une solution logicielle fonctionnelle. Elle couvre la conception, le codage, et les tests.<br><br><strong>Preuves associées :</strong><ul style='margin-top:15px; padding-left:20px; color:#aaa;'><li><strong>SaaS Immo :</strong> Architecture complète Next.js/Supabase. <br><a href='#' onclick='closeModal(); openModal(\"proj_saas\")' style='color:var(--accent)'>Voir le projet</a></li><li><strong>App Annonces :</strong> Développement Web Fullstack. <br><a href='#' onclick='closeModal(); openModal(\"proj_app\")' style='color:var(--accent)'>Voir le projet</a></li></ul>" 
+                },
+                en: { title: 'Develop', desc: "Developing computer applications..." },
                 link: null
             },
-            skill_collaborate: {
-                fr: { title: 'Collaborer', desc: "<strong>Travail d'équipe</strong><br><br>Intégration au sein d'équipes techniques (R&D).<br><br>Pratiques : Code Review, Git Flow, Documentation et communication technique efficace." },
-                en: { title: 'Collaboration', desc: "<strong>Teamwork</strong><br><br>Integration within technical teams (R&D).<br><br>Practices: Code Review, Git Flow, Documentation, and effective technical communication." },
+            comp_optimiser: {
+                fr: { 
+                    title: 'C2 - Optimiser', 
+                    desc: "<strong>Optimiser des applications informatiques.</strong><br><br>Il ne s'agit pas seulement de coder, mais de coder efficacement. J'analyse la complexité algorithmique et l'impact des structures de données.<br><br><strong>Preuves associées :</strong><ul style='margin-top:15px; padding-left:20px; color:#aaa;'><li><strong>N-Dames :</strong> Algorithme de backtracking optimisé en Python. <br><a href='#' onclick='closeModal(); openModal(\"proj_n_dames\")' style='color:var(--accent)'>Voir le projet</a></li><li><strong>Sudoku :</strong> Gestion mémoire et logique en C. <br><a href='#' onclick='closeModal(); openModal(\"proj_sudoku\")' style='color:var(--accent)'>Voir le projet</a></li></ul>" 
+                },
+                en: { title: 'Optimize', desc: "Optimizing computer applications..." },
+                link: null
+            },
+            comp_administrer: {
+                fr: { 
+                    title: 'C3 - Administrer', 
+                    desc: "<strong>Administrer des systèmes communicants complexes.</strong><br><br>Installation, configuration et sécurisation des services et réseaux. Compréhension de l'infrastructure sous-jacente au code.<br><br><strong>Preuves associées :</strong><ul style='margin-top:15px; padding-left:20px; color:#aaa;'><li><strong>Alternance ALE :</strong> Déploiement de pipelines CI/CD et gestion d'environnements virtualisés. <br><a href='#' onclick='closeModal(); openModal(\"time_ale\")' style='color:var(--accent)'>Voir l'expérience</a></li></ul>" 
+                },
+                en: { title: 'Administer', desc: "System administration..." },
+                link: null
+            },
+            comp_gerer: {
+                fr: { 
+                    title: 'C4 - Gérer', 
+                    desc: "<strong>Gérer des données de l’information.</strong><br><br>Conception de modèles de données, exploitation SQL/NoSQL et visualisation pour la prise de décision.<br><br><strong>Preuves associées :</strong><ul style='margin-top:15px; padding-left:20px; color:#aaa;'><li><strong>Dashboard Data :</strong> Visualisation temps réel streamlit. <br><a href='#' onclick='closeModal(); openModal(\"proj_dash\")' style='color:var(--accent)'>Voir le projet</a></li><li><strong>Decision Analysis :</strong> Analyse statistique avec Pandas/Matplotlib. <br><a href='#' onclick='closeModal(); openModal(\"proj_decision_analysis\")' style='color:var(--accent)'>Voir le projet</a></li></ul>" 
+                },
+                en: { title: 'Manage Data', desc: "Data management..." },
+                link: null
+            },
+            comp_conduire: {
+                fr: { 
+                    title: 'C5 - Conduire', 
+                    desc: "<strong>Conduire un projet.</strong><br><br>Identification des besoins, planification Agile et gestion des ressources pour mener un projet à terme.<br><br><strong>Preuves associées :</strong><ul style='margin-top:15px; padding-left:20px; color:#aaa;'><li><strong>ImmoAI :</strong> Lancement de mon SaaS, gestion du projet, relation clients ... <br><a href='#' onclick='closeModal(); openModal(\"proj_saas\")' style='color:var(--accent)'>Voir l'activité</a></li><li><strong>Triv'Info :</strong> Création d'un jeu physique (gestion de production). <br><a href='#' onclick='closeModal(); openModal(\"proj_trivinfo\")' style='color:var(--accent)'>Voir le projet</a></li></ul>" 
+                },
+                en: { title: 'Lead Project', desc: "Project management..." },
+                link: null
+            },
+            comp_collaborer: {
+                fr: { 
+                    title: 'C6 - Collaborer', 
+                    desc: "<strong>Travailler en équipe informatique.</strong><br><br>S'intégrer dans une équipe, utiliser les outils collaboratifs (Git) et communiquer efficacement.<br><br><strong>Preuves associées :</strong><ul style='margin-top:15px; padding-left:20px; color:#aaa;'><li><strong>Sweeded American Psycho :</strong> Travail de groupe créatif et coordination. <br><a href='#' onclick='closeModal(); openModal(\"proj_psycho\")' style='color:var(--accent)'>Voir le projet</a></li><li><strong>Alternance :</strong> Intégration en équipe R&D internationale.</li></ul>" 
+                },
+                en: { title: 'Collaborate', desc: "Team work..." },
                 link: null
             }
         };
@@ -680,7 +875,6 @@
             document.querySelectorAll('[data-i18n]').forEach(el => {
                 const key = el.getAttribute('data-i18n');
                 if (translations[lang][key]) {
-                    // Check if it contains HTML tags
                     if (translations[lang][key].includes('<')) {
                         el.innerHTML = translations[lang][key];
                     } else {
@@ -711,29 +905,37 @@
         function raf(time) { lenis.raf(time); requestAnimationFrame(raf); }
         requestAnimationFrame(raf);
 
-        // 2. FONCTION MODALE (Mise à jour pour gérer les ID de langue)
+        // 2. FONCTION MODALE (Modifiée pour gérer l'absence de lien)
         const modal = document.getElementById('modalOverlay');
         const modalTitle = document.getElementById('modalTitle');
         const modalDesc = document.getElementById('modalDesc');
         const modalLink = document.getElementById('modalLink');
 
         window.openModal = function(key) {
-            // On récupère les données basées sur la clé et la langue actuelle
             const data = modalData[key];
             if (!data) return;
 
-            const content = data[currentLang]; // fr ou en
+            const content = data[currentLang];
 
             modalTitle.textContent = content.title;
             modalDesc.innerHTML = content.desc;
             
-            if (data.link && data.link !== '') {
+            // Si le lien existe et n'est pas vide/null
+            if (data.link) {
                 modalLink.href = data.link; 
-                modalLink.style.display = 'inline-block';
+                modalLink.style.display = 'inline-block'; 
             } else { 
+                // Sinon on cache le bouton
                 modalLink.style.display = 'none'; 
+                modalLink.href = '#'; // Sécurité
             }
+            
             modal.classList.add('active');
+        };
+        
+        // Fonction globale pour fermer la modale (utile pour les liens internes)
+        window.closeModal = function() {
+            modal.classList.remove('active');
         };
 
         document.getElementById('closeModal').addEventListener('click', () => modal.classList.remove('active'));
@@ -741,20 +943,120 @@
             if (e.target === modal) modal.classList.remove('active');
         });
 
-        // 3. SWIPER (PROJETS)
-        const swiper = new Swiper('.project-swiper', {
-            effect: 'coverflow',
-            grabCursor: true,
-            centeredSlides: true,
-            slidesPerView: 'auto',
-            loop: false,
-            speed: 600,
-            keyboard: { enabled: true },
-            mousewheel: { forceToAxis: true },
-            navigation: { nextEl: '.swiper-button-next', prevEl: '.swiper-button-prev' },
-            coverflowEffect: { rotate: 0, stretch: 0, depth: 150, modifier: 1.5, slideShadows: true },
-            pagination: { el: '.swiper-pagination', clickable: true }
+        // 3. LOGIQUE DE FILTRAGE + SWIPER PROJETS
+        
+        const swiperWrapper = document.querySelector('.project-swiper .swiper-wrapper');
+        const allSlides = Array.from(swiperWrapper.children);
+        let projectSwiper;
+
+        // Variables d'état pour le filtrage
+        let activeCategory = 'all';
+        let activeSkill = 'all';
+
+        function initProjectSwiper() {
+            if (projectSwiper) projectSwiper.destroy(true, true);
+
+            projectSwiper = new Swiper('.project-swiper', {
+                effect: 'coverflow',
+                grabCursor: true,
+                centeredSlides: true,
+                slidesPerView: 'auto',
+                loop: false,
+                speed: 600,
+                keyboard: { enabled: true },
+                mousewheel: { forceToAxis: true },
+                navigation: { nextEl: '.swiper-button-next', prevEl: '.swiper-button-prev' },
+                coverflowEffect: { rotate: 0, stretch: 0, depth: 150, modifier: 1.5, slideShadows: true },
+                pagination: { el: '.swiper-pagination', clickable: true },
+                observer: true,
+                observeParents: true
+            });
+        }
+
+        // Initialisation au démarrage
+        initProjectSwiper();
+
+        // Fonction principale de filtrage qui combine les deux critères
+        function applyFilters() {
+            // 1. Vider le wrapper
+            swiperWrapper.innerHTML = '';
+
+            // 2. Filtrer et réinsérer les slides qui matchent les DEUX critères
+            allSlides.forEach(slide => {
+                const categories = slide.getAttribute('data-categories');
+                const skills = slide.getAttribute('data-skills');
+
+                // Check Category
+                const matchCategory = (activeCategory === 'all') || (categories && categories.includes(activeCategory));
+                
+                // Check Skill
+                const matchSkill = (activeSkill === 'all') || (skills && skills.includes(activeSkill));
+
+                if (matchCategory && matchSkill) {
+                    swiperWrapper.appendChild(slide.cloneNode(true));
+                }
+            });
+
+            // 3. Réinitialiser Swiper
+            initProjectSwiper();
+            
+            // 4. Update UI
+            refreshCursorEvents();
+        }
+
+        // --- Event Listeners Boutons Catégories ---
+        document.querySelectorAll('.filter-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                // Gestion classe active
+                document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+
+                // Mise à jour de l'état
+                activeCategory = this.getAttribute('data-filter');
+                applyFilters();
+            });
         });
+
+        // --- Event Listeners Dropdown Skills (NOUVEAU) ---
+        const dropdown = document.getElementById('skillDropdown');
+        const dropdownSelected = dropdown.querySelector('.dropdown-selected');
+        const dropdownOptions = dropdown.querySelectorAll('.dropdown-option');
+        const currentSkillText = document.getElementById('currentSkillText');
+
+        // Toggle dropdown open
+        dropdownSelected.addEventListener('click', (e) => {
+            e.stopPropagation();
+            dropdown.classList.toggle('open');
+        });
+
+        // Fermer si click ailleurs
+        document.addEventListener('click', () => dropdown.classList.remove('open'));
+
+        // Sélection d'une option
+        dropdownOptions.forEach(option => {
+            option.addEventListener('click', function() {
+                const skillFilter = this.getAttribute('data-skill-filter');
+                const skillLabel = this.textContent;
+
+                // Mise à jour état
+                activeSkill = skillFilter;
+                
+                // Mise à jour UI Dropdown
+                currentSkillText.textContent = skillLabel;
+                dropdownOptions.forEach(opt => opt.classList.remove('selected'));
+                this.classList.add('selected');
+
+                if (activeSkill !== 'all') {
+                    dropdownSelected.classList.add('active-filter');
+                } else {
+                    dropdownSelected.classList.remove('active-filter');
+                    currentSkillText.textContent = "Filtrer par compétence";
+                }
+
+                applyFilters();
+            });
+        });
+
 
         // 4. SWIPER (COMPETENCES)
         const skillsSwiper = new Swiper('.skills-swiper', {
@@ -769,7 +1071,7 @@
         window.scrollToProject = function(index) {
             const projectsSection = document.getElementById('projects');
             lenis.scrollTo(projectsSection, { offset: -50 });
-            swiper.slideTo(index);
+            if(projectSwiper) projectSwiper.slideTo(index);
         };
 
         // 6. GSAP ANIMATIONS
@@ -802,14 +1104,29 @@
 
         // 7. CURSOR
         const cursor = document.getElementById('cursor');
+        
+        // Fonction pour attacher les événements (appelée au load + après filtrage)
+        function refreshCursorEvents() {
+            const interactives = '.hover-trigger, a, button, .project-card, .timeline-content, .swiper-button-prev, .swiper-button-next, .skill-box, .passion-card, .skills-swiper, .about-image, .dropdown-selected, .dropdown-option';
+            document.querySelectorAll(interactives).forEach(el => {
+                // On retire d'abord pour éviter les doublons si on appelle plusieurs fois
+                el.removeEventListener('mouseenter', cursorEnter);
+                el.removeEventListener('mouseleave', cursorLeave);
+                
+                el.addEventListener('mouseenter', cursorEnter);
+                el.addEventListener('mouseleave', cursorLeave);
+            });
+        }
+
+        const cursorEnter = () => cursor.classList.add('hovered');
+        const cursorLeave = () => cursor.classList.remove('hovered');
+
         document.addEventListener('mousemove', e => {
             gsap.to(cursor, { x: e.clientX, y: e.clientY, duration: 0.1 });
         });
-        const interactives = '.hover-trigger, a, button, .project-card, .timeline-content, .swiper-button-prev, .swiper-button-next, .skill-box, .passion-card, .skills-swiper, .about-image';
-        document.querySelectorAll(interactives).forEach(el => {
-            el.addEventListener('mouseenter', () => cursor.classList.add('hovered'));
-            el.addEventListener('mouseleave', () => cursor.classList.remove('hovered'));
-        });
+        
+        // Init cursor events
+        refreshCursorEvents();
 
         // 8. PARTICLES
         const canvas = document.getElementById("bgCanvas");

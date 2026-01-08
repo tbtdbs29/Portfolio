@@ -4,234 +4,117 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Assistant IA | Thibault</title>
-    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/style.css"> </head>
+<body class="chat-mode">
     
-    <style>
-        /* Layout spécifique : Plein écran sans scroll sur le body */
-        body {
-            height: 100vh;
-            display: flex;
-            flex-direction: column;
-            overflow: hidden;
-            background-color: var(--bg-color);
-        }
-
-        /* Header simplifié */
-        .chat-header {
-            padding: 20px;
-            border-bottom: 1px solid var(--border);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background: rgba(10, 10, 10, 0.8);
-            backdrop-filter: blur(10px);
-            z-index: 10;
-        }
-
-        .chat-header h1 {
-            font-size: 1.2rem;
-            margin: 0;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .status-dot {
-            width: 8px;
-            height: 8px;
-            background-color: #10b981; /* Vert "Online" */
-            border-radius: 50%;
-            box-shadow: 0 0 10px rgba(16, 185, 129, 0.5);
-        }
-
-        /* Zone de Chat */
-        .chat-container {
-            flex: 1;
-            overflow-y: auto;
-            padding: 20px;
-            max-width: 900px;
-            margin: 0 auto;
-            width: 100%;
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-            scroll-behavior: smooth;
-        }
-
-        .message {
-            max-width: 80%;
-            padding: 15px 20px;
-            border-radius: 12px;
-            line-height: 1.6;
-            font-size: 1rem;
-            animation: fadeIn 0.3s ease;
-            position: relative;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .message.user {
-            align-self: flex-end;
-            background-color: var(--surface);
-            color: var(--text-primary);
-            border: 1px solid var(--border);
-            border-bottom-right-radius: 2px;
-        }
-
-        .message.bot {
-            align-self: flex-start;
-            /* Pas de fond ou fond très léger pour le bot, style "ChatGPT" */
-            background-color: transparent; 
-            color: var(--text-secondary);
-            border: 1px solid transparent;
-            padding-left: 0;
-        }
-        
-        .message.bot strong {
-            color: var(--text-primary);
-        }
-
-        /* Zone de saisie */
-        .input-area {
-            padding: 20px;
-            border-top: 1px solid var(--border);
-            background: var(--bg-color);
-        }
-
-        .input-wrapper {
-            max-width: 900px;
-            margin: 0 auto;
-            position: relative;
-            display: flex;
-            gap: 10px;
-        }
-
-        input[type="text"] {
-            width: 100%;
-            background: var(--surface);
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            padding: 15px 20px;
-            color: var(--text-primary);
-            font-family: 'Inter', sans-serif;
-            font-size: 1rem;
-            transition: border-color 0.3s, box-shadow 0.3s;
-        }
-
-        input[type="text"]:focus {
-            outline: none;
-            border-color: var(--accent);
-            box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.1);
-        }
-
-        button#sendBtn {
-            background: var(--text-primary);
-            color: var(--bg-color);
-            border: none;
-            padding: 0 25px;
-            border-radius: 12px;
-            cursor: pointer;
-            font-weight: 600;
-            transition: opacity 0.2s;
-        }
-
-        button#sendBtn:hover {
-            opacity: 0.9;
-        }
-        
-        .back-link {
-            text-decoration: none;
-            color: var(--text-secondary);
-            font-size: 0.9rem;
-            display: flex;
-            align-items: center;
-            gap: 5px;
-            transition: color 0.3s;
-        }
-        .back-link:hover {
-            color: var(--text-primary);
-        }
-
-    </style>
-</head>
-<body>
+    <div class="noise-overlay"></div>
     <div id="cursor"></div>
 
     <header class="chat-header">
-        <a href="../index.html" class="back-link hover-trigger">← Retour</a>
-        <h1>
-            <span class="status-dot"></span>
-            Assistant Virtuel
-        </h1>
+        <a href="../index.html" class="back-link hover-trigger">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+            Retour
+        </a>
+        <div class="ai-identity">
+            <div class="status-indicator">
+                <span class="status-dot"></span>
+                <span>SYSTEM ONLINE</span>
+            </div>
+        </div>
         <div style="width: 60px;"></div> </header>
 
-    <div class="chat-container" id="chat">
-        <div class="message bot">
-            <strong>IA :</strong> Bonjour. Je suis l'assistant virtuel de Thibault. Je peux répondre à vos questions sur son parcours, ses compétences techniques ou ses projets. Que souhaitez-vous savoir ?
-        </div>
-    </div>
+    <main class="chat-viewport" id="chat">
+        <div class="chat-content" id="chatContent">
+            
+            <div class="message-row bot">
+                <div class="avatar">
+                    <svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 0 1 10 10c0 5.52-4.48 10-10 10S2 17.52 2 12 6.48 2 12 2zm0 2a8 8 0 0 0-8 8c0 4.42 3.58 8 8 8s8-3.58 8-8-3.58-8-8-8zm0 4a4 4 0 0 1 4 4c0 2.21-1.79 4-4 4s-4-1.79-4-4 1.79-4 4-4z" fill="currentColor"/></svg>
+                </div>
+                <div class="bubble">
+                    <strong>IA :</strong> Initialisation terminée.<br> Je suis l'assistant neural de Thibault. J'ai accès à l'ensemble de son parcours, ses données techniques et ses projets. Quelle information recherchez-vous ?
+                </div>
+            </div>
 
-    <div class="input-area">
-        <div class="input-wrapper">
-            <input type="text" id="userInput" placeholder="Posez une question sur mon profil..." autocomplete="off">
-            <button id="sendBtn" class="hover-trigger">Envoyer</button>
+        </div>
+    </main>
+
+    <div class="input-area-float">
+        <div class="input-glass">
+            <input type="text" id="userInput" placeholder="Posez une question..." autocomplete="off">
+            <button id="sendBtn" class="send-btn hover-trigger">
+                <svg viewBox="0 0 24 24"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>
+            </button>
         </div>
     </div>
 
     <script>
-        // Logique UI (Curseur + Chat)
+        // --- LOGIQUE UI ---
         const cursor = document.getElementById('cursor');
-        const chatContainer = document.getElementById("chat");
+        const chatContent = document.getElementById("chatContent");
+        const chatViewport = document.getElementById("chat"); // Pour le scroll
         const input = document.getElementById("userInput");
         const sendBtn = document.getElementById("sendBtn");
 
-        // Curseur
+        // Curseur Magnétique
         document.addEventListener('mousemove', (e) => {
             cursor.style.left = e.clientX + 'px';
             cursor.style.top = e.clientY + 'px';
         });
-        document.querySelectorAll('.hover-trigger, button, a').forEach(el => {
-            el.addEventListener('mouseenter', () => cursor.classList.add('hovered'));
-            el.addEventListener('mouseleave', () => cursor.classList.remove('hovered'));
+
+        // Gestion du hover dynamique
+        document.body.addEventListener('mouseover', (e) => {
+            if (e.target.closest('.hover-trigger') || e.target.tagName === 'A' || e.target.tagName === 'BUTTON') {
+                cursor.classList.add('hovered');
+            } else {
+                cursor.classList.remove('hovered');
+            }
         });
 
-        // Fonctions Chat
-        function addMessage(text, sender) {
-            const msg = document.createElement("div");
-            msg.classList.add("message", sender);
-            
-            // Si c'est le bot, on met en gras le nom
-            if(sender === 'bot') {
-                msg.innerHTML = `<strong>IA :</strong> ${text}`;
-            } else {
-                msg.textContent = text;
+        // --- FONCTIONS CHAT ---
+
+        function createMessageElement(text, sender) {
+            const row = document.createElement("div");
+            row.classList.add("message-row", sender);
+
+            // Avatar logic
+            let avatarHTML = '';
+            if (sender === 'bot') {
+                avatarHTML = `<div class="avatar"><svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 0 1 10 10c0 5.52-4.48 10-10 10S2 17.52 2 12 6.48 2 12 2zm0 2a8 8 0 0 0-8 8c0 4.42 3.58 8 8 8s8-3.58 8-8-3.58-8-8-8zm0 4a4 4 0 0 1 4 4c0 2.21-1.79 4-4 4s-4-1.79-4-4 1.79-4 4-4z" fill="currentColor"/></svg></div>`;
             }
-            
-            chatContainer.appendChild(msg);
-            chatContainer.scrollTop = chatContainer.scrollHeight;
+
+            // Bubble content
+            let contentHTML = `<div class="bubble">${text}</div>`;
+            if (sender === 'bot') {
+                // Style différent pour le bot, peut inclure du HTML/Markdown plus tard
+                contentHTML = `<div class="bubble">${text}</div>`;
+            }
+
+            row.innerHTML = sender === 'bot' ? avatarHTML + contentHTML : contentHTML;
+            return row;
+        }
+
+        function scrollToBottom() {
+            chatViewport.scrollTop = chatViewport.scrollHeight;
         }
 
         async function sendMessage() {
             const text = input.value.trim();
             if (!text) return;
 
-            addMessage(text, "user");
+            // 1. Affiche le message de l'utilisateur
+            chatContent.appendChild(createMessageElement(text, "user"));
             input.value = "";
+            scrollToBottom();
             
-            // Indicateur de chargement (optionnel mais recommandé pro)
+            // 2. Affiche le loader stylé
             const loadingId = 'loading-' + Date.now();
-            const loadingMsg = document.createElement("div");
-            loadingMsg.classList.add("message", "bot");
-            loadingMsg.id = loadingId;
-            loadingMsg.innerHTML = `<em>En train d'écrire...</em>`;
-            chatContainer.appendChild(loadingMsg);
-            chatContainer.scrollTop = chatContainer.scrollHeight;
+            const loadingRow = createMessageElement('<span style="opacity:0.6; font-style:italic;">Analyse en cours...</span>', "bot");
+            loadingRow.id = loadingId;
+            chatContent.appendChild(loadingRow);
+            scrollToBottom();
 
             try {
-                const response = await fetch("http://localhost:3000/chat", {
+                const response = await fetch("/api/chat", {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({ message: text })
@@ -239,16 +122,20 @@
                 
                 const data = await response.json();
                 
-                // Supprimer le message de chargement
+                // 3. On supprime le loader
                 const loader = document.getElementById(loadingId);
                 if(loader) loader.remove();
 
-                addMessage(data.reply, "bot");
+                // 4. On affiche la vraie réponse du backend
+                chatContent.appendChild(createMessageElement(data.reply, "bot"));
+                scrollToBottom();
 
             } catch (err) {
+                // Gestion d'erreur
                 const loader = document.getElementById(loadingId);
                 if(loader) loader.remove();
-                addMessage("Erreur de connexion au serveur. Assurez-vous que le backend tourne.", "bot");
+                
+                chatContent.appendChild(createMessageElement("Erreur critique: Je n'arrive pas à joindre le backend (port 3000).", "bot"));
                 console.error(err);
             }
         }
@@ -257,6 +144,9 @@
         input.addEventListener("keypress", (e) => {
             if (e.key === "Enter") sendMessage();
         });
+        
+        // Focus auto
+        input.focus();
     </script>
 </body>
 </html>
