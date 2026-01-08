@@ -6,7 +6,23 @@
       "use": "@vercel/node"
     },
     {
-      "src": "**/*.html",
+      "src": "index.html",
+      "use": "@vercel/static"
+    },
+    {
+      "src": "css/**",
+      "use": "@vercel/static"
+    },
+    {
+      "src": "assets/**",
+      "use": "@vercel/static"
+    },
+    {
+      "src": "chatbot/**",
+      "use": "@vercel/static"
+    },
+    {
+      "src": "classic/**",
       "use": "@vercel/static"
     }
   ],
