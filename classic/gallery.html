@@ -121,7 +121,7 @@
     <div class="nav-arrow right" id="btnRight">&#10095;</div>
 
     <script>
-        const API_URL = "http://localhost:3000"; // Adresse de ton serveur Node.js
+        const API_URL = ""; // Adresse de ton serveur Node.js
 
         // Configuration des catégories
         const categoriesConfig = [
@@ -149,7 +149,7 @@
                     loaderLogs.textContent = `Récupération dossier : ${catConfig.title}...`;
                     
                     // 1. Demander la liste des fichiers au serveur
-                    const res = await fetch(`${API_URL}/api/photos/${catConfig.id}`);
+                    const res = await fetch(`/api/photos/${catConfig.id}`);
                     if (!res.ok) throw new Error(`Erreur serveur pour ${catConfig.id}`);
                     const data = await res.json();
                     
@@ -163,7 +163,7 @@
                     
                     const imagePromises = data.images.map(filename => {
                         // On utilise l'URL statique servie par le serveur
-                        return getImageMeta(`${API_URL}/assets/${catConfig.id}/${filename}`);
+                        return getImageMeta(`/assets/${catConfig.id}/${filename}`);
                     });
 
                     const loadedImages = (await Promise.all(imagePromises)).filter(img => img !== null);
