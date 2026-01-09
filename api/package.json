@@ -1,13 +1,13 @@
 {
-  "name": "backend-cohere",
+  "name": "backend-portfolio-thibault",
   "version": "1.0.0",
-  "description": "Backend avec l'IA générative de Cohere",
-  "main": "server.js",
+  "description": "Backend API Portfolio",
+  "main": "index.js",
   "type": "module",
   "scripts": {
-    "start": "node server.js"
+    "start": "node index.js"
   },
-  "author": "",
+  "author": "Thibault Dubois",
   "license": "ISC",
   "dependencies": {
     "cors": "^2.8.5",

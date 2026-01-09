@@ -17,6 +17,9 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
+// Servir les fichiers statiques depuis la racine du projet
+app.use(express.static(path.join(__dirname, '../')));
+
 // --- 1. ASSETS ---
 const assetsPath = path.join(__dirname, '../assets');
 app.use('/assets', express.static(assetsPath));
@@ -144,7 +147,7 @@ app.get("/api/photos/:category", (req, res) => {
 });
 
 // --- 4. ROUTE CHAT (MIGRÉE VERS OPENAI) ---
-app.post("/chat", async (req, res) => {
+app.post("/api/chat", async (req, res) => {
   try {
     const userMessage = req.body.message;
     if (!userMessage) return res.status(400).json({ reply: "Message vide." });
@@ -194,4 +197,4 @@ if (process.env.NODE_ENV !== 'production') {
 }
 
 // Pour Vercel, on exporte l'application
-module.exports = app;
+export default app;
