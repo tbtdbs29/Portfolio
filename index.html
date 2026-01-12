@@ -2,12 +2,19 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Thibault | Digital Experience</title>
     <link rel="stylesheet" href="css/style.css">
     <style>
         /* Styles spécifiques pour l'intro */
-        body { overflow: hidden; height: 100vh; display: flex; flex-direction: column; }
+        body { 
+            overflow: hidden; 
+            height: 100vh; /* Fallback */
+            height: 100dvh; /* Mobile modern fix */
+            display: flex; 
+            flex-direction: column; 
+            margin: 0;
+        }
         
         .split-screen {
             display: flex;
@@ -25,11 +32,7 @@
             position: relative;
             transition: flex 0.8s cubic-bezier(0.16, 1, 0.3, 1);
             border-right: 1px solid rgba(255,255,255,0.05);
-        }
-
-        .split-side:hover {
-            flex: 1.5;
-            background: rgba(255,255,255,0.02);
+            overflow: hidden;
         }
 
         .big-link {
@@ -38,10 +41,11 @@
             text-align: center;
             position: relative;
             z-index: 10;
+            padding: 20px;
         }
 
         .big-title {
-            font-size: clamp(3rem, 6vw, 8rem);
+            font-size: clamp(2.5rem, 5vw, 8rem);
             font-family: 'Space Grotesk', sans-serif;
             font-weight: 700;
             text-transform: uppercase;
@@ -62,13 +66,23 @@
             transition: all 0.5s;
         }
 
-        .split-side:hover .subtitle {
-            opacity: 1;
-            transform: translateY(0);
-        }
-        
-        .split-side:hover .big-title {
-            transform: scale(1.05);
+        /* Desktop Hover Effects */
+        @media (min-width: 769px) {
+            .split-side:hover {
+                flex: 1.5;
+                background: rgba(255,255,255,0.02);
+            }
+            .split-side:hover .subtitle {
+                opacity: 1;
+                transform: translateY(0);
+            }
+            .split-side:hover .big-title {
+                transform: scale(1.05);
+            }
+            .split-side:hover .bg-reveal {
+                opacity: 0.6;
+                transform: scale(1.05);
+            }
         }
 
         /* Background Image Reveal */
@@ -77,19 +91,25 @@
             top: 0; left: 0; width: 100%; height: 100%;
             object-fit: cover;
             opacity: 0;
-            transition: opacity 0.6s ease;
+            transition: opacity 0.6s ease, transform 1s ease;
             z-index: 1;
             filter: grayscale(100%) brightness(0.4);
+            pointer-events: none;
         }
 
-        .split-side:hover .bg-reveal {
-            opacity: 0.6;
-        }
-        
-        /* Mobile */
+        /* Mobile specific adjustments */
         @media (max-width: 768px) {
             .split-screen { flex-direction: column; }
-            .split-side { border-right: none; border-bottom: 1px solid rgba(255,255,255,0.05); }
+            .split-side { 
+                border-right: none; 
+                border-bottom: 1px solid rgba(255,255,255,0.05); 
+                flex: 1 !important; /* Force equality on mobile */
+            }
+            
+            /* On mobile, we show content by default since there is no hover */
+            .bg-reveal { opacity: 0.3; }
+            .subtitle { opacity: 1; transform: translateY(0); margin-top: 10px; font-size: 0.8rem; }
+            .big-title { font-size: 3rem; }
         }
     </style>
 </head>
@@ -117,21 +137,25 @@
 
     </main>
 
-    <footer style="position: fixed; bottom: 30px; width: 100%; text-align: center; pointer-events: none; z-index: 10; color: #444; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.1em;">
+    <footer style="position: fixed; bottom: 30px; width: 100%; text-align: center; pointer-events: none; z-index: 10; color: #444; font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.1em; padding: 0 10px;">
         Select your interface
     </footer>
 
     <script>
-        // Curseur Magnétique Simple
+        // Detection tactile pour désactiver la logique curseur JS si nécessaire
+        const isTouch = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
         const cursor = document.getElementById('cursor');
-        document.addEventListener('mousemove', (e) => {
-            cursor.style.left = e.clientX + 'px';
-            cursor.style.top = e.clientY + 'px';
-        });
-        document.querySelectorAll('.hover-trigger, a').forEach(el => {
-            el.addEventListener('mouseenter', () => cursor.classList.add('hovered'));
-            el.addEventListener('mouseleave', () => cursor.classList.remove('hovered'));
-        });
+
+        if (!isTouch) {
+            document.addEventListener('mousemove', (e) => {
+                cursor.style.left = e.clientX + 'px';
+                cursor.style.top = e.clientY + 'px';
+            });
+            document.querySelectorAll('.hover-trigger, a').forEach(el => {
+                el.addEventListener('mouseenter', () => cursor.classList.add('hovered'));
+                el.addEventListener('mouseleave', () => cursor.classList.remove('hovered'));
+            });
+        }
     </script>
 </body>
 </html>

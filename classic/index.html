@@ -10,6 +10,16 @@
     <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css" />
 
     <style>
+        /* --- CORRECTION CRITIQUE SCROLL HORIZONTAL --- */
+        html, body {
+            width: 100%;
+            max-width: 100%;
+            overflow-x: hidden !important;
+            position: relative;
+            margin: 0;
+            padding: 0;
+        }
+
         /* --- STYLES EXISTANTS CONSERVÉS --- */
         #cursor { z-index: 20000 !important; }
 
@@ -29,6 +39,7 @@
             position: relative; transform: translateY(50px);
             transition: transform 0.4s cubic-bezier(0.19, 1, 0.22, 1);
             box-shadow: 0 20px 50px rgba(0, 255, 229, 0.05);
+            max-height: 90vh; overflow-y: auto; /* Sécurité mobile */
         }
         .modal-overlay.active .modal { transform: translateY(0); }
 
@@ -46,6 +57,7 @@
             display: flex; align-items: center; justify-content: center;
             position: relative; text-align: center; padding-top: 100px;
             z-index: 10;
+            width: 100%; overflow: hidden; /* Sécurité */
         }
 
         .anim-text { display: inline-block; }
@@ -75,7 +87,7 @@
 
 
         /* --- SKILLS CARROUSEL --- */
-        .skills-section { padding: 100px 0; position: relative; z-index: 20; }
+        .skills-section { padding: 100px 0; position: relative; z-index: 20; width: 100%; overflow: hidden; }
         .skills-swiper { width: 100%; padding: 40px 0; overflow: visible; }
         .skills-swiper .swiper-slide { width: 320px; height: auto; opacity: 1; transform: scale(1); transition: transform 0.3s ease; }
 
@@ -209,7 +221,7 @@
         .stat-item h4 { font-size: 2.5rem; color: var(--accent); margin-bottom: 5px; font-family: 'Space Grotesk', sans-serif; }
         .stat-item span { font-size: 0.9rem; text-transform: uppercase; letter-spacing: 0.1em; color: #666; }
 
-        .timeline-section { position: relative; padding: 100px 0; z-index: 20; }
+        .timeline-section { position: relative; padding: 100px 0; z-index: 20; width: 100%; overflow: hidden; /* Sécurité */ }
         .timeline-line { position: absolute; left: 50%; top: 0; bottom: 0; width: 4px; background: rgba(255,255,255,0.05); transform: translateX(-50%); z-index: 1; border-radius: 4px; }
         .timeline-progress { position: absolute; left: 50%; top: 0; width: 4px; height: 0%; background: var(--accent); transform: translateX(-50%); z-index: 2; box-shadow: 0 0 20px var(--accent); border-radius: 4px; }
         .timeline-row { display: flex; justify-content: space-between; margin-bottom: 100px; width: 100%; position: relative; z-index: 10; }
@@ -236,25 +248,80 @@
         .form-input { width: 100%; background: transparent; border: none; border-bottom: 1px solid #333; padding: 15px 0; color: white; font-size: 1.1rem; outline: none; transition: border-color 0.3s; }
         .form-input:focus { border-bottom-color: var(--accent); }
 
+        /* --- STYLES MENU MOBILE (AJOUT) --- */
+        .burger-menu {
+            display: none;
+            flex-direction: column;
+            gap: 6px;
+            cursor: pointer;
+            z-index: 10001;
+            padding: 10px;
+        }
+        .burger-menu span {
+            width: 30px; height: 2px;
+            background-color: white;
+            transition: 0.3s;
+        }
+        
+        .mobile-nav-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: #050505; z-index: 10000;
+            display: flex; align-items: center; justify-content: center;
+            opacity: 0; visibility: hidden; transition: 0.4s ease;
+        }
+        .mobile-nav-overlay.active { opacity: 1; visibility: visible; }
+        .mobile-links { display: flex; flex-direction: column; gap: 30px; text-align: center; }
+        .mobile-links a {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 2rem; color: white; text-decoration: none;
+            text-transform: uppercase; letter-spacing: 0.1em;
+        }
+
+        /* --- MEDIA QUERIES (MOBILE FIXES) --- */
         @media (max-width: 900px) {
             .about-wrapper { flex-direction: column; }
             .about-image { width: 100%; height: 400px; }
             .about-text h2 { font-size: 2.5rem; }
-        }
-        @media (max-width: 768px) {
+            
+            /* Navbar Mobile */
             .nav-links { display: none; }
-            .lang-switch { margin-left: auto; border: none; }
-            .timeline-row { flex-direction: column; padding-left: 60px; }
+            .burger-menu { display: flex; }
+            .lang-switch { margin-right: 20px; border: none; }
+            .top-nav { padding: 20px; }
+
+            /* Timeline Mobile */
+            .timeline-row { flex-direction: column; padding-left: 50px; margin-bottom: 50px; }
             .timeline-row.right { flex-direction: column; }
             .timeline-content { width: 100%; margin-bottom: 20px; }
-            .project-swiper .swiper-slide { width: 85%; height: 450px; }
+            .timeline-line, .timeline-progress { left: 20px; transform: none; }
+            .timeline-row .timeline-dot { left: 11px; transform: translateY(-50%); }
+            
+            /* Swiper Mobile */
+            .project-swiper .swiper-slide { width: 85vw; height: 480px; opacity: 1; transform: scale(1); }
             .swiper-button-prev, .swiper-button-next { display: none; }
             .swiper-container { padding: 60px 0; }
-            .timeline-line, .timeline-progress { left: 20px; }
-            .timeline-row .timeline-dot { left: 11px; }
+            
+            /* Skills Mobile */
+            .skills-swiper .swiper-slide { width: 85vw; }
+            .skills-section { width: 100vw; overflow-x: hidden; }
+
+            /* Hero Text */
+            .hero h1 { font-size: clamp(3rem, 13vw, 5rem) !important; }
+            
+            /* Modal */
+            .modal { width: 95%; padding: 30px 20px; }
+        }
+
+        @media (max-width: 768px) {
             .filter-container { gap: 10px; }
             .filter-btn { padding: 8px 15px; font-size: 0.8rem; }
             .custom-dropdown { width: 100%; max-width: 300px; }
+            
+            /* Sécurité overflow */
+            .hero, .skills-section, .project-swiper, .timeline-section {
+                max-width: 100vw;
+                overflow-x: hidden;
+            }
         }
     </style>
 </head>
@@ -283,6 +350,11 @@
                 <img src="../assets/en.png" onclick="setLanguage('en')" class="lang-btn hover-trigger" id="btn-en" alt="EN">
             </div>
         </div>
+
+        <div class="burger-menu hover-trigger" onclick="toggleMobileMenu()">
+            <span></span>
+            <span></span>
+        </div>
     </nav>
 
     <canvas id="bgCanvas" style="position: fixed; top: 0; left: 0; z-index: -1; opacity: 0.2; pointer-events: none;"></canvas>
@@ -304,7 +376,7 @@
                 <div class="swiper-container skills-swiper">
                     <div class="swiper-wrapper">
                         <div class="swiper-slide">
-                            <a href="javascript:void(0)" class="skill-box core-skill hover-trigger" onclick="openModal('comp_realiser')">
+                            <a href="javascript:void(0)" class="skill-box hover-trigger" onclick="openModal('comp_realiser')">
                                 <div class="skill-icon"><i class="fas fa-laptop-code"></i></div>
                                 <h3 data-i18n="skill_realise">Réaliser</h3>
                                 <p data-i18n="skill_realise_desc">Développer des applications informatiques complexes.</p>
@@ -313,7 +385,7 @@
                         </div>
                     
                         <div class="swiper-slide">
-                            <a href="javascript:void(0)" class="skill-box core-skill hover-trigger" onclick="openModal('comp_optimiser')">
+                            <a href="javascript:void(0)" class="skill-box hover-trigger" onclick="openModal('comp_optimiser')">
                                 <div class="skill-icon"><i class="fas fa-tachometer-alt"></i></div>
                                 <h3 data-i18n="skill_optimize">Optimiser</h3>
                                 <p data-i18n="skill_optimize_desc">Analyser et optimiser des applications (algo, perf).</p>
@@ -322,7 +394,7 @@
                         </div>
                     
                         <div class="swiper-slide">
-                            <a href="javascript:void(0)" class="skill-box core-skill hover-trigger" onclick="openModal('comp_administrer')">
+                            <a href="javascript:void(0)" class="skill-box hover-trigger" onclick="openModal('comp_administrer')">
                                 <div class="skill-icon"><i class="fas fa-server"></i></div>
                                 <h3 data-i18n="skill_admin">Administrer</h3>
                                 <p data-i18n="skill_admin_desc">Installation, configuration et déploiement de services.</p>
@@ -331,7 +403,7 @@
                         </div>
                         
                         <div class="swiper-slide">
-                            <a href="javascript:void(0)" class="skill-box hover-trigger" onclick="openModal('comp_gerer')">
+                            <a href="javascript:void(0)" class="skill-box core-skill hover-trigger" onclick="openModal('comp_gerer')">
                                 <div class="skill-icon"><i class="fas fa-database"></i></div>
                                 <h3 data-i18n="skill_data">Gérer</h3>
                                 <p data-i18n="skill_data_desc">Conception et exploitation de bases de données.</p>
@@ -340,7 +412,7 @@
                         </div>
                     
                         <div class="swiper-slide">
-                            <a href="javascript:void(0)" class="skill-box hover-trigger" onclick="openModal('comp_conduire')">
+                            <a href="javascript:void(0)" class="skill-box core-skill hover-trigger" onclick="openModal('comp_conduire')">
                                 <div class="skill-icon"><i class="fas fa-tasks"></i></div>
                                 <h3 data-i18n="skill_manage">Conduire</h3>
                                 <p data-i18n="skill_manage_desc">Gestion de projet, identification des besoins.</p>
@@ -349,7 +421,7 @@
                         </div>
                     
                         <div class="swiper-slide">
-                            <a href="javascript:void(0)" class="skill-box hover-trigger" onclick="openModal('comp_collaborer')">
+                            <a href="javascript:void(0)" class="skill-box core-skill hover-trigger" onclick="openModal('comp_collaborer')">
                                 <div class="skill-icon"><i class="fas fa-users"></i></div>
                                 <h3 data-i18n="skill_collab">Collaborer</h3>
                                 <p data-i18n="skill_collab_desc">Travail en équipe, communication professionnelle.</p>
@@ -423,7 +495,7 @@
                                 <p>Interactive Chatbot</p>
                             </div>
                         </div>
-                        <div class="swiper-slide" data-categories="fini ale" data-skills="gerer optimiser">
+                        <div class="swiper-slide" data-categories="fini ale" data-skills="gerer optimiser administrer">
                             <div class="project-card" onclick="openModal('proj_dash')">
                                 <div class="card-bg" style="background-image: url('../assets/proj/ALE-Cloud.jpeg');"></div>
                                 <h3>Dashboard Data</h3>
@@ -458,7 +530,7 @@
                                 <p>Decision-making analysis of sports data</p>
                             </div>
                         </div>
-                        <div class="swiper-slide" data-categories="fini but" data-skills="realiser">
+                        <div class="swiper-slide" data-categories="fini but" data-skills="realiser administrer gerer collaborer">
                             <div class="project-card" onclick="openModal('proj_app')">
                                 <div class="card-bg" style="background-image: url('../assets/proj/image.png');"></div>
                                 <h3>App Annonces</h3>
@@ -613,10 +685,21 @@
         <div class="modal">
             <span class="modal-close" id="closeModal">&times;</span>
             <h2 id="modalTitle">Titre</h2>
-            <p id="modalDesc">Description...</p>
+            <div id="modalSkills" class="modal-skills"></div> <p id="modalDesc">Description...</p>
             <a id="modalLink" href="#" target="_blank" class="btn-magnetic" style="display:inline-block; margin-top:30px; border-color:var(--accent); color: var(--accent); padding: 12px 35px;">
                 Voir sur GitHub <i class="fab fa-github" style="margin-left: 10px;"></i>
             </a>
+        </div>
+    </div>
+    
+    <div class="mobile-nav-overlay" id="mobileNav">
+        <div class="mobile-links">
+            <a href="#skills" onclick="toggleMobileMenu()">Compétences</a>
+            <a href="#projects" onclick="toggleMobileMenu()">Projets</a>
+            <a href="#passions" onclick="toggleMobileMenu()">Lifestyle</a>
+            <a href="#photo" onclick="toggleMobileMenu()">Photos</a>
+            <a href="#about" onclick="toggleMobileMenu()">Parcours</a>
+            <a href="../assets/cv_thibault.pdf" target="_blank">Mon CV</a>
         </div>
     </div>
 
@@ -653,14 +736,14 @@
                 skill_collab_desc: "Travail en équipe, communication professionnelle.",
                 link_details: "Détails ➔",
 
-                passions_pre: "Behind the code",
+                passions_pre: "Derrière le code",
                 passion_photo: "Photographie",
                 passion_photo_desc: "Plus qu'un hobby, une discipline du regard. Capturer l'instant exige patience et précision, deux qualités que je transpose dans mon code.",
                 passion_moto: "Moto",
                 passion_moto_desc: "La liberté et la responsabilité. Sur la route comme dans un projet, tout est question d'anticipation, de trajectoire et de gestion du risque.",
                 passion_gym: "Musculation",
                 passion_gym_desc: "La preuve que l'effort constant paie. Pas de raccourcis. Juste de la discipline, de la répétition et une volonté de fer pour progresser.",
-                projects_title: "SELECTED WORKS",
+                projects_title: "PROJETS SÉLECTIONNÉS",
                 btn_gallery: "Explorer la Galerie",
                 about_pre: "Vision & Parcours",
                 about_title: "L'HUMAIN DERRIÈRE LE CODE",
@@ -676,7 +759,7 @@
                 time_ale_sub: "Développeur IA & Data chez ALE.",
                 time_iut_sub: "Cursus Informatique.",
                 time_s3p_sub: "Première expérience Web.",
-                contact_title: "LET'S TALK",
+                contact_title: "Discutons 😃",
                 ph_name: "Votre Nom",
                 ph_email: "Votre Email",
                 ph_msg: "Votre Message...",
@@ -738,80 +821,104 @@
             }
         };
 
+        // --- MAPPING DES COMPETENCES ---
+        const skillLabels = {
+            realiser: { fr: "Réaliser", en: "Develop" },
+            optimiser: { fr: "Optimiser", en: "Optimize" },
+            administrer: { fr: "Administrer", en: "Administer" },
+            gerer: { fr: "Gérer", en: "Manage Data" },
+            conduire: { fr: "Conduire", en: "Lead" },
+            collaborer: { fr: "Collaborer", en: "Collaborate" }
+        };
+
         // Données des Modales
         const modalData = {
             // PROJETS
             proj_ia: {
                 fr: { title: 'Portfolio IA', desc: "Développement d'un chatbot interactif utilisant l'API OpenAI.<br><br>Stack : Python, LangChain, OpenAI API.<br>Objectif : Rendre statique dynamique." },
                 en: { title: 'AI Portfolio', desc: "Development of an interactive chatbot using OpenAI API.<br><br>Stack: Python, LangChain, OpenAI API.<br>Goal: Make static dynamic." },
-                link: 'https://github.com/tbtdbs29/Portfolio'
+                link: 'https://github.com/tbtdbs29/Portfolio',
+                skills: ['realiser', 'optimiser']
             },
             proj_dash: {
                 fr: { title: 'Dashboard Data', desc: "Plateforme de visualisation et d'analyse de données de réseau en temps réel. Mise en place de modeles probalistique afin de detecter des anomalies.<br><br>Stack : Python restAPI postgres SQL Timesquale Kafka.<br>Fonctionnalités : Analyse prédictive, graphiques dynamiques. <br> Pas de lien GitHub car projet Pro" },
                 en: { title: 'Data Dashboard', desc: "Real-time network data visualization and analysis platform. Implementation of probabilistic models to detect anomalies.<br><br>Stack: Python restAPI Postgres timesquale kafka.<br>Features: Predictive analysis, dynamic charts. <br> No GitHub link due to project confidentiality." },
-                link: null
+                link: null,
+                skills: ['gerer', 'optimiser', 'administrer']
             },
             proj_agents: {
                 fr: { title: 'Chatbot Agents', desc: "Développement d'un chatbot multi-agent pour OVNA(Omnivista network advisor), webscrapper, vectorisation, base de données vectoriser ... <br><br>Concept : Multi-Agent Systems. <br> Pas de lien GitHub car projet Pro" },
-                en: { title: 'Agent Chatbot', desc: "Development of a multi-agent chatbot for OVNA (Omnivista network advisor), webscrapper, vectorization, vector database ... <br><br>Concept: Multi-Agent Systems. <br> No GitHub link due to project confidentiality." },
-                link: null
+                en: { title: 'Agent Chatbot', desc: "Development of an multi-agent chatbot for OVNA (Omnivista network advisor), webscrapper, vectorization, vector database ... <br><br>Concept: Multi-Agent Systems. <br> No GitHub link due to project confidentiality." },
+                link: null,
+                skills: ['realiser', 'optimiser']
             },
             proj_saas: {
                 fr: { title: 'SaaS Immo', desc: "Plateforme SaaS B2B pour les agences immobilières incluant une IA de génération de description.<br><br>Stack : Next.js, Supabase, Stripe." },
                 en: { title: 'Real Estate SaaS', desc: "B2B SaaS platform for real estate agencies including AI description generation.<br><br>Stack: Next.js, Supabase, Stripe." },
-                link: 'https://github.com/tbtdbs29/ImmoAI'
+                link: 'https://github.com/tbtdbs29/ImmoAI',
+                skills: ['realiser', 'conduire']
             },
             proj_10heures: {
                 fr: { title: '10heures', desc: "Application de recommandation de musique. Récupération des besoins utilisateurs à travers un questionnaire, créations de graph, analyse de tendance, de corrélation ...<br><br>Stack : Python, google forms." },
                 en: { title: '10heures', desc: "Music recommendation application. User needs retrieval through a questionnaire, graph creation, trend and correlation analysis ...<br><br>Stack: Next.js, Supabase, Stripe." },
-                link: 'https://github.com/tbtdbs29/10heures'
+                link: 'https://github.com/tbtdbs29/10heures',
+                skills: ['realiser', 'gerer']
             },
             proj_decision_analysis: {
                 fr: { title: 'Decision Analysis', desc: "Analyse de données sportives pour prise de décision.<br><br>Stack : Python, pandas, matplotlib." },
                 en: { title: 'Decision Analysis', desc: "Sports data analysis for decision-making.<br><br>Stack: Python, pandas, matplotlib." },
-                link: 'https://github.com/tbtdbs29/decision_analysis'
+                link: 'https://github.com/tbtdbs29/decision_analysis',
+                skills: ['gerer', 'optimiser']
             },
             proj_app: {
                 fr: { title: 'App Annonces', desc: "Application web avec front-office et back-office dans le but de repertorier des activitées dans la régions PACA<br><br>Focus : UX/UI et performance." },
                 en: { title: 'Classifieds App', desc: "Web application with front-office and back-office to list activities in the PACA region<br><br>Focus: UX/UI and performance." },
-                link: 'https://github.com/tbtdbs2/Xx_TregorIndustries_xX'
+                link: 'https://github.com/tbtdbs2/Xx_TregorIndustries_xX',
+                skills: ['realiser', 'administrer', 'gerer', 'collaborer']
             },
             proj_psycho: {
                 fr: { title: 'Sweeded American psycho', desc: "Nous avons réalisé un sweeded film d'american psycho en anglais<br><br>Focus : création de contenu et design. <a href='https://youtu.be/BgZtwG82gr0' target='_blank' style='color:var(--accent)'>Lien Youtube</a>" },
                 en: { title: 'Sweeded American psycho', desc: "We have created a sweeded version of the American Psycho film in English<br><br>Focus: content creation and design." },
-                link: null
+                link: null,
+                skills: ['collaborer']
             },
             proj_trivinfo: {
                 fr: { title: 'Triv\'info Pursuit', desc: "Jeu de questions-réponses en physique afin de présenter les compétences du BUT informatique à Lannion avec plateau de jeu, cartes, pions ect <br><br>Focus : jeu physique. <a href='../assets/proj/Trivinfo.pdf' target='_blank' style='color:var(--accent)'>Lien PDF</a>" },
                 en: { title: 'Triv\'info Pursuit', desc: "Quiz game in physics, to present BUT information to Lannion with a game board, cards, pawns etc <br><br>Focus: physical play." },
-                link: null
+                link: null,
+                skills: ['collaborer', 'conduire']
             },
             proj_sudoku: {
                 fr: { title: 'Sudoku', desc: "Jeu de Sudoku en C avec interface graphique, menu ect<br><br>Technologies : C, SDL2. <br> Pas de lien GitHub car projet perdu..." },
                 en: { title: 'Sudoku', desc: "Sudoku game in C with GUI and menu.<br><br>Technologies: C, SDL2. <br> No GitHub link due to loose project..." },
-                link: null
+                link: null,
+                skills: ['realiser', 'optimiser']
             },
             proj_n_dames: {
                 fr: { title: 'N-Dames', desc: "Problème des N-dames résolu avec optimisation de performance.<br><br>Technologies : Python, Optimisation. <br> Pas de lien GitHub car projet perdu..." },
                 en: { title: 'N-Queens', desc: "N-Queens problem solved with performance optimization.<br><br>Technologies: Python, Optimization. <br> No GitHub link due to loose project..." },
-                link: null
+                link: null,
+                skills: ['optimiser']
             },
             
             // TIMELINE
             time_ale: {
                 fr: { title: 'Alternance IA', desc: "<strong>2024 - Alcatel-Lucent Enterprise</strong><br><br>Développeur au sein de l'équipe R&D.<br><br>Missions : <br>- Développement de pipelines de données.<br>- Intégration de modèles prédictifs.<br>- Création de dashboards décisionnels." },
                 en: { title: 'AI Apprenticeship', desc: "<strong>2024 - Alcatel-Lucent Enterprise</strong><br><br>Developer within the R&D team.<br><br>Missions: <br>- Data pipeline development.<br>- Predictive model integration.<br>- Creation of decision-making dashboards." },
-                link: null
+                link: null,
+                skills: ['administrer', 'optimiser']
             },
             time_iut: {
                 fr: { title: 'IUT Lannion', desc: "<strong>2021 - 2024</strong><br><br>BUT Informatique - Parcours Réalisation d'Applications.<br><br>Acquisition des fondamentaux solides :<br>- Algorithmique & Structures de données.<br>- Développement Web & Mobile.<br>- Gestion de projet Agile." },
                 en: { title: 'IUT Lannion', desc: "<strong>2021 - 2024</strong><br><br>Computer Science Degree - Application Development Track.<br><br>Acquisition of solid fundamentals:<br>- Algorithms & Data Structures.<br>- Web & Mobile Development.<br>- Agile Project Management." },
-                link: null
+                link: null,
+                skills: []
             },
             time_s3p: {
                 fr: { title: 'Stage S3Pweb', desc: "<strong>2020 - Stage Découverte</strong><br><br>Première immersion dans le monde professionnel du web.<br>Découverte des enjeux du développement frontend et de l'UX Design." },
                 en: { title: 'Internship S3Pweb', desc: "<strong>2020 - Discovery Internship</strong><br><br>First immersion in the professional web world.<br>Discovery of frontend development and UX Design challenges." },
-                link: null
+                link: null,
+                skills: []
             },
 
             // --- COMPÉTENCES BUT ---
@@ -821,7 +928,8 @@
                     desc: "<strong>Développer des applications informatiques.</strong><br><br>Cette compétence valide ma capacité à partir d'un besoin client pour livrer une solution logicielle fonctionnelle. Elle couvre la conception, le codage, et les tests.<br><br><strong>Preuves associées :</strong><ul style='margin-top:15px; padding-left:20px; color:#aaa;'><li><strong>SaaS Immo :</strong> Architecture complète Next.js/Supabase. <br><a href='#' onclick='closeModal(); openModal(\"proj_saas\")' style='color:var(--accent)'>Voir le projet</a></li><li><strong>App Annonces :</strong> Développement Web Fullstack. <br><a href='#' onclick='closeModal(); openModal(\"proj_app\")' style='color:var(--accent)'>Voir le projet</a></li></ul>" 
                 },
                 en: { title: 'Develop', desc: "Developing computer applications..." },
-                link: null
+                link: null,
+                skills: []
             },
             comp_optimiser: {
                 fr: { 
@@ -829,7 +937,8 @@
                     desc: "<strong>Optimiser des applications informatiques.</strong><br><br>Il ne s'agit pas seulement de coder, mais de coder efficacement. J'analyse la complexité algorithmique et l'impact des structures de données.<br><br><strong>Preuves associées :</strong><ul style='margin-top:15px; padding-left:20px; color:#aaa;'><li><strong>N-Dames :</strong> Algorithme de backtracking optimisé en Python. <br><a href='#' onclick='closeModal(); openModal(\"proj_n_dames\")' style='color:var(--accent)'>Voir le projet</a></li><li><strong>Sudoku :</strong> Gestion mémoire et logique en C. <br><a href='#' onclick='closeModal(); openModal(\"proj_sudoku\")' style='color:var(--accent)'>Voir le projet</a></li></ul>" 
                 },
                 en: { title: 'Optimize', desc: "Optimizing computer applications..." },
-                link: null
+                link: null,
+                skills: []
             },
             comp_administrer: {
                 fr: { 
@@ -837,7 +946,8 @@
                     desc: "<strong>Administrer des systèmes communicants complexes.</strong><br><br>Installation, configuration et sécurisation des services et réseaux. Compréhension de l'infrastructure sous-jacente au code.<br><br><strong>Preuves associées :</strong><ul style='margin-top:15px; padding-left:20px; color:#aaa;'><li><strong>Alternance ALE :</strong> Déploiement de pipelines CI/CD et gestion d'environnements virtualisés. <br><a href='#' onclick='closeModal(); openModal(\"time_ale\")' style='color:var(--accent)'>Voir l'expérience</a></li></ul>" 
                 },
                 en: { title: 'Administer', desc: "System administration..." },
-                link: null
+                link: null,
+                skills: []
             },
             comp_gerer: {
                 fr: { 
@@ -845,7 +955,8 @@
                     desc: "<strong>Gérer des données de l’information.</strong><br><br>Conception de modèles de données, exploitation SQL/NoSQL et visualisation pour la prise de décision.<br><br><strong>Preuves associées :</strong><ul style='margin-top:15px; padding-left:20px; color:#aaa;'><li><strong>Dashboard Data :</strong> Visualisation temps réel streamlit. <br><a href='#' onclick='closeModal(); openModal(\"proj_dash\")' style='color:var(--accent)'>Voir le projet</a></li><li><strong>Decision Analysis :</strong> Analyse statistique avec Pandas/Matplotlib. <br><a href='#' onclick='closeModal(); openModal(\"proj_decision_analysis\")' style='color:var(--accent)'>Voir le projet</a></li></ul>" 
                 },
                 en: { title: 'Manage Data', desc: "Data management..." },
-                link: null
+                link: null,
+                skills: []
             },
             comp_conduire: {
                 fr: { 
@@ -853,7 +964,8 @@
                     desc: "<strong>Conduire un projet.</strong><br><br>Identification des besoins, planification Agile et gestion des ressources pour mener un projet à terme.<br><br><strong>Preuves associées :</strong><ul style='margin-top:15px; padding-left:20px; color:#aaa;'><li><strong>ImmoAI :</strong> Lancement de mon SaaS, gestion du projet, relation clients ... <br><a href='#' onclick='closeModal(); openModal(\"proj_saas\")' style='color:var(--accent)'>Voir l'activité</a></li><li><strong>Triv'Info :</strong> Création d'un jeu physique (gestion de production). <br><a href='#' onclick='closeModal(); openModal(\"proj_trivinfo\")' style='color:var(--accent)'>Voir le projet</a></li></ul>" 
                 },
                 en: { title: 'Lead Project', desc: "Project management..." },
-                link: null
+                link: null,
+                skills: []
             },
             comp_collaborer: {
                 fr: { 
@@ -861,7 +973,8 @@
                     desc: "<strong>Travailler en équipe informatique.</strong><br><br>S'intégrer dans une équipe, utiliser les outils collaboratifs (Git) et communiquer efficacement.<br><br><strong>Preuves associées :</strong><ul style='margin-top:15px; padding-left:20px; color:#aaa;'><li><strong>Sweeded American Psycho :</strong> Travail de groupe créatif et coordination. <br><a href='#' onclick='closeModal(); openModal(\"proj_psycho\")' style='color:var(--accent)'>Voir le projet</a></li><li><strong>Alternance :</strong> Intégration en équipe R&D internationale.</li></ul>" 
                 },
                 en: { title: 'Collaborate', desc: "Team work..." },
-                link: null
+                link: null,
+                skills: []
             }
         };
 
@@ -905,11 +1018,12 @@
         function raf(time) { lenis.raf(time); requestAnimationFrame(raf); }
         requestAnimationFrame(raf);
 
-        // 2. FONCTION MODALE (Modifiée pour gérer l'absence de lien)
+        // 2. FONCTION MODALE (Modifiée pour les Tags)
         const modal = document.getElementById('modalOverlay');
         const modalTitle = document.getElementById('modalTitle');
         const modalDesc = document.getElementById('modalDesc');
         const modalLink = document.getElementById('modalLink');
+        const modalSkills = document.getElementById('modalSkills'); // New
 
         window.openModal = function(key) {
             const data = modalData[key];
@@ -920,20 +1034,31 @@
             modalTitle.textContent = content.title;
             modalDesc.innerHTML = content.desc;
             
-            // Si le lien existe et n'est pas vide/null
+            // GESTION DES TAGS DE COMPETENCES
+            modalSkills.innerHTML = ''; // Reset
+            if (data.skills && data.skills.length > 0) {
+                data.skills.forEach(skillKey => {
+                    const skillTag = document.createElement('span');
+                    skillTag.className = 'skill-tag';
+                    // Traduction du tag ou fallback sur la clé
+                    const label = skillLabels[skillKey] ? skillLabels[skillKey][currentLang] : skillKey;
+                    skillTag.textContent = label;
+                    modalSkills.appendChild(skillTag);
+                });
+            }
+
+            // GESTION DU LIEN
             if (data.link) {
                 modalLink.href = data.link; 
                 modalLink.style.display = 'inline-block'; 
             } else { 
-                // Sinon on cache le bouton
                 modalLink.style.display = 'none'; 
-                modalLink.href = '#'; // Sécurité
+                modalLink.href = '#'; 
             }
             
             modal.classList.add('active');
         };
         
-        // Fonction globale pour fermer la modale (utile pour les liens internes)
         window.closeModal = function() {
             modal.classList.remove('active');
         };
@@ -1074,19 +1199,28 @@
             if(projectSwiper) projectSwiper.slideTo(index);
         };
 
-        // 6. GSAP ANIMATIONS
+        // 6. GSAP ANIMATIONS (CORRIGÉE POUR MOBILE)
         gsap.registerPlugin(ScrollTrigger);
         gsap.to(".timeline-progress", {
             height: "100%", ease: "none",
             scrollTrigger: { trigger: ".timeline-section", start: "top center", end: "bottom center", scrub: true }
         });
 
+        // Correction du bug de scroll horizontal sur mobile ici :
         gsap.utils.toArray('.timeline-row').forEach(row => {
             const isRight = row.classList.contains('right');
+            // Si on est sur un petit écran, on fait venir du bas (y), sinon du côté (x)
+            const isMobile = window.innerWidth < 900;
+            
             gsap.from(row.querySelector('.timeline-content'), {
-                x: isRight ? 100 : -100, opacity: 0, duration: 1, ease: "power3.out",
+                x: isMobile ? 0 : (isRight ? 100 : -100), 
+                y: isMobile ? 50 : 0,
+                opacity: 0, 
+                duration: 1, 
+                ease: "power3.out",
                 scrollTrigger: { trigger: row, start: "top 80%", toggleActions: "play none none reverse" }
             });
+
             ScrollTrigger.create({
                 trigger: row, start: "top 60%", end: "bottom 60%",
                 onEnter: () => row.classList.add('active'),
@@ -1121,9 +1255,14 @@
         const cursorEnter = () => cursor.classList.add('hovered');
         const cursorLeave = () => cursor.classList.remove('hovered');
 
-        document.addEventListener('mousemove', e => {
-            gsap.to(cursor, { x: e.clientX, y: e.clientY, duration: 0.1 });
-        });
+        // Seulement sur PC
+        if (window.matchMedia("(pointer: fine)").matches) {
+            document.addEventListener('mousemove', e => {
+                gsap.to(cursor, { x: e.clientX, y: e.clientY, duration: 0.1 });
+            });
+        } else {
+            cursor.style.display = 'none'; // Cache le custom cursor sur mobile
+        }
         
         // Init cursor events
         refreshCursorEvents();
@@ -1149,6 +1288,21 @@
             requestAnimationFrame(animate);
         }
         animate();
+
+        // 9. MENU MOBILE LOGIC
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobileNav');
+            const burger = document.querySelector('.burger-menu');
+            menu.classList.toggle('active');
+            
+            if(menu.classList.contains('active')) {
+                burger.children[0].style.transform = "rotate(45deg) translate(5px, 6px)";
+                burger.children[1].style.transform = "rotate(-45deg) translate(5px, -6px)";
+            } else {
+                burger.children[0].style.transform = "none";
+                burger.children[1].style.transform = "none";
+            }
+        }
     </script>
 </body>
 </html>
