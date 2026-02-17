@@ -18,7 +18,6 @@
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { background: var(--background-color); color: var(--text-color); font-family: var(--font-body); overflow: hidden; }
 
-        /* --- ÉCRAN DE CHARGEMENT --- */
         #loader-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background-color: #050505; z-index: 9999;
@@ -35,14 +34,12 @@
         @keyframes spin { to { transform: rotate(360deg); } }
         @keyframes pulse { 50% { opacity: 0.5; } }
 
-        /* --- CONTAINER --- */
         #immersive-container {
             position: fixed; top: 0; left: 0; width: 100%; height: 100vh;
             opacity: 0; transition: opacity 1s ease;
         }
         #immersive-container.loaded { opacity: 1; }
 
-        /* --- STYLES GALERIE --- */
         .category-slide {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
             opacity: 0; transform: scale(1.1); pointer-events: none; background: #000;
@@ -62,7 +59,6 @@
         .gallery-slide.is-leaving-left { transform: translateX(-100px); opacity: 0; }
         .gallery-slide.is-leaving-right { transform: translateX(100px); opacity: 0; }
 
-        /* Modes d'affichage */
         .landscape-mode { background-size: cover; background-position: center; width: 100%; height: 100%; }
         
         .portrait-grid {
@@ -77,7 +73,6 @@
         }
         .portrait-img:hover { transform: scale(1.05); z-index: 10; }
 
-        /* Textes */
         .category-content {
             position: absolute; bottom: 5%; left: 50%; transform: translateX(-50%);
             z-index: 10; text-align: center; color: white; opacity: 0; pointer-events: none;
@@ -88,7 +83,6 @@
         .category-subtitle { font-family: var(--font-body); letter-spacing: 3px; color: var(--accent-color); text-transform: uppercase; }
         .paginator { margin-top:10px; font-size: 1.2rem; }
 
-        /* Navigation */
         .nav-arrow {
             position: fixed; top: 50%; transform: translateY(-50%);
             z-index: 100; font-size: 2.5rem; color: rgba(255,255,255,0.6);
@@ -104,31 +98,28 @@
         
         .error-msg { color: red; font-size: 1.5rem; text-align: center; margin-top: 20px; }
         @media (max-width: 768px) {
-    /* Titres */
     .category-title { font-size: 2.5rem; }
     .category-subtitle { font-size: 0.8rem; letter-spacing: 2px; }
     
-    /* Ajustement Portrait Grid */
     .portrait-grid {
-        flex-direction: column; /* On empile verticalement */
+        flex-direction: column; 
         gap: 20px;
-        overflow-y: auto; /* Scroll vertical */
+        overflow-y: auto;
         justify-content: flex-start;
-        padding-top: 80px; /* Espace pour ne pas coller en haut */
+        padding-top: 80px; 
     }
     
     .portrait-img {
-        width: 85vw; /* Largeur quasi totale */
+        width: 85vw; 
         max-width: none;
-        height: auto; /* Hauteur auto pour garder le ratio */
+        height: auto; 
         max-height: 60vh;
     }
     
-    /* Navigation Arrows */
     .nav-arrow { 
         font-size: 1.5rem; 
         padding: 10px;
-        background: rgba(0,0,0,0.5); /* Plus visible sur mobile */
+        background: rgba(0,0,0,0.5);
     }
     .nav-arrow.left { left: 10px; }
     .nav-arrow.right { right: 10px; }
@@ -153,9 +144,8 @@
     <div class="nav-arrow right" id="btnRight">&#10095;</div>
 
     <script>
-        const API_URL = ""; // Adresse de ton serveur Node.js
+        const API_URL = ""; 
 
-        // Configuration des catégories
         const categoriesConfig = [
             { id: 'voyage', title: 'Voyages', subtitle: 'Exploration' },
             { id: 'evt', title: 'Événements', subtitle: 'Moments Capturés' }
@@ -165,12 +155,12 @@
         const loaderLogs = document.getElementById('loader-logs');
         let generatedCategories = [];
 
-        // Fonction utilitaire pour charger une image et récupérer ses dimensions
+       
         function getImageMeta(url) {
             return new Promise((resolve, reject) => {
                 const img = new Image();
                 img.onload = () => resolve({ url, width: img.naturalWidth, height: img.naturalHeight, orientation: img.naturalWidth > img.naturalHeight ? 'landscape' : 'portrait' });
-                img.onerror = () => { console.warn("Image échec:", url); resolve(null); }; // On ignore les erreurs pour ne pas bloquer
+                img.onerror = () => { console.warn("Image échec:", url); resolve(null); }; 
                 img.src = url;
             });
         }
@@ -180,7 +170,6 @@
                 for (let catConfig of categoriesConfig) {
                     loaderLogs.textContent = `Récupération dossier : ${catConfig.title}...`;
                     
-                    // 1. Demander la liste des fichiers au serveur
                     const res = await fetch(`/api/photos/${catConfig.id}`);
                     if (!res.ok) throw new Error(`Erreur serveur pour ${catConfig.id}`);
                     const data = await res.json();
@@ -190,40 +179,32 @@
                         continue;
                     }
 
-                    // 2. Analyser les images (dimensions) pour le tri
                     loaderLogs.textContent = `Tri automatique : ${catConfig.title} (${data.images.length} photos)...`;
                     
                     const imagePromises = data.images.map(filename => {
-                        // On utilise l'URL statique servie par le serveur
                         return getImageMeta(`/assets/${catConfig.id}/${filename}`);
                     });
 
                     const loadedImages = (await Promise.all(imagePromises)).filter(img => img !== null);
 
-                    // 3. Construire les slides (Logique de tri intelligente)
                     let slides = [];
                     let portraitBuffer = [];
 
                     loadedImages.forEach((img) => {
                         if (img.orientation === 'landscape') {
-                            // Si on a des portraits en attente, on crée d'abord un slide pour eux
                             if (portraitBuffer.length > 0) {
                                 slides.push({ type: 'portrait', images: [...portraitBuffer] });
                                 portraitBuffer = [];
                             }
-                            // Puis on ajoute le paysage
                             slides.push({ type: 'landscape', images: [img] });
                         } else {
-                            // C'est un portrait
                             portraitBuffer.push(img);
-                            // Si on en a 3, on crée un slide
                             if (portraitBuffer.length >= 3) {
                                 slides.push({ type: 'portrait', images: [...portraitBuffer] });
                                 portraitBuffer = [];
                             }
                         }
                     });
-                    // S'il reste des portraits à la fin
                     if (portraitBuffer.length > 0) {
                         slides.push({ type: 'portrait', images: [...portraitBuffer] });
                     }
@@ -234,16 +215,14 @@
                     });
                 }
 
-                // 4. Générer le HTML
                 renderHTML();
 
-                // 5. Cacher le loader
                 loaderLogs.textContent = "Prêt !";
                 setTimeout(() => {
                     document.getElementById('loader-overlay').style.opacity = '0';
                     document.getElementById('loader-overlay').style.visibility = 'hidden';
                     container.classList.add('loaded');
-                    initNavigation(); // Lancer la logique de navigation
+                    initNavigation(); 
                 }, 800);
 
             } catch (err) {
@@ -281,7 +260,6 @@
                     catDiv.appendChild(slideDiv);
                 });
 
-                // Texte
                 const contentDiv = document.createElement('div');
                 contentDiv.className = 'category-content';
                 contentDiv.innerHTML = `
@@ -294,7 +272,6 @@
             });
         }
 
-        // --- NAVIGATION (Similaire à avant mais adaptée au dynamique) ---
         function initNavigation() {
             const categoriesEls = document.querySelectorAll('.category-slide');
             const btnLeft = document.getElementById('btnLeft');
@@ -385,7 +362,6 @@
             updateUI();
         }
 
-        // Lancement !
         initGallery();
 
     </script>

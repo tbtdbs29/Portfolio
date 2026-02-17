@@ -10,7 +10,6 @@
     <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css" />
 
     <style>
-        /* --- CORRECTION CRITIQUE SCROLL HORIZONTAL --- */
         html, body {
             width: 100%;
             max-width: 100%;
@@ -20,7 +19,6 @@
             padding: 0;
         }
 
-        /* --- STYLES EXISTANTS CONSERVÉS --- */
         #cursor { z-index: 20000 !important; }
 
         .modal-overlay {
@@ -39,7 +37,7 @@
             position: relative; transform: translateY(50px);
             transition: transform 0.4s cubic-bezier(0.19, 1, 0.22, 1);
             box-shadow: 0 20px 50px rgba(0, 255, 229, 0.05);
-            max-height: 90vh; overflow-y: auto; /* Sécurité mobile */
+            max-height: 90vh; overflow-y: auto; 
         }
         .modal-overlay.active .modal { transform: translateY(0); }
 
@@ -51,13 +49,12 @@
         }
         .modal-close:hover { color: var(--accent); }
 
-        /* --- LAYOUT & NAVIGATION --- */
         .hero {
             min-height: 90vh;
             display: flex; align-items: center; justify-content: center;
             position: relative; text-align: center; padding-top: 100px;
             z-index: 10;
-            width: 100%; overflow: hidden; /* Sécurité */
+            width: 100%; overflow: hidden; 
         }
 
         .anim-text { display: inline-block; }
@@ -76,7 +73,6 @@
             text-transform: uppercase; font-size: 0.9rem; letter-spacing: 0.05em;
         }
 
-        /* --- LANG SWITCHER --- */
         .lang-switch {
             display: flex; gap: 15px; margin-left: 30px; border-left: 1px solid rgba(255,255,255,0.3); padding-left: 30px;
         }
@@ -86,7 +82,6 @@
         .lang-btn.active, .lang-btn:hover { opacity: 1; filter: grayscale(0%); transform: scale(1.1); }
 
 
-        /* --- SKILLS CARROUSEL --- */
         .skills-section { padding: 100px 0; position: relative; z-index: 20; width: 100%; overflow: hidden; }
         .skills-swiper { width: 100%; padding: 40px 0; overflow: visible; }
         .skills-swiper .swiper-slide { width: 320px; height: auto; opacity: 1; transform: scale(1); transition: transform 0.3s ease; }
@@ -97,7 +92,6 @@
             padding: 40px; border-radius: 16px; transition: all 0.3s ease;
             position: relative; overflow: hidden; z-index: 25; height: 100%;
         }
-        /* Hover effect standard */
         .skill-box:hover { background: rgba(255, 255, 255, 0.08); border-color: var(--accent); transform: translateY(-10px); }
         .skill-box h3 { font-size: 1.5rem; margin-bottom: 15px; color: white; }
         .skill-box p { color: #888; font-size: 0.95rem; line-height: 1.6; }
@@ -109,7 +103,6 @@
         }
         .skill-box:hover .skill-link-indicator { opacity: 1; transform: translateX(0); }
 
-        /* --- CAROUSEL PROJETS --- */
         .swiper-container.project-swiper { width: 100%; padding: 60px 50px; overflow: visible; position: relative; z-index: 30; }
         .project-swiper .swiper-slide { width: 400px; height: 550px; transition: all 0.5s ease; opacity: 0.4; transform: scale(0.85); pointer-events: auto; }
         .project-swiper .swiper-slide-active { opacity: 1; transform: scale(1); z-index: 40; }
@@ -140,7 +133,6 @@
             background: var(--accent); border-color: var(--accent); color: black;
         }
 
-        /* --- FILTRES PROJETS --- */
         .filter-container {
             display: flex;
             justify-content: center;
@@ -173,7 +165,6 @@
             transform: translateY(-2px);
         }
 
-        /* --- PASSIONS --- */
         .passions-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 40px; }
         .passion-card {
             background: #0f0f0f; border: 1px solid #222; padding: 40px 30px;
@@ -191,7 +182,6 @@
         .passion-card h3 { font-size: 1.5rem; margin-bottom: 15px; color: white; }
         .passion-card p { color: #777; font-size: 0.95rem; line-height: 1.6; }
 
-        /* --- PHOTO --- */
         .photo-section {
             display: flex; text-decoration: none;
             position: relative; width: 100%; height: 70vh;
@@ -207,7 +197,6 @@
         .photo-section:hover .photo-bg { filter: grayscale(0%) brightness(0.7); }
         .photo-content { z-index: 2; text-align: center; }
 
-        /* --- ABOUT & TIMELINE --- */
         .about-wrapper {
             display: flex; align-items: center; justify-content: space-between; gap: 80px; margin-bottom: 100px;
         }
@@ -244,11 +233,9 @@
         .timeline-row .timeline-dot { left: calc(50% - 9px); transform: translateY(-50%); }
         .timeline-row.active .timeline-dot { background: var(--accent); border-color: white; box-shadow: 0 0 20px var(--accent); transform: translateY(-50%) scale(1.5); }
 
-        /* --- CONTACT --- */
         .form-input { width: 100%; background: transparent; border: none; border-bottom: 1px solid #333; padding: 15px 0; color: white; font-size: 1.1rem; outline: none; transition: border-color 0.3s; }
         .form-input:focus { border-bottom-color: var(--accent); }
 
-        /* --- STYLES MENU MOBILE (AJOUT) --- */
         .burger-menu {
             display: none;
             flex-direction: column;
@@ -277,38 +264,31 @@
             text-transform: uppercase; letter-spacing: 0.1em;
         }
 
-        /* --- MEDIA QUERIES (MOBILE FIXES) --- */
         @media (max-width: 900px) {
             .about-wrapper { flex-direction: column; }
             .about-image { width: 100%; height: 400px; }
             .about-text h2 { font-size: 2.5rem; }
             
-            /* Navbar Mobile */
             .nav-links { display: none; }
             .burger-menu { display: flex; }
             .lang-switch { margin-right: 20px; border: none; }
             .top-nav { padding: 20px; }
 
-            /* Timeline Mobile */
             .timeline-row { flex-direction: column; padding-left: 50px; margin-bottom: 50px; }
             .timeline-row.right { flex-direction: column; }
             .timeline-content { width: 100%; margin-bottom: 20px; }
             .timeline-line, .timeline-progress { left: 20px; transform: none; }
             .timeline-row .timeline-dot { left: 11px; transform: translateY(-50%); }
             
-            /* Swiper Mobile */
             .project-swiper .swiper-slide { width: 85vw; height: 480px; opacity: 1; transform: scale(1); }
             .swiper-button-prev, .swiper-button-next { display: none; }
             .swiper-container { padding: 60px 0; }
             
-            /* Skills Mobile */
             .skills-swiper .swiper-slide { width: 85vw; }
             .skills-section { width: 100vw; overflow-x: hidden; }
 
-            /* Hero Text */
             .hero h1 { font-size: clamp(3rem, 13vw, 5rem) !important; }
             
-            /* Modal */
             .modal { width: 95%; padding: 30px 20px; }
         }
 
@@ -317,7 +297,6 @@
             .filter-btn { padding: 8px 15px; font-size: 0.8rem; }
             .custom-dropdown { width: 100%; max-width: 300px; }
             
-            /* Sécurité overflow */
             .hero, .skills-section, .project-swiper, .timeline-section {
                 max-width: 100vw;
                 overflow-x: hidden;
@@ -467,6 +446,7 @@
                     <button class="filter-btn hover-trigger" data-filter="en-cours">En cours</button>
                     <button class="filter-btn hover-trigger" data-filter="fini">Terminé</button>
                     <button class="filter-btn hover-trigger" data-filter="ale">Ale</button>
+                    <button class="filter-btn hover-trigger" data-filter="perso">Perso</button>
                     <button class="filter-btn hover-trigger" data-filter="but">BUT</button>
 
                     <div class="custom-dropdown" id="skillDropdown">
@@ -488,27 +468,6 @@
 
                 <div class="swiper-container project-swiper">
                     <div class="swiper-wrapper">
-                        <div class="swiper-slide" data-categories="fini but perso" data-skills="realiser optimiser">
-                            <div class="project-card" onclick="openModal('proj_ia')">
-                                <div class="card-bg" style="background-image: url('../assets/proj/istockphoto-2058507417-612x612.jpg');"></div>
-                                <h3>Portfolio IA</h3>
-                                <p>Interactive Chatbot</p>
-                            </div>
-                        </div>
-                        <div class="swiper-slide" data-categories="fini ale" data-skills="gerer optimiser administrer">
-                            <div class="project-card" onclick="openModal('proj_dash')">
-                                <div class="card-bg" style="background-image: url('../assets/proj/ALE-Cloud.jpeg');"></div>
-                                <h3>Dashboard Data</h3>
-                                <p>Data Science</p>
-                            </div>
-                        </div>
-                        <div class="swiper-slide" data-categories="en-cours perso" data-skills="realiser optimiser">
-                            <div class="project-card" onclick="openModal('proj_agents')">
-                                <div class="card-bg" style="background-image: url('../assets/proj/what-is-an-AI-agent-1.png');"></div>
-                                <h3>Chatbot Agents</h3>
-                                <p>Advanced AI</p>
-                            </div>
-                        </div>
                         <div class="swiper-slide" data-categories="en-cours perso" data-skills="realiser conduire">
                             <div class="project-card" onclick="openModal('proj_saas')">
                                 <div class="card-bg" style="background-image: url('../assets/proj/agent_immobilier-1.jpeg');"></div>
@@ -516,6 +475,39 @@
                                 <p>Fullstack & AI</p>
                             </div>
                         </div>
+
+                        <div class="swiper-slide" data-categories="en-cours ale" data-skills="realiser optimiser">
+                            <div class="project-card" onclick="openModal('proj_agents')">
+                                <div class="card-bg" style="background-image: url('../assets/proj/what-is-an-AI-agent-1.png');"></div>
+                                <h3>Chatbot Agents</h3>
+                                <p>Advanced AI</p>
+                            </div>
+                        </div>
+
+                        <div class="swiper-slide" data-categories="fini ale" data-skills="gerer optimiser administrer">
+                            <div class="project-card" onclick="openModal('proj_dash')">
+                                <div class="card-bg" style="background-image: url('../assets/proj/ALE-Cloud.jpeg');"></div>
+                                <h3>Dashboard Data</h3>
+                                <p>Data Science</p>
+                            </div>
+                        </div>
+
+                        <div class="swiper-slide" data-categories="fini perso" data-skills="realiser collaborer">
+                            <div class="project-card" onclick="openModal('proj_pauline')">
+                                <div class="card-bg" style="background-image: url('../assets/proj/pauline/photo2.png');"></div>
+                                <h3>Portfolio Pauline</h3>
+                                <p>Portfolio info-com</p>
+                            </div>
+                        </div>
+
+                        <div class="swiper-slide" data-categories="fini but perso" data-skills="realiser optimiser">
+                            <div class="project-card" onclick="openModal('proj_ia')">
+                                <div class="card-bg" style="background-image: url('../assets/proj/istockphoto-2058507417-612x612.jpg');"></div>
+                                <h3>Portfolio IA</h3>
+                                <p>Interactive Chatbot</p>
+                            </div>
+                        </div>
+
                         <div class="swiper-slide" data-categories="fini but" data-skills="realiser gerer">
                             <div class="project-card" onclick="openModal('proj_10heures')">
                                 <div class="card-bg" style="background-image: url('../assets/proj/Flyer_10Heures1.png');"></div>
@@ -523,6 +515,7 @@
                                 <p>Recommendation application</p>
                             </div>
                         </div>
+
                         <div class="swiper-slide" data-categories="fini but" data-skills="gerer optimiser">
                             <div class="project-card" onclick="openModal('proj_decision_analysis')">
                                 <div class="card-bg" style="background-image: url('../assets/proj/decision_analysis.png');"></div>
@@ -530,6 +523,7 @@
                                 <p>Decision-making analysis of sports data</p>
                             </div>
                         </div>
+
                         <div class="swiper-slide" data-categories="fini but" data-skills="realiser administrer gerer collaborer">
                             <div class="project-card" onclick="openModal('proj_app')">
                                 <div class="card-bg" style="background-image: url('../assets/proj/image.png');"></div>
@@ -537,20 +531,7 @@
                                 <p>Web Development</p>
                             </div>
                         </div>
-                        <div class="swiper-slide" data-categories="fini but" data-skills="collaborer">
-                            <div class="project-card" onclick="openModal('proj_psycho')">
-                                <div class="card-bg" style="background-image: url('../assets/proj/mqdefault.jpg');"></div>
-                                <h3>Sweeded American Psycho</h3>
-                                <p>Content Creation & Design</p>
-                            </div>
-                        </div>
-                        <div class="swiper-slide" data-categories="fini but" data-skills="collaborer conduire">
-                            <div class="project-card" onclick="openModal('proj_trivinfo')">
-                                <div class="card-bg" style="background-image: url('../assets/proj/trivinfo.png');"></div>
-                                <h3>Triv'info Pursuit</h3>
-                                <p>Physical play</p>
-                            </div>
-                        </div>
+
                         <div class="swiper-slide" data-categories="fini but" data-skills="realiser optimiser">
                             <div class="project-card" onclick="openModal('proj_sudoku')">
                                 <div class="card-bg" style="background-image: url('../assets/proj/sudoku.jpeg');"></div>
@@ -558,11 +539,28 @@
                                 <p>C Development</p>
                             </div>
                         </div>
+
                         <div class="swiper-slide" data-categories="fini but" data-skills="optimiser">
                             <div class="project-card" onclick="openModal('proj_n_dames')">
                                 <div class="card-bg" style="background-image: url('../assets/proj/ndames.jpg');"></div>
                                 <h3>N-Dames</h3>
                                 <p>Python Development & Optimization</p>
+                            </div>
+                        </div>
+
+                         <div class="swiper-slide" data-categories="fini but" data-skills="collaborer">
+                            <div class="project-card" onclick="openModal('proj_psycho')">
+                                <div class="card-bg" style="background-image: url('../assets/proj/mqdefault.jpg');"></div>
+                                <h3>Sweded American Psycho</h3>
+                                <p>Content Creation & Design</p>
+                            </div>
+                        </div>
+
+                        <div class="swiper-slide" data-categories="fini but" data-skills="collaborer conduire">
+                            <div class="project-card" onclick="openModal('proj_trivinfo')">
+                                <div class="card-bg" style="background-image: url('../assets/proj/trivinfo.png');"></div>
+                                <h3>Triv'info Pursuit</h3>
+                                <p>Physical play</p>
                             </div>
                         </div>
                     </div>
@@ -709,7 +707,6 @@
     <script src="https://cdn.jsdelivr.net/gh/studio-freight/lenis@1.0.29/bundled/lenis.min.js"></script>
 
     <script>
-        // --- GESTION DES TRADUCTIONS ---
         const translations = {
             fr: {
                 nav_skills: "Compétences",
@@ -775,7 +772,6 @@
                 skills_title: "SKILLS",
                 skills_subtitle: "Technical and methodological expertise (CS Degree).",
 
-                // Compétences BUT (EN)
                 skill_realise: "Develop",
                 skill_realise_desc: "Developing complex computer applications.",
                 skill_optimize: "Optimize",
@@ -821,7 +817,6 @@
             }
         };
 
-        // --- MAPPING DES COMPETENCES ---
         const skillLabels = {
             realiser: { fr: "Réaliser", en: "Develop" },
             optimiser: { fr: "Optimiser", en: "Optimize" },
@@ -831,97 +826,103 @@
             collaborer: { fr: "Collaborer", en: "Collaborate" }
         };
 
-        // Données des Modales
         const modalData = {
-            // PROJETS
-            proj_ia: {
-                fr: { title: 'Portfolio IA', desc: "Développement d'un chatbot interactif utilisant l'API OpenAI.<br><br>Stack : Python, LangChain, OpenAI API.<br>Objectif : Rendre statique dynamique." },
-                en: { title: 'AI Portfolio', desc: "Development of an interactive chatbot using OpenAI API.<br><br>Stack: Python, LangChain, OpenAI API.<br>Goal: Make static dynamic." },
-                link: 'https://github.com/tbtdbs29/Portfolio',
-                skills: ['realiser', 'optimiser']
-            },
-            proj_dash: {
-                fr: { title: 'Dashboard Data', desc: "Plateforme de visualisation et d'analyse de données de réseau en temps réel. Mise en place de modeles probalistique afin de detecter des anomalies.<br><br>Stack : Python restAPI postgres SQL Timesquale Kafka.<br>Fonctionnalités : Analyse prédictive, graphiques dynamiques. <br> Pas de lien GitHub car projet Pro" },
-                en: { title: 'Data Dashboard', desc: "Real-time network data visualization and analysis platform. Implementation of probabilistic models to detect anomalies.<br><br>Stack: Python restAPI Postgres timesquale kafka.<br>Features: Predictive analysis, dynamic charts. <br> No GitHub link due to project confidentiality." },
-                link: null,
-                skills: ['gerer', 'optimiser', 'administrer']
-            },
-            proj_agents: {
-                fr: { title: 'Chatbot Agents', desc: "Développement d'un chatbot multi-agent pour OVNA(Omnivista network advisor), webscrapper, vectorisation, base de données vectoriser ... <br><br>Concept : Multi-Agent Systems. <br> Pas de lien GitHub car projet Pro" },
-                en: { title: 'Agent Chatbot', desc: "Development of an multi-agent chatbot for OVNA (Omnivista network advisor), webscrapper, vectorization, vector database ... <br><br>Concept: Multi-Agent Systems. <br> No GitHub link due to project confidentiality." },
-                link: null,
-                skills: ['realiser', 'optimiser']
-            },
             proj_saas: {
-                fr: { title: 'SaaS Immo', desc: "Plateforme SaaS B2B pour les agences immobilières incluant une IA de génération de description.<br><br>Stack : Next.js, Supabase, Stripe." },
-                en: { title: 'Real Estate SaaS', desc: "B2B SaaS platform for real estate agencies including AI description generation.<br><br>Stack: Next.js, Supabase, Stripe." },
+                fr: { title: 'SaaS Immo', desc: "Plateforme SaaS B2B pour les agences immobilières incluant une IA de génération de descriptions automatiques.<br><br>Stack : Next.js, Supabase, Stripe." },
+                en: { title: 'Real Estate SaaS', desc: "B2B SaaS platform for real estate agencies including AI-powered description generation.<br><br>Stack: Next.js, Supabase, Stripe." },
                 link: 'https://github.com/tbtdbs29/ImmoAI',
                 skills: ['realiser', 'conduire']
             },
+            proj_agents: {
+                fr: { title: 'Chatbot Agents', desc: "Développement d'un système multi-agents pour OVNA (Omnivista Network Advisor). Intègre du web scraping, de la vectorisation de données et une base de données vectorielle.<br><br>Concept : Multi-Agent Systems (MAS).<br>Note : Code propriétaire (Confidentialité industrielle)." },
+                en: { title: 'Agent Chatbot', desc: "Development of a multi-agent system for OVNA. Includes web scraping, data vectorization, and vector databases.<br><br>Concept: Multi-Agent Systems.<br>Note: Proprietary code (Industrial confidentiality)." },
+                link: null,
+                skills: ['realiser', 'optimiser']
+            },
+            proj_dash: {
+                fr: { title: 'Dashboard Data', desc: "Plateforme d'analyse réseau en temps réel. Mise en place de modèles probabilistes pour la détection d'anomalies sur flux de données.<br><br>Stack : Python, PostgreSQL, TimescaleDB, Kafka.<br>Note : Architecture sécurisée (Accès restreint)." },
+                en: { title: 'Data Dashboard', desc: "Real-time network analysis platform. Implementation of probabilistic models for anomaly detection on data streams.<br><br>Stack: Python, PostgreSQL, TimescaleDB, Kafka.<br>Note: Secured architecture (Restricted access)." },
+                link: null,
+                skills: ['gerer', 'optimiser', 'administrer']
+            },
+
+            time_ale: {
+                fr: { title: 'Alternance IA', desc: "<strong>2024 - Alcatel-Lucent Enterprise</strong><br><br>Missions : <br>- Architecture de monitoring temps réel.<br>- Modèles prédictifs et détection d'anomalies.<br>- Intégration d'agents conversationnels IA.<br>- Déploiement CI/CD avec Kubernetes." },
+                en: { title: 'AI Apprenticeship', desc: "<strong>2024 - Alcatel-Lucent Enterprise</strong><br><br>Tasks: <br>- Real-time monitoring architecture.<br>- Predictive models & anomaly detection.<br>- AI conversational agents integration.<br>- CI/CD deployment via Kubernetes." },
+                link: null,
+                skills: ["gerer","conduire","collaborer","realiser",'administrer', 'optimiser']
+            },
+
+            proj_pauline: {
+                fr: { title: 'Portfolio Pauline', desc: "Réalisation d'un portfolio complet pour une étudiante en communication. Focus sur l'esthétique et l'expérience utilisateur.<br><br>Stack : HTML, CSS, JS.", btnText: 'Visiter le site' },
+                en: { title: 'Pauline\'s Portfolio', desc: "Creation of a full portfolio for a communication student. Focus on aesthetics and user experience.<br><br>Stack: HTML, CSS, JS.", btnText: 'Visit Website' },
+                link: 'https://pauline-guilcher.netlify.app/',
+                skills: ['realiser', 'collaborer']
+            },
+            proj_ia: {
+                fr: { title: 'Portfolio IA', desc: "Interface interactive utilisant l'API OpenAI pour dynamiser l'expérience utilisateur.<br><br>Stack : Python, LangChain, OpenAI API." },
+                en: { title: 'AI Portfolio', desc: "Interactive interface using OpenAI API to enhance user experience.<br><br>Stack: Python, LangChain, OpenAI API." },
+                link: 'https://github.com/tbtdbs29/Portfolio',
+                skills: ['realiser', 'optimiser']
+            },
+
             proj_10heures: {
-                fr: { title: '10heures', desc: "Application de recommandation de musique. Récupération des besoins utilisateurs à travers un questionnaire, créations de graph, analyse de tendance, de corrélation ...<br><br>Stack : Python, google forms." },
-                en: { title: '10heures', desc: "Music recommendation application. User needs retrieval through a questionnaire, graph creation, trend and correlation analysis ...<br><br>Stack: Next.js, Supabase, Stripe." },
+                fr: { title: '10heures', desc: "Analyse de données et recommandation musicale. Traitement de questionnaires et visualisation de corrélations.<br><br>Stack : Python, Pandas, Matplotlib." },
+                en: { title: '10heures', desc: "Data analysis and music recommendation. Survey processing and correlation visualization.<br><br>Stack: Python, Pandas, Matplotlib." },
                 link: 'https://github.com/tbtdbs29/10heures',
                 skills: ['realiser', 'gerer']
             },
             proj_decision_analysis: {
-                fr: { title: 'Decision Analysis', desc: "Analyse de données sportives pour prise de décision.<br><br>Stack : Python, pandas, matplotlib." },
-                en: { title: 'Decision Analysis', desc: "Sports data analysis for decision-making.<br><br>Stack: Python, pandas, matplotlib." },
+                fr: { title: 'Decision Analysis', desc: "Aide à la décision basée sur l'analyse statistique de données sportives.<br><br>Stack : Python, Pandas, Matplotlib." },
+                en: { title: 'Decision Analysis', desc: "Decision support based on statistical analysis of sports data.<br><br>Stack: Python, Pandas, Matplotlib." },
                 link: 'https://github.com/tbtdbs29/decision_analysis',
                 skills: ['gerer', 'optimiser']
             },
             proj_app: {
-                fr: { title: 'App Annonces', desc: "Application web avec front-office et back-office dans le but de repertorier des activitées dans la régions PACA<br><br>Focus : UX/UI et performance." },
-                en: { title: 'Classifieds App', desc: "Web application with front-office and back-office to list activities in the PACA region<br><br>Focus: UX/UI and performance." },
+                fr: { title: 'App Annonces', desc: "Application Web Fullstack répertoriant les activités régionales.<br><br>Focus : Architecture MVC et gestion de base de données." },
+                en: { title: 'Classifieds App', desc: "Fullstack Web application listing regional activities.<br><br>Focus: MVC architecture and database management." },
                 link: 'https://github.com/tbtdbs2/Xx_TregorIndustries_xX',
                 skills: ['realiser', 'administrer', 'gerer', 'collaborer']
             },
-            proj_psycho: {
-                fr: { title: 'Sweeded American psycho', desc: "Nous avons réalisé un sweeded film d'american psycho en anglais<br><br>Focus : création de contenu et design. <a href='https://youtu.be/BgZtwG82gr0' target='_blank' style='color:var(--accent)'>Lien Youtube</a>" },
-                en: { title: 'Sweeded American psycho', desc: "We have created a sweeded version of the American Psycho film in English<br><br>Focus: content creation and design." },
-                link: null,
-                skills: ['collaborer']
-            },
-            proj_trivinfo: {
-                fr: { title: 'Triv\'info Pursuit', desc: "Jeu de questions-réponses en physique afin de présenter les compétences du BUT informatique à Lannion avec plateau de jeu, cartes, pions ect <br><br>Focus : jeu physique. <a href='../assets/proj/Trivinfo.pdf' target='_blank' style='color:var(--accent)'>Lien PDF</a>" },
-                en: { title: 'Triv\'info Pursuit', desc: "Quiz game in physics, to present BUT information to Lannion with a game board, cards, pawns etc <br><br>Focus: physical play." },
-                link: null,
-                skills: ['collaborer', 'conduire']
-            },
+
             proj_sudoku: {
-                fr: { title: 'Sudoku', desc: "Jeu de Sudoku en C avec interface graphique, menu ect<br><br>Technologies : C, SDL2. <br> Pas de lien GitHub car projet perdu..." },
-                en: { title: 'Sudoku', desc: "Sudoku game in C with GUI and menu.<br><br>Technologies: C, SDL2. <br> No GitHub link due to loose project..." },
+                fr: { title: 'Sudoku', desc: "Développement d'un moteur de jeu de Sudoku avec interface graphique complète.<br><br>Technologies : C, SDL2.<br>Note : Archive de développement (Code disponible sur demande)." },
+                en: { title: 'Sudoku', desc: "Development of a Sudoku engine with full graphical interface.<br><br>Technologies: C, SDL2.<br>Note: Development archive (Code available upon request)." },
                 link: null,
                 skills: ['realiser', 'optimiser']
             },
             proj_n_dames: {
-                fr: { title: 'N-Dames', desc: "Problème des N-dames résolu avec optimisation de performance.<br><br>Technologies : Python, Optimisation. <br> Pas de lien GitHub car projet perdu..." },
-                en: { title: 'N-Queens', desc: "N-Queens problem solved with performance optimization.<br><br>Technologies: Python, Optimization. <br> No GitHub link due to loose project..." },
+                fr: { title: 'N-Dames', desc: "Résolution du problème mathématique des N-Dames via un algorithme de backtracking optimisé.<br><br>Focus : Complexité algorithmique.<br>Note : Archive de développement." },
+                en: { title: 'N-Queens', desc: "Solving the N-Queens mathematical problem via optimized backtracking.<br><br>Focus: Algorithmic complexity.<br>Note: Development archive." },
                 link: null,
                 skills: ['optimiser']
             },
-            
-            // TIMELINE
-            time_ale: {
-                fr: { title: 'Alternance IA', desc: "<strong>2024 - Alcatel-Lucent Enterprise</strong><br><br>Développeur au sein de l'équipe R&D.<br><br>Missions : <br>- Développement de pipelines de données.<br>- Intégration de modèles prédictifs.<br>- Création de dashboards décisionnels." },
-                en: { title: 'AI Apprenticeship', desc: "<strong>2024 - Alcatel-Lucent Enterprise</strong><br><br>Developer within the R&D team.<br><br>Missions: <br>- Data pipeline development.<br>- Predictive model integration.<br>- Creation of decision-making dashboards." },
+            proj_psycho: {
+                fr: { title: 'Suédé American Psycho', desc: "Remake créatif (vidéo) d'American Psycho. Travail sur la narration et le montage.<br><br><a href='https://youtu.be/BgZtwG82gr0' target='_blank' style='color:var(--accent)'>Lien YouTube</a>" },
+                en: { title: 'Sweded American Psycho', desc: "Creative remake of American Psycho. Focus on storytelling and editing.<br><br><a href='https://youtu.be/BgZtwG82gr0' target='_blank' style='color:var(--accent)'>YouTube Link</a>" },
                 link: null,
-                skills: ['administrer', 'optimiser']
+                skills: ['collaborer']
             },
+            proj_trivinfo: {
+                fr: { title: 'Triv\'info Pursuit', desc: "Conception d'un support pédagogique physique pour le BUT Informatique.<br><br>Focus : Gestion de production et communication.<br><a href='../assets/proj/Trivinfo.pdf' target='_blank' style='color:var(--accent)'>Lien PDF</a>" },
+                en: { title: 'Triv\'info Pursuit', desc: "Design of a physical educational game for the CS Degree.<br><br>Focus: Production management and communication." },
+                link: null,
+                skills: ['collaborer', 'conduire']
+            },
+
             time_iut: {
-                fr: { title: 'IUT Lannion', desc: "<strong>2023 - 2026</strong><br><br>BUT Informatique - Parcours data/ia.<br><br>Acquisition des fondamentaux solides :<br>- Algorithmique & Structures de données.<br>- Technique d'IA<br>- Développement Web & Mobile.<br>- Gestion de projet Agile." },
-                en: { title: 'IUT Lannion', desc: "<strong>2023 - 2026</strong><br><br>Computer Science Degree - data/ai Track.<br><br>Acquisition of solid fundamentals:<br>- Algorithms & Data Structures.<br>-<br>- Web & Mobile Development.<br>- Agile Project Management." },
+                fr: { title: 'IUT Lannion', desc: "<strong>2023 - 2026</strong><br><br>BUT Informatique - Parcours Data/IA.<br><br>Focus : Algorithmique, IA et Gestion de projet Agile." },
+                en: { title: 'IUT Lannion', desc: "<strong>2023 - 2026</strong><br><br>CS Degree - Data/AI Track.<br><br>Focus: Algorithms, AI, and Agile Management." },
                 link: null,
                 skills: []
             },
             time_s3p: {
-                fr: { title: 'Stage S3Pweb', desc: "<strong>2020 - Stage Découverte</strong><br><br>Première immersion dans le monde professionnel du web.<br>Découverte des enjeux du développement frontend et de l'UX Design." },
-                en: { title: 'Internship S3Pweb', desc: "<strong>2020 - Discovery Internship</strong><br><br>First immersion in the professional web world.<br>Discovery of frontend development and UX Design challenges." },
+                fr: { title: 'Stage S3Pweb', desc: "<strong>2020 - Stage Découverte</strong><br><br>Première immersion professionnelle. Découverte du développement Frontend." },
+                en: { title: 'Internship S3Pweb', desc: "<strong>2020 - Discovery Internship</strong><br><br>First professional immersion. Discovery of Frontend development." },
                 link: null,
                 skills: []
             },
-
-            // --- COMPÉTENCES BUT ---
+            
             comp_realiser: {
                 fr: { 
                     title: 'C1 - Réaliser', 
@@ -984,7 +985,6 @@
             currentLang = lang;
             localStorage.setItem('lang', lang);
 
-            // Update Text
             document.querySelectorAll('[data-i18n]').forEach(el => {
                 const key = el.getAttribute('data-i18n');
                 if (translations[lang][key]) {
@@ -996,7 +996,6 @@
                 }
             });
 
-            // Update Placeholders
             document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
                 const key = el.getAttribute('data-i18n-placeholder');
                 if (translations[lang][key]) {
@@ -1004,56 +1003,52 @@
                 }
             });
 
-            // Update Buttons State
             document.querySelectorAll('.lang-btn').forEach(btn => btn.classList.remove('active'));
             document.getElementById('btn-' + lang).classList.add('active');
         }
 
-        // Init Language on Load
         setLanguage(currentLang);
 
-
-        // 1. LENIS (SCROLL)
         const lenis = new Lenis();
         function raf(time) { lenis.raf(time); requestAnimationFrame(raf); }
         requestAnimationFrame(raf);
 
-        // 2. FONCTION MODALE (Modifiée pour les Tags)
         const modal = document.getElementById('modalOverlay');
         const modalTitle = document.getElementById('modalTitle');
         const modalDesc = document.getElementById('modalDesc');
         const modalLink = document.getElementById('modalLink');
-        const modalSkills = document.getElementById('modalSkills'); // New
+        const modalSkills = document.getElementById('modalSkills');
 
         window.openModal = function(key) {
             const data = modalData[key];
             if (!data) return;
 
             const content = data[currentLang];
-
             modalTitle.textContent = content.title;
             modalDesc.innerHTML = content.desc;
             
-            // GESTION DES TAGS DE COMPETENCES
-            modalSkills.innerHTML = ''; // Reset
+            modalSkills.innerHTML = '';
             if (data.skills && data.skills.length > 0) {
                 data.skills.forEach(skillKey => {
                     const skillTag = document.createElement('span');
                     skillTag.className = 'skill-tag';
-                    // Traduction du tag ou fallback sur la clé
                     const label = skillLabels[skillKey] ? skillLabels[skillKey][currentLang] : skillKey;
                     skillTag.textContent = label;
                     modalSkills.appendChild(skillTag);
                 });
             }
 
-            // GESTION DU LIEN
             if (data.link) {
                 modalLink.href = data.link; 
-                modalLink.style.display = 'inline-block'; 
+                modalLink.style.display = 'inline-block';
+                
+                if (content.btnText) {
+                    modalLink.innerHTML = `${content.btnText} <i class="fas fa-external-link-alt" style="margin-left: 10px;"></i>`;
+                } else {
+                    modalLink.innerHTML = `Voir sur GitHub <i class="fab fa-github" style="margin-left: 10px;"></i>`;
+                }
             } else { 
                 modalLink.style.display = 'none'; 
-                modalLink.href = '#'; 
             }
             
             modal.classList.add('active');
@@ -1068,13 +1063,10 @@
             if (e.target === modal) modal.classList.remove('active');
         });
 
-        // 3. LOGIQUE DE FILTRAGE + SWIPER PROJETS
-        
         const swiperWrapper = document.querySelector('.project-swiper .swiper-wrapper');
         const allSlides = Array.from(swiperWrapper.children);
         let projectSwiper;
 
-        // Variables d'état pour le filtrage
         let activeCategory = 'all';
         let activeSkill = 'all';
 
@@ -1098,23 +1090,17 @@
             });
         }
 
-        // Initialisation au démarrage
         initProjectSwiper();
 
-        // Fonction principale de filtrage qui combine les deux critères
         function applyFilters() {
-            // 1. Vider le wrapper
             swiperWrapper.innerHTML = '';
 
-            // 2. Filtrer et réinsérer les slides qui matchent les DEUX critères
             allSlides.forEach(slide => {
                 const categories = slide.getAttribute('data-categories');
                 const skills = slide.getAttribute('data-skills');
 
-                // Check Category
                 const matchCategory = (activeCategory === 'all') || (categories && categories.includes(activeCategory));
                 
-                // Check Skill
                 const matchSkill = (activeSkill === 'all') || (skills && skills.includes(activeSkill));
 
                 if (matchCategory && matchSkill) {
@@ -1122,51 +1108,40 @@
                 }
             });
 
-            // 3. Réinitialiser Swiper
             initProjectSwiper();
             
-            // 4. Update UI
             refreshCursorEvents();
         }
 
-        // --- Event Listeners Boutons Catégories ---
         document.querySelectorAll('.filter-btn').forEach(btn => {
             btn.addEventListener('click', function() {
-                // Gestion classe active
                 document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
                 this.classList.add('active');
 
-                // Mise à jour de l'état
                 activeCategory = this.getAttribute('data-filter');
                 applyFilters();
             });
         });
 
-        // --- Event Listeners Dropdown Skills (NOUVEAU) ---
         const dropdown = document.getElementById('skillDropdown');
         const dropdownSelected = dropdown.querySelector('.dropdown-selected');
         const dropdownOptions = dropdown.querySelectorAll('.dropdown-option');
         const currentSkillText = document.getElementById('currentSkillText');
 
-        // Toggle dropdown open
         dropdownSelected.addEventListener('click', (e) => {
             e.stopPropagation();
             dropdown.classList.toggle('open');
         });
 
-        // Fermer si click ailleurs
         document.addEventListener('click', () => dropdown.classList.remove('open'));
 
-        // Sélection d'une option
         dropdownOptions.forEach(option => {
             option.addEventListener('click', function() {
                 const skillFilter = this.getAttribute('data-skill-filter');
                 const skillLabel = this.textContent;
 
-                // Mise à jour état
                 activeSkill = skillFilter;
                 
-                // Mise à jour UI Dropdown
                 currentSkillText.textContent = skillLabel;
                 dropdownOptions.forEach(opt => opt.classList.remove('selected'));
                 this.classList.add('selected');
@@ -1183,7 +1158,6 @@
         });
 
 
-        // 4. SWIPER (COMPETENCES)
         const skillsSwiper = new Swiper('.skills-swiper', {
             slidesPerView: 'auto',
             spaceBetween: 30,
@@ -1192,24 +1166,20 @@
             mousewheel: { forceToAxis: true },
         });
 
-        // 5. SCROLL TO PROJECT
         window.scrollToProject = function(index) {
             const projectsSection = document.getElementById('projects');
             lenis.scrollTo(projectsSection, { offset: -50 });
             if(projectSwiper) projectSwiper.slideTo(index);
         };
 
-        // 6. GSAP ANIMATIONS (CORRIGÉE POUR MOBILE)
         gsap.registerPlugin(ScrollTrigger);
         gsap.to(".timeline-progress", {
             height: "100%", ease: "none",
             scrollTrigger: { trigger: ".timeline-section", start: "top center", end: "bottom center", scrub: true }
         });
 
-        // Correction du bug de scroll horizontal sur mobile ici :
         gsap.utils.toArray('.timeline-row').forEach(row => {
             const isRight = row.classList.contains('right');
-            // Si on est sur un petit écran, on fait venir du bas (y), sinon du côté (x)
             const isMobile = window.innerWidth < 900;
             
             gsap.from(row.querySelector('.timeline-content'), {
@@ -1236,14 +1206,11 @@
             scrollTrigger: { trigger: ".photo-section", start: "top bottom", end: "bottom top", scrub: true }
         });
 
-        // 7. CURSOR
         const cursor = document.getElementById('cursor');
         
-        // Fonction pour attacher les événements (appelée au load + après filtrage)
         function refreshCursorEvents() {
             const interactives = '.hover-trigger, a, button, .project-card, .timeline-content, .swiper-button-prev, .swiper-button-next, .skill-box, .passion-card, .skills-swiper, .about-image, .dropdown-selected, .dropdown-option';
             document.querySelectorAll(interactives).forEach(el => {
-                // On retire d'abord pour éviter les doublons si on appelle plusieurs fois
                 el.removeEventListener('mouseenter', cursorEnter);
                 el.removeEventListener('mouseleave', cursorLeave);
                 
@@ -1255,19 +1222,16 @@
         const cursorEnter = () => cursor.classList.add('hovered');
         const cursorLeave = () => cursor.classList.remove('hovered');
 
-        // Seulement sur PC
         if (window.matchMedia("(pointer: fine)").matches) {
             document.addEventListener('mousemove', e => {
                 gsap.to(cursor, { x: e.clientX, y: e.clientY, duration: 0.1 });
             });
         } else {
-            cursor.style.display = 'none'; // Cache le custom cursor sur mobile
+            cursor.style.display = 'none';
         }
         
-        // Init cursor events
         refreshCursorEvents();
 
-        // 8. PARTICLES
         const canvas = document.getElementById("bgCanvas");
         const ctx = canvas.getContext("2d");
         const resize = () => { canvas.width = window.innerWidth; canvas.height = window.innerHeight; };
@@ -1289,7 +1253,6 @@
         }
         animate();
 
-        // 9. MENU MOBILE LOGIC
         function toggleMobileMenu() {
             const menu = document.getElementById('mobileNav');
             const burger = document.querySelector('.burger-menu');

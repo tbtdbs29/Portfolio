@@ -5,11 +5,8 @@ import OpenAI from 'openai';
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
-
-// Charger les variables d'environnement
 dotenv.config();
 
-// Configuration des chemins (ES Modules)
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
@@ -17,14 +14,11 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-// Servir les fichiers statiques depuis la racine du projet
 app.use(express.static(path.join(__dirname, '../')));
 
-// --- 1. ASSETS ---
 const assetsPath = path.join(__dirname, '../assets');
 app.use('/assets', express.static(assetsPath));
 
-// --- 2. CONFIGURATION OPENAI ---
 const OPENAI_API_KEY = process.env.OPENAI_API_KEY;
 
 let openai = null;
@@ -36,7 +30,6 @@ if (!OPENAI_API_KEY) {
   });
 }
 
-// ----- SYSTEM PROMPT (Personnalité du bot & Base de connaissances) -----
 const systemPrompt = `
 Tu es l'assistant IA du portfolio de Thibault DUBOIS. Tu parles en son nom ou comme son partenaire digital.
 
@@ -109,13 +102,10 @@ Si on te demande les compétences du but, réfère-toi à ces 6 piliers :
 - Reste dans le contexte professionnel et technique.
 `;
 
-// --- ATTENTION : HISTORIQUE GLOBAL (TEMPORAIRE) ---
-// Note : Ceci est partagé entre TOUS les utilisateurs du site.
 let conversationHistory = [
   { role: "system", content: systemPrompt }
 ];
 
-// --- 3. ROUTE PHOTOS (Inchangée) ---
 app.get("/api/photos/:category", (req, res) => {
     const category = req.params.category;
     const dirPath = path.join(assetsPath, category);
@@ -146,7 +136,6 @@ app.get("/api/photos/:category", (req, res) => {
     }
 });
 
-// --- 4. ROUTE CHAT (MIGRÉE VERS OPENAI) ---
 app.post("/api/chat", async (req, res) => {
   try {
     const userMessage = req.body.message;
@@ -159,24 +148,19 @@ app.post("/api/chat", async (req, res) => {
         { role: "user", content: userMessage }
     ];
 
-    // 2. Appel API OpenAI
     const completion = await openai.chat.completions.create({
-      model: "gpt-4o-mini", // Modèle rapide et économique
-      messages: messages,
-      temperature: 0.3, // Créativité modérée
+      model: "gpt-4o-mini", 
+      temperature: 0.3, 
       max_tokens: 300,
     });
 
     const botReply = completion.choices[0].message.content;
 
-    // 3. Ajouter la réponse IA à l'historique
     conversationHistory.push({ role: "assistant", content: botReply });
 
-    // 4. Nettoyage de l'historique (Safety)
-    // Si l'historique dépasse 20 messages, on garde le System Prompt + les 10 derniers
     if (conversationHistory.length > 20) {
         conversationHistory = [
-            conversationHistory[0], // Garder le system prompt
+            conversationHistory[0], 
             ...conversationHistory.slice(conversationHistory.length - 10)
         ];
     }
@@ -189,12 +173,10 @@ app.post("/api/chat", async (req, res) => {
   }
 });
 
-// Pour le local, on garde le listen
 if (process.env.NODE_ENV !== 'production') {
     app.listen(3000, () => {
         console.log("Server running locally on port 3000");
     });
 }
 
-// Pour Vercel, on exporte l'application
 export default app;

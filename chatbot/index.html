@@ -48,7 +48,7 @@
     </div>
 
     <script>
-        // --- LOGIQUE UI ---
+        // LOGIQUE UI 
         const cursor = document.getElementById('cursor');
         const chatContent = document.getElementById("chatContent");
         const chatViewport = document.getElementById("chat"); // Pour le scroll
@@ -70,22 +70,19 @@
             }
         });
 
-        // --- FONCTIONS CHAT ---
+        // FONCTIONS CHAT 
 
         function createMessageElement(text, sender) {
             const row = document.createElement("div");
             row.classList.add("message-row", sender);
 
-            // Avatar logic
             let avatarHTML = '';
             if (sender === 'bot') {
                 avatarHTML = `<div class="avatar"><svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 0 1 10 10c0 5.52-4.48 10-10 10S2 17.52 2 12 6.48 2 12 2zm0 2a8 8 0 0 0-8 8c0 4.42 3.58 8 8 8s8-3.58 8-8-3.58-8-8-8zm0 4a4 4 0 0 1 4 4c0 2.21-1.79 4-4 4s-4-1.79-4-4 1.79-4 4-4z" fill="currentColor"/></svg></div>`;
             }
 
-            // Bubble content
             let contentHTML = `<div class="bubble">${text}</div>`;
             if (sender === 'bot') {
-                // Style différent pour le bot, peut inclure du HTML/Markdown plus tard
                 contentHTML = `<div class="bubble">${text}</div>`;
             }
 
@@ -101,12 +98,10 @@
             const text = input.value.trim();
             if (!text) return;
 
-            // 1. Affiche le message de l'utilisateur
             chatContent.appendChild(createMessageElement(text, "user"));
             input.value = "";
             scrollToBottom();
             
-            // 2. Affiche le loader stylé
             const loadingId = 'loading-' + Date.now();
             const loadingRow = createMessageElement('<span style="opacity:0.6; font-style:italic;">Analyse en cours...</span>', "bot");
             loadingRow.id = loadingId;
@@ -122,16 +117,13 @@
                 
                 const data = await response.json();
                 
-                // 3. On supprime le loader
                 const loader = document.getElementById(loadingId);
                 if(loader) loader.remove();
 
-                // 4. On affiche la vraie réponse du backend
                 chatContent.appendChild(createMessageElement(data.reply, "bot"));
                 scrollToBottom();
 
             } catch (err) {
-                // Gestion d'erreur
                 const loader = document.getElementById(loadingId);
                 if(loader) loader.remove();
                 
@@ -145,7 +137,6 @@
             if (e.key === "Enter") sendMessage();
         });
         
-        // Focus auto
         input.focus();
     </script>
 </body>
