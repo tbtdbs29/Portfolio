@@ -1,0 +1,35 @@
+{
+  "detector": {
+    "ignoreRules": [],
+    "ignoreFiles": [],
+    "ignoreValues": [
+      {
+        "rule": "pulsing-dot",
+        "value": "*",
+        "files": [
+          "css/site.css"
+        ],
+        "createdAt": "2026-10-29T14:15:47.151Z",
+        "reason": "Claude: .msg-wait is the assistant typing indicator, a real loading state"
+      },
+      {
+        "rule": "shape-assembled-illustration",
+        "value": "*",
+        "files": [
+          "index.html"
+        ],
+        "createdAt": "2026-10-29T14:21:13.720Z",
+        "reason": "Claude, per finish reviewer fix 2: N-Dames frame is a data graphic of a valid 8-queens solution, not clip art"
+      },
+      {
+        "rule": "cramped-padding",
+        "value": "*",
+        "files": [
+          "index.html"
+        ],
+        "createdAt": "2026-10-29T14:50:49.318Z",
+        "reason": "Claude: Apple-canon tiles and section bands hold full-bleed media by design; text inside tiles has 1.5rem padding"
+      }
+    ]
+  }
+}

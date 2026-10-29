@@ -1,0 +1,472 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-10-29T15:01:22+00:00",
+  "title": "Design System: Thibault Dubois — Portfolio",
+  "extensions": {
+    "colorMeta": {
+      "blue": {
+        "role": "primary",
+        "displayName": "Apple Blue",
+        "canonical": "#0071e3",
+        "tonalRamp": [
+          "#001a3d",
+          "#00316f",
+          "#004a9f",
+          "#0062c4",
+          "#0071e3",
+          "#2997ff",
+          "#7cbcff",
+          "#d6eaff"
+        ]
+      },
+      "blue-hover": {
+        "role": "primary",
+        "displayName": "Pressed Blue",
+        "canonical": "#0062c4",
+        "tonalRamp": [
+          "#001a3d",
+          "#00316f",
+          "#004a9f",
+          "#0062c4",
+          "#0071e3",
+          "#2997ff",
+          "#7cbcff",
+          "#d6eaff"
+        ]
+      },
+      "link": {
+        "role": "primary",
+        "displayName": "Link Blue",
+        "canonical": "#0066cc",
+        "tonalRamp": [
+          "#001a3d",
+          "#00316f",
+          "#004a9f",
+          "#0062c4",
+          "#0071e3",
+          "#2997ff",
+          "#7cbcff",
+          "#d6eaff"
+        ]
+      },
+      "link-dark": {
+        "role": "primary",
+        "displayName": "Night Link Blue",
+        "canonical": "#2997ff",
+        "tonalRamp": [
+          "#001a3d",
+          "#00316f",
+          "#004a9f",
+          "#0062c4",
+          "#0071e3",
+          "#2997ff",
+          "#7cbcff",
+          "#d6eaff"
+        ]
+      },
+      "white": {
+        "role": "neutral",
+        "displayName": "White",
+        "canonical": "#ffffff",
+        "tonalRamp": [
+          "#1d1d1f",
+          "#333336",
+          "#48484c",
+          "#6e6e73",
+          "#a1a1a6",
+          "#d2d2d7",
+          "#e8e8ed",
+          "#f5f5f7"
+        ]
+      },
+      "gray": {
+        "role": "neutral",
+        "displayName": "Apple Gray",
+        "canonical": "#f5f5f7",
+        "tonalRamp": [
+          "#1d1d1f",
+          "#333336",
+          "#48484c",
+          "#6e6e73",
+          "#a1a1a6",
+          "#d2d2d7",
+          "#e8e8ed",
+          "#f5f5f7"
+        ]
+      },
+      "ink": {
+        "role": "neutral",
+        "displayName": "Ink",
+        "canonical": "#1d1d1f",
+        "tonalRamp": [
+          "#1d1d1f",
+          "#333336",
+          "#48484c",
+          "#6e6e73",
+          "#a1a1a6",
+          "#d2d2d7",
+          "#e8e8ed",
+          "#f5f5f7"
+        ]
+      },
+      "ink-2": {
+        "role": "neutral",
+        "displayName": "Secondary Gray",
+        "canonical": "#6e6e73",
+        "tonalRamp": [
+          "#1d1d1f",
+          "#333336",
+          "#48484c",
+          "#6e6e73",
+          "#a1a1a6",
+          "#d2d2d7",
+          "#e8e8ed",
+          "#f5f5f7"
+        ]
+      },
+      "hair": {
+        "role": "neutral",
+        "displayName": "Hairline Gray",
+        "canonical": "#d2d2d7",
+        "tonalRamp": [
+          "#1d1d1f",
+          "#333336",
+          "#48484c",
+          "#6e6e73",
+          "#a1a1a6",
+          "#d2d2d7",
+          "#e8e8ed",
+          "#f5f5f7"
+        ]
+      },
+      "segment-track": {
+        "role": "neutral",
+        "displayName": "Segment Track",
+        "canonical": "#e8e8ed",
+        "tonalRamp": [
+          "#1d1d1f",
+          "#333336",
+          "#48484c",
+          "#6e6e73",
+          "#a1a1a6",
+          "#d2d2d7",
+          "#e8e8ed",
+          "#f5f5f7"
+        ]
+      },
+      "bubble": {
+        "role": "neutral",
+        "displayName": "Bubble Gray",
+        "canonical": "#e9e9eb",
+        "tonalRamp": [
+          "#1d1d1f",
+          "#333336",
+          "#48484c",
+          "#6e6e73",
+          "#a1a1a6",
+          "#d2d2d7",
+          "#e8e8ed",
+          "#f5f5f7"
+        ]
+      },
+      "black": {
+        "role": "neutral",
+        "displayName": "Black",
+        "canonical": "#000000",
+        "tonalRamp": [
+          "#000000",
+          "#1d1d1f",
+          "#333336",
+          "#48484c",
+          "#6e6e73",
+          "#a1a1a6",
+          "#d2d2d7",
+          "#e8e8ed"
+        ]
+      },
+      "tile-dark": {
+        "role": "neutral",
+        "displayName": "Graphite",
+        "canonical": "#1d1d1f",
+        "tonalRamp": [
+          "#1d1d1f",
+          "#333336",
+          "#48484c",
+          "#6e6e73",
+          "#a1a1a6",
+          "#d2d2d7",
+          "#e8e8ed",
+          "#f5f5f7"
+        ]
+      },
+      "on-dark": {
+        "role": "neutral",
+        "displayName": "On-Dark",
+        "canonical": "#f5f5f7",
+        "tonalRamp": [
+          "#1d1d1f",
+          "#333336",
+          "#48484c",
+          "#6e6e73",
+          "#a1a1a6",
+          "#d2d2d7",
+          "#e8e8ed",
+          "#f5f5f7"
+        ]
+      },
+      "on-dark-2": {
+        "role": "neutral",
+        "displayName": "On-Dark Secondary",
+        "canonical": "#a1a1a6",
+        "tonalRamp": [
+          "#1d1d1f",
+          "#333336",
+          "#48484c",
+          "#6e6e73",
+          "#a1a1a6",
+          "#d2d2d7",
+          "#e8e8ed",
+          "#f5f5f7"
+        ]
+      },
+      "control-dark": {
+        "role": "neutral",
+        "displayName": "Dark Control",
+        "canonical": "#333336",
+        "tonalRamp": [
+          "#1d1d1f",
+          "#333336",
+          "#48484c",
+          "#6e6e73",
+          "#a1a1a6",
+          "#d2d2d7",
+          "#e8e8ed",
+          "#f5f5f7"
+        ]
+      },
+      "control-dark-hover": {
+        "role": "neutral",
+        "displayName": "Dark Control Hover",
+        "canonical": "#48484c",
+        "tonalRamp": [
+          "#1d1d1f",
+          "#333336",
+          "#48484c",
+          "#6e6e73",
+          "#a1a1a6",
+          "#d2d2d7",
+          "#e8e8ed",
+          "#f5f5f7"
+        ]
+      }
+    },
+    "typographyMeta": {
+      "display": {
+        "displayName": "Display",
+        "purpose": "Hero name and gallery title only."
+      },
+      "headline": {
+        "displayName": "Headline",
+        "purpose": "One centred headline per section."
+      },
+      "subhead": {
+        "displayName": "Subhead",
+        "purpose": "The one-line title under the hero name."
+      },
+      "lead": {
+        "displayName": "Lead",
+        "purpose": "Secondary Gray paragraph under each headline, max 40ch."
+      },
+      "title": {
+        "displayName": "Title",
+        "purpose": "Tile, feature and list titles."
+      },
+      "body": {
+        "displayName": "Body",
+        "purpose": "Running text and button labels."
+      },
+      "label": {
+        "displayName": "Label",
+        "purpose": "Nav links, small pill, footnotes, footer, fine print; sentence case."
+      }
+    },
+    "shadows": [
+      {
+        "name": "segment-thumb",
+        "value": "0 1px 3px rgba(0, 0, 0, .12)",
+        "purpose": "Selected segment in a segmented control, nowhere else."
+      },
+      {
+        "name": "field-focus",
+        "value": "0 0 0 3px rgba(0, 113, 227, .2)",
+        "purpose": "Ask field while focused."
+      },
+      {
+        "name": "nav-material",
+        "value": "background: rgba(255, 255, 255, .72); backdrop-filter: saturate(1.8) blur(20px)",
+        "purpose": "Translucent sticky nav; gains a 1px rgba(0,0,0,.12) hairline once scrolled."
+      },
+      {
+        "name": "focus-ring",
+        "value": "outline: 2px solid #0071e3; outline-offset: 3px",
+        "purpose": "Global :focus-visible; #2997ff on dark grounds."
+      }
+    ],
+    "motion": [
+      {
+        "name": "ease",
+        "value": "cubic-bezier(.25, .1, .25, 1)",
+        "purpose": "Default easing: button colour (0.2s), chip stroke, segment thumb (0.25s), nav hairline (0.3s), lightbox fade (0.3s)."
+      },
+      {
+        "name": "ease-out",
+        "value": "cubic-bezier(.16, 1, .3, 1)",
+        "purpose": "Project image hover zoom, scale(1.03) over 0.8s."
+      },
+      {
+        "name": "hero-grow",
+        "value": "scroll-linked scale 1 → min(viewport/frame, 1.12)",
+        "purpose": "Hero portrait frame grows toward full width as it scrolls into view; disabled under reduced motion."
+      }
+    ],
+    "breakpoints": [
+      {
+        "name": "tablet",
+        "value": "1068px"
+      },
+      {
+        "name": "mobile",
+        "value": "734px"
+      }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary Pill",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "The one filled action per section; Apple Blue pill.",
+      "html": "<a class=\"ds-pill\" href=\"#\">Voir les projets</a>",
+      "css": ".ds-pill { display: inline-flex; align-items: center; justify-content: center; min-height: 2.75rem; padding: .75rem 1.4rem; background: var(--blue, #0071e3); color: #fff; border-radius: 980px; font-size: 1.0625rem; font-weight: 400; text-decoration: none; font-family: var(--sans, -apple-system, BlinkMacSystemFont, 'SF Pro Text', Inter, 'Helvetica Neue', Arial, sans-serif); letter-spacing: -.022em; transition: background-color .2s cubic-bezier(.25,.1,.25,1); } .ds-pill:hover { background: var(--blue-hover, #0062c4); } .ds-pill:focus-visible { outline: 2px solid #0071e3; outline-offset: 3px; }"
+    },
+    {
+      "name": "Chevron Link",
+      "kind": "button",
+      "refersTo": "link-chevron",
+      "description": "The secondary action beside a pill: blue text with an SVG chevron.",
+      "html": "<a class=\"ds-chev\" href=\"#\">Me contacter<svg viewBox=\"0 0 16 16\" aria-hidden=\"true\"><path d=\"m6 3.5 4.5 4.5L6 12.5\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.7\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/></svg></a>",
+      "css": ".ds-chev { display: inline-flex; align-items: center; gap: .2em; font-size: 1.0625rem; color: var(--link, #0066cc); text-decoration: none; font-family: var(--sans, -apple-system, BlinkMacSystemFont, 'SF Pro Text', Inter, 'Helvetica Neue', Arial, sans-serif); letter-spacing: -.022em; } .ds-chev svg { width: .8em; height: .8em; } .ds-chev:hover { text-decoration: underline; } .ds-chev:focus-visible { outline: 2px solid #0071e3; outline-offset: 3px; border-radius: 6px; }"
+    },
+    {
+      "name": "Question Chip",
+      "kind": "chip",
+      "refersTo": "chip",
+      "description": "Suggested question above the chat field.",
+      "html": "<button type=\"button\" class=\"ds-chip\">Quelle est ta stack ?</button>",
+      "css": ".ds-chip { background: #fff; color: #1d1d1f; border: 1px solid var(--hair, #d2d2d7); border-radius: 99px; padding: .5rem .95rem; min-height: 2.5rem; font-size: .9375rem; cursor: pointer; font-family: var(--sans, -apple-system, BlinkMacSystemFont, 'SF Pro Text', Inter, 'Helvetica Neue', Arial, sans-serif); letter-spacing: -.022em; transition: border-color .2s cubic-bezier(.25,.1,.25,1); } .ds-chip:hover { border-color: #6e6e73; } .ds-chip:focus-visible { outline: 2px solid #0071e3; outline-offset: 3px; }"
+    },
+    {
+      "name": "Ask Field",
+      "kind": "input",
+      "refersTo": "input-ask",
+      "description": "Pill text field with a blue circular send button.",
+      "html": "<form class=\"ds-ask\" onsubmit=\"return false\"><input type=\"text\" placeholder=\"Posez une question…\" aria-label=\"Votre question\"><button type=\"submit\" aria-label=\"Envoyer\"><svg viewBox=\"0 0 16 16\" aria-hidden=\"true\"><path d=\"M8 13V3M4 7l4-4 4 4\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.9\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/></svg></button></form>",
+      "css": ".ds-ask { display: flex; align-items: center; gap: .5rem; max-width: 28rem; background: #fff; border: 1px solid #d2d2d7; border-radius: 99px; padding: .3rem .3rem .3rem 1.1rem; transition: border-color .2s, box-shadow .2s; } .ds-ask:focus-within { border-color: #0071e3; box-shadow: 0 0 0 3px rgba(0,113,227,.2); } .ds-ask input { flex: 1; min-width: 0; border: 0; outline: 0; background: none; font-size: 1.0625rem; padding: .5rem 0; color: #1d1d1f; font-family: var(--sans, -apple-system, BlinkMacSystemFont, 'SF Pro Text', Inter, 'Helvetica Neue', Arial, sans-serif); letter-spacing: -.022em; } .ds-ask input::placeholder { color: #6e6e73; } .ds-ask button { flex: none; display: grid; place-items: center; width: 2.25rem; height: 2.25rem; border-radius: 50%; border: 0; background: #0071e3; color: #fff; cursor: pointer; } .ds-ask svg { width: 1em; height: 1em; }"
+    },
+    {
+      "name": "Segmented Control",
+      "kind": "custom",
+      "refersTo": "segmented",
+      "description": "Project filter and gallery series switch; selected segment lifts as a white pill.",
+      "html": "<div class=\"ds-seg\" role=\"group\" aria-label=\"Filtrer\"><button type=\"button\" aria-pressed=\"true\">Tout</button><button type=\"button\" aria-pressed=\"false\">Alcatel‑Lucent</button><button type=\"button\" aria-pressed=\"false\">Personnel</button></div>",
+      "css": ".ds-seg { display: inline-flex; padding: 3px; background: #e8e8ed; border-radius: 99px; } .ds-seg button { border: 0; background: none; border-radius: 99px; padding: .45rem 1.1rem; min-height: 2.25rem; font-size: .875rem; color: #1d1d1f; cursor: pointer; font-family: var(--sans, -apple-system, BlinkMacSystemFont, 'SF Pro Text', Inter, 'Helvetica Neue', Arial, sans-serif); letter-spacing: -.022em; transition: background-color .25s cubic-bezier(.25,.1,.25,1); } .ds-seg button[aria-pressed=\"true\"] { background: #fff; box-shadow: 0 1px 3px rgba(0,0,0,.12); } .ds-seg button:focus-visible { outline: 2px solid #0071e3; outline-offset: 3px; }"
+    },
+    {
+      "name": "Project Tile",
+      "kind": "card",
+      "refersTo": "tile",
+      "description": "Rounded white tile with 3:2 media over title, description, meta and links.",
+      "html": "<article class=\"ds-tile\"><div class=\"ds-tile-media\"><div class=\"ds-shot\"></div></div><div class=\"ds-tile-body\"><h3>Refuge du Pays de Landerneau</h3><p>Site public et back‑office des bénévoles d'un refuge animal.</p><p class=\"ds-meta\">2025 · Next.js</p><a href=\"#\">Voir le site ›</a></div></article>",
+      "css": ".ds-tile { max-width: 22rem; background: #fff; border-radius: 18px; overflow: hidden; font-family: var(--sans, -apple-system, BlinkMacSystemFont, 'SF Pro Text', Inter, 'Helvetica Neue', Arial, sans-serif); letter-spacing: -.022em; color: #1d1d1f; } .ds-tile-media { aspect-ratio: 3 / 2; background: #f5f5f7; padding: 1.75rem 1.75rem 0; overflow: hidden; } .ds-shot { height: 100%; border-radius: 10px 10px 0 0; background: linear-gradient(#fff, #e8e8ed); transition: transform .8s cubic-bezier(.16,1,.3,1); } .ds-tile:hover .ds-shot { transform: scale(1.03); } .ds-tile-body { display: grid; gap: .45rem; padding: 1.5rem 1.6rem 1.7rem; } .ds-tile-body h3 { margin: 0; font-size: 1.3125rem; font-weight: 600; letter-spacing: -.02em; line-height: 1.2; } .ds-tile-body p { margin: 0; font-size: 1rem; line-height: 1.45; color: #6e6e73; } .ds-meta { font-size: .8125rem !important; font-variant-numeric: tabular-nums; } .ds-tile-body a { color: #0066cc; text-decoration: none; } .ds-tile-body a:hover { text-decoration: underline; }"
+    },
+    {
+      "name": "Chat Bubbles",
+      "kind": "custom",
+      "refersTo": "message-user",
+      "description": "iMessage-style bubbles: blue for the visitor, grey for the assistant.",
+      "html": "<ol class=\"ds-log\"><li class=\"ds-msg ds-user\">Quelle est ta stack ?</li><li class=\"ds-msg ds-bot\">Python, JavaScript et des modèles de langage en production.</li></ol>",
+      "css": ".ds-log { display: grid; gap: .6rem; max-width: 26rem; margin: 0; padding: 1.25rem; list-style: none; background: #f5f5f7; border-radius: 28px; } .ds-msg { max-width: 80%; font-size: 1.0625rem; line-height: 1.4; padding: .55rem .95rem; border-radius: 1.15rem; font-family: var(--sans, -apple-system, BlinkMacSystemFont, 'SF Pro Text', Inter, 'Helvetica Neue', Arial, sans-serif); letter-spacing: -.022em; } .ds-user { justify-self: end; background: #0071e3; color: #fff; border-bottom-right-radius: .35rem; } .ds-bot { justify-self: start; background: #e9e9eb; color: #1d1d1f; border-bottom-left-radius: .35rem; }"
+    },
+    {
+      "name": "Product Nav",
+      "kind": "nav",
+      "refersTo": "",
+      "description": "Sticky translucent nav: wordmark, small links, language toggle, Contact pill.",
+      "html": "<header class=\"ds-nav\"><a class=\"ds-wordmark\" href=\"#\">Thibault Dubois</a><nav><a href=\"#\" aria-current=\"true\">Projet phare</a><a href=\"#\">Projets</a><a href=\"#\">Photo</a><a href=\"#\">Parcours</a></nav><button type=\"button\" class=\"ds-lang\">EN</button><a class=\"ds-pill-sm\" href=\"#\">Contact</a></header>",
+      "css": ".ds-nav { display: flex; align-items: center; gap: 1.5rem; height: 3.25rem; padding-inline: 1.5rem; background: rgba(255,255,255,.72); -webkit-backdrop-filter: saturate(1.8) blur(20px); backdrop-filter: saturate(1.8) blur(20px); border-bottom: 1px solid rgba(0,0,0,.12); font-family: var(--sans, -apple-system, BlinkMacSystemFont, 'SF Pro Text', Inter, 'Helvetica Neue', Arial, sans-serif); letter-spacing: -.022em; } .ds-wordmark { margin-right: auto; color: #1d1d1f; font-size: 1.3125rem; font-weight: 600; letter-spacing: -.02em; text-decoration: none; } .ds-nav nav { display: flex; gap: 1.6rem; font-size: .75rem; } .ds-nav nav a { color: #1d1d1f; opacity: .8; text-decoration: none; } .ds-nav nav a:hover, .ds-nav nav a[aria-current] { opacity: 1; } .ds-lang { border: 0; background: none; font-size: .75rem; color: #1d1d1f; opacity: .8; cursor: pointer; } .ds-lang:hover { opacity: 1; } .ds-pill-sm { display: inline-flex; align-items: center; min-height: 1.75rem; padding: .25rem .8rem; border-radius: 980px; background: #0071e3; color: #fff; font-size: .75rem; text-decoration: none; transition: background-color .2s; } .ds-pill-sm:hover { background: #0062c4; } .ds-nav a:focus-visible, .ds-nav button:focus-visible { outline: 2px solid #0071e3; outline-offset: 3px; border-radius: 6px; }"
+    },
+    {
+      "name": "Round Dark Button",
+      "kind": "button",
+      "refersTo": "button-round-dark",
+      "description": "Circular arrow button for the carousel and the lightbox on dark grounds.",
+      "html": "<div class=\"ds-dark\"><button type=\"button\" class=\"ds-round\" aria-label=\"Photo précédente\"><svg viewBox=\"0 0 16 16\" aria-hidden=\"true\"><path d=\"M10 3.5 5.5 8l4.5 4.5\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/></svg></button><button type=\"button\" class=\"ds-round\" aria-label=\"Photo suivante\"><svg viewBox=\"0 0 16 16\" aria-hidden=\"true\"><path d=\"m6 3.5 4.5 4.5L6 12.5\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/></svg></button></div>",
+      "css": ".ds-dark { display: inline-flex; gap: .75rem; padding: 1.25rem; background: #000; border-radius: 18px; } .ds-round { display: grid; place-items: center; width: 2.25rem; height: 2.25rem; border-radius: 50%; border: 0; background: #333336; color: #f5f5f7; cursor: pointer; transition: background-color .2s, opacity .2s; } .ds-round:hover { background: #48484c; } .ds-round:disabled { opacity: .35; cursor: default; } .ds-round:focus-visible { outline: 2px solid #2997ff; outline-offset: 3px; } .ds-round svg { width: 1em; height: 1em; }"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Product Page",
+    "overview": "The site presents a person the way apple.com presents a product, played straight: one idea per section, a centred headline, a short grey lead under it, one large image or one dark tile, and nothing decorative. Grounds alternate between white and a pale cool grey, with a single black band for the photography. The craft bar is apple.com itself; anything that would look out of place on an iPhone or MacBook Air product page is out of place here.\n\nDensity is low and the rhythm is vertical. Every band carries generous padding (80–136px), headlines balance across lines, and content sits in Apple's 980px column, widening to 1200px only for tile grids, the photo carousel and the gallery. Type does the hierarchy work through size and weight alone: SF Pro where the platform has it, self-hosted Inter variable everywhere else, tightened by negative tracking. Colour is almost absent; Apple blue appears only where something can be pressed or followed.\n\nMotion is quiet and functional: the hero portrait scales up gently toward full width as it scrolls into view (capped at 1.12x), project images zoom 3% on hover, the nav gains a hairline once the page scrolls. All of it collapses under `prefers-reduced-motion`. The rejected directions are confirmed: no themed concepts (film, paper, grease pencil) and no dark \"creative developer\" portfolio.",
+    "keyCharacteristics": [
+      "White / #f5f5f7 alternating bands, one black band for photography",
+      "Centred headline + grey lead opening every section",
+      "Apple blue only on actions and links",
+      "Large rounded media frames (18px tiles, 28px hero and showcase)",
+      "Pill buttons and pill controls throughout",
+      "Translucent sticky nav with backdrop blur",
+      "Hairlines instead of shadows"
+    ],
+    "rules": [
+      {
+        "name": "The Blue Means Press Rule",
+        "body": "Blue is never decoration, never a heading colour, never a background band. If it is blue, it can be clicked, typed into, or is the user's own message.",
+        "section": "colors"
+      },
+      {
+        "name": "The Alternating Ground Rule",
+        "body": "Sections change ground (white, then #f5f5f7, with black kept for the one photographic band) instead of using borders, cards or dividers to separate them.",
+        "section": "colors"
+      },
+      {
+        "name": "The Weight Not Colour Rule",
+        "body": "Hierarchy comes from size and weight (600 vs 400) plus the ink / Secondary Gray pair. No uppercase labels, no letter-spaced small caps, no coloured headings.",
+        "section": "typography"
+      },
+      {
+        "name": "The Tabular Meta Rule",
+        "body": "Dates, years, photo counts and lightbox captions use tabular numerals.",
+        "section": "typography"
+      },
+      {
+        "name": "The No-Lift Rule",
+        "body": "Tiles, cards, images and buttons never cast shadows, at rest or on hover. Hover changes colour, opacity or image scale, not elevation.",
+        "section": "elevation"
+      }
+    ],
+    "dos": [
+      "Do open every section with a centred headline (600, -0.03em) and a Secondary Gray lead, then one piece of content.",
+      "Do alternate white and #f5f5f7 bands; keep black for the one photographic band.",
+      "Do pair one blue pill with one chevron link when a section needs two actions.",
+      "Do frame large media in 28px rounded corners and tiles in 18px.",
+      "Do use the shared SVG sprite for icons (chevron, arrows, send, close, menu) at 1em.",
+      "Do keep hover feedback to colour, opacity or a 3% image zoom, and honour `prefers-reduced-motion`."
+    ],
+    "donts": [
+      "Don't use blue for anything that cannot be pressed or followed.",
+      "Don't add shadows to tiles, images or buttons; the segment thumb and the field focus glow are the only shadows.",
+      "Don't put uppercase or letter-spaced labels above headlines; the headline opens the section on its own.",
+      "Don't reintroduce themed worlds (film rebate, paper, grease pencil) or the dark \"creative developer\" look (noise overlays, custom cursors, uppercase Space Grotesk).",
+      "Don't use emoji or text glyphs as icons; icons are SVG strokes in the current colour."
+    ]
+  }
+}
