@@ -1,5 +1,10 @@
 {
   "version": 2,
+  "redirects": [
+    { "source": "/classic/gallery.html", "destination": "/galerie.html", "permanent": true },
+    { "source": "/classic/(.*)", "destination": "/", "permanent": true },
+    { "source": "/chatbot/(.*)", "destination": "/#assistant", "permanent": true }
+  ],
   "rewrites": [
     {
       "source": "/api/(.*)",

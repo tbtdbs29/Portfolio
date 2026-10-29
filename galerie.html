@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Galerie · Thibault Dubois</title>
+  <meta name="description" content="Photographies de Thibault Dubois : voyages, meetings aériens, rallyes.">
+  <meta name="theme-color" content="#ffffff">
+  <link rel="icon" href="/favicon.ico" sizes="32x32">
+  <link rel="icon" href="/icon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <link rel="preload" href="assets/fonts/inter-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="css/site.css">
+  <script>document.documentElement.classList.add('js')</script>
+</head>
+<body>
+  <svg width="0" height="0" class="sprite" aria-hidden="true">
+    <symbol id="i-left" viewBox="0 0 16 16"><path d="M10 3.5 5.5 8l4.5 4.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-right" viewBox="0 0 16 16"><path d="m6 3.5 4.5 4.5L6 12.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-close" viewBox="0 0 16 16"><path d="M4 4l8 8M12 4l-8 8" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></symbol>
+  </svg>
+
+  <a class="skip" href="#main" data-en="Skip to content">Aller au contenu</a>
+
+  <header class="nav">
+    <div class="nav-in">
+      <a class="wordmark" href="index.html">Thibault Dubois</a>
+      <nav id="site-menu" aria-label="Navigation principale" data-en-aria="Main navigation">
+        <a href="index.html#phare" data-en="Flagship">Projet phare</a>
+        <a href="index.html#projets" data-en="Work">Projets</a>
+        <a href="galerie.html" aria-current="page" data-en="Photo">Photo</a>
+        <a href="index.html#parcours" data-en="About">Parcours</a>
+      </nav>
+      <button class="menu-btn" type="button" aria-expanded="false" aria-controls="site-menu" aria-label="Ouvrir le menu" data-en-aria="Open the menu" data-menu><svg class="ico" viewBox="0 0 16 16" aria-hidden="true"><path d="M2.5 5.5h11M2.5 10.5h11" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></button>
+      <button class="lang" type="button" aria-label="Switch to English" data-lang-toggle>EN</button>
+      <a class="pill pill-sm" href="index.html#contact" data-en="Contact">Contact</a>
+    </div>
+  </header>
+
+  <main id="main">
+    <div class="wrap gallery-head">
+      <h1 data-en="Gallery.">Galerie.</h1>
+      <p class="lead" data-en="Travel and events. Select a photo to see it larger.">Voyages et événements. Choisissez une photo pour l'agrandir.</p>
+      <div class="segmented" role="group" aria-label="Choisir une série" data-en-aria="Choose a series" data-series>
+        <button type="button" aria-pressed="true" data-cat="voyage"><span data-en="Travel">Voyages</span><span class="count" data-count="voyage"></span></button>
+        <button type="button" aria-pressed="false" data-cat="evt"><span data-en="Events">Événements</span><span class="count" data-count="evt"></span></button>
+      </div>
+    </div>
+    <ul class="photo-grid" data-grid aria-live="polite"></ul>
+    <p class="gallery-status" data-status hidden></p>
+  </main>
+
+  <footer class="foot">
+    <div class="wrap foot-in">
+      <span>© 2026 Thibault Dubois</span>
+      <a href="index.html" data-en="Back to the home page">Retour à l'accueil</a>
+    </div>
+  </footer>
+
+  <dialog class="loupe" data-loupe aria-label="Photographie agrandie" data-en-aria="Enlarged photograph">
+    <figure class="loupe-fig" data-loupe-fig>
+      <figcaption class="loupe-cap" data-loupe-cap></figcaption>
+    </figure>
+    <button type="button" class="round loupe-prev" data-prev aria-label="Photo précédente" data-en-aria="Previous photo"><svg class="ico"><use href="#i-left"/></svg></button>
+    <button type="button" class="round loupe-next" data-next aria-label="Photo suivante" data-en-aria="Next photo"><svg class="ico"><use href="#i-right"/></svg></button>
+    <button type="button" class="round loupe-close" data-close aria-label="Fermer" data-en-aria="Close"><svg class="ico"><use href="#i-close"/></svg></button>
+  </dialog>
+
+  <script src="js/site.js" defer></script>
+  <script src="js/galerie.js" defer></script>
+</body>
+</html>

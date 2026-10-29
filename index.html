@@ -1,155 +1,293 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Thibault | Digital Experience</title>
-    <link rel="stylesheet" href="css/style.css">
-    <style>
-        body { 
-            overflow: hidden; 
-            height: 100vh; 
-            height: 100dvh; 
-            display: flex; 
-            flex-direction: column; 
-            margin: 0;
-        }
-        
-        .split-screen {
-            display: flex;
-            height: 100%;
-            width: 100%;
-            position: relative;
-            z-index: 2;
-        }
-
-        .split-side {
-            flex: 1;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            position: relative;
-            transition: flex 0.8s cubic-bezier(0.16, 1, 0.3, 1);
-            border-right: 1px solid rgba(255,255,255,0.05);
-            overflow: hidden;
-        }
-
-        .big-link {
-            text-decoration: none;
-            color: white;
-            text-align: center;
-            position: relative;
-            z-index: 10;
-            padding: 20px;
-        }
-
-        .big-title {
-            font-size: clamp(2.5rem, 5vw, 8rem);
-            font-family: 'Space Grotesk', sans-serif;
-            font-weight: 700;
-            text-transform: uppercase;
-            line-height: 0.9;
-            display: block;
-            transition: transform 0.5s;
-        }
-
-        .subtitle {
-            font-family: 'Inter', sans-serif;
-            font-size: 1rem;
-            letter-spacing: 0.2em;
-            color: var(--accent);
-            margin-top: 20px;
-            display: block;
-            opacity: 0;
-            transform: translateY(20px);
-            transition: all 0.5s;
-        }
-
-        @media (min-width: 769px) {
-            .split-side:hover {
-                flex: 1.5;
-                background: rgba(255,255,255,0.02);
-            }
-            .split-side:hover .subtitle {
-                opacity: 1;
-                transform: translateY(0);
-            }
-            .split-side:hover .big-title {
-                transform: scale(1.05);
-            }
-            .split-side:hover .bg-reveal {
-                opacity: 0.6;
-                transform: scale(1.05);
-            }
-        }
-
-        .bg-reveal {
-            position: absolute;
-            top: 0; left: 0; width: 100%; height: 100%;
-            object-fit: cover;
-            opacity: 0;
-            transition: opacity 0.6s ease, transform 1s ease;
-            z-index: 1;
-            filter: grayscale(100%) brightness(0.4);
-            pointer-events: none;
-        }
-
-        @media (max-width: 768px) {
-            .split-screen { flex-direction: column; }
-            .split-side { 
-                border-right: none; 
-                border-bottom: 1px solid rgba(255,255,255,0.05); 
-                flex: 1 !important; 
-            }
-            
-            .bg-reveal { opacity: 0.3; }
-            .subtitle { opacity: 1; transform: translateY(0); margin-top: 10px; font-size: 0.8rem; }
-            .big-title { font-size: 3rem; }
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Thibault Dubois · Développeur logiciel</title>
+  <meta name="description" content="Thibault Dubois, développeur logiciel chez Alcatel-Lucent Enterprise. Chatbot multi-agent, projets web et data, photographie.">
+  <meta property="og:title" content="Thibault Dubois · Développeur logiciel">
+  <meta property="og:description" content="Développeur logiciel chez Alcatel-Lucent Enterprise. Chatbot multi-agent, projets web et data, photographie.">
+  <meta property="og:image" content="/assets/img/portrait.webp">
+  <meta name="theme-color" content="#ffffff">
+  <link rel="icon" href="/favicon.ico" sizes="32x32">
+  <link rel="icon" href="/icon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <link rel="preload" href="assets/fonts/inter-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="css/site.css">
+  <script>document.documentElement.classList.add('js')</script>
 </head>
 <body>
-    <div class="noise-overlay"></div>
-    <div id="cursor"></div>
+  <svg width="0" height="0" class="sprite" aria-hidden="true">
+    <symbol id="i-chev" viewBox="0 0 16 16"><path d="m6 3.5 4.5 4.5L6 12.5" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-left" viewBox="0 0 16 16"><path d="M10 3.5 5.5 8l4.5 4.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-right" viewBox="0 0 16 16"><path d="m6 3.5 4.5 4.5L6 12.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-send" viewBox="0 0 16 16"><path d="M8 13V3M4 7l4-4 4 4" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  </svg>
 
-    <main class="split-screen">
-        
-        <div class="split-side hover-trigger">
-            <img src="assets/pdp.jpg" alt="Classic" class="bg-reveal">
-            <a href="classic/index.html" class="big-link">
-                <span class="big-title">Classic<br>Portfolio</span>
-                <span class="subtitle">Développement & Design</span>
-            </a>
+  <a class="skip" href="#main" data-en="Skip to content">Aller au contenu</a>
+
+  <header class="nav">
+    <div class="nav-in">
+      <a class="wordmark" href="#top">Thibault Dubois</a>
+      <nav id="site-menu" aria-label="Navigation principale" data-en-aria="Main navigation">
+        <a href="#phare" data-en="Flagship">Projet phare</a>
+        <a href="#projets" data-en="Work">Projets</a>
+        <a href="#photo" data-en="Photo">Photo</a>
+        <a href="#parcours" data-en="About">Parcours</a>
+      </nav>
+      <button class="menu-btn" type="button" aria-expanded="false" aria-controls="site-menu" aria-label="Ouvrir le menu" data-en-aria="Open the menu" data-menu><svg class="ico" viewBox="0 0 16 16" aria-hidden="true"><path d="M2.5 5.5h11M2.5 10.5h11" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></button>
+      <button class="lang" type="button" aria-label="Switch to English" data-lang-toggle>EN</button>
+      <a class="pill pill-sm" href="#contact" data-en="Contact">Contact</a>
+    </div>
+  </header>
+
+  <main id="main">
+    <section class="hero" id="top">
+      <div class="wrap hero-copy">
+        <h1>Thibault Dubois.</h1>
+        <p class="hero-sub" data-en="Software developer at Alcatel‑Lucent Enterprise.">Développeur logiciel chez Alcatel‑Lucent Enterprise.</p>
+        <div class="ctas">
+          <a class="pill" href="#projets" data-en="See the work">Voir les projets</a>
+          <a class="chev-link" href="#contact"><span data-en="Get in touch">Me contacter</span><svg class="ico"><use href="#i-chev"/></svg></a>
         </div>
+      </div>
+      <div class="hero-media" data-grow>
+        <img src="assets/img/portrait.webp" alt="Thibault Dubois, souriant, en terrasse au soleil" data-en-alt="Thibault Dubois smiling on a sunny terrace" width="1800" height="1200" fetchpriority="high">
+      </div>
+    </section>
 
-        <div class="split-side hover-trigger">
-            <img src="assets/ai.jpg" alt="ai" class="bg-reveal">
-            <a href="chatbot/index.html" class="big-link">
-                <span class="big-title">AI<br>Experience</span>
-                <span class="subtitle">Chatbot Interactif</span>
-            </a>
+    <section class="band band-gray" id="phare" aria-labelledby="flag-title">
+      <div class="wrap center">
+        <h2 id="flag-title" data-en="A multi‑agent chatbot for OmniVista Network Advisor.">Un chatbot multi‑agent pour OmniVista Network Advisor.</h2>
+        <p class="lead" data-en="At Alcatel‑Lucent Enterprise, I have been building since 2025 a system where specialised agents work together to answer questions from the product documentation.">Chez Alcatel‑Lucent Enterprise, je développe depuis 2025 un système où des agents spécialisés coopèrent pour répondre aux questions à partir de la documentation produit.</p>
+      </div>
+      <div class="stage" data-stage>
+        <div class="stage-sticky">
+          <canvas class="stage-canvas" aria-hidden="true"></canvas>
+          <div class="stage-copy">
+            <div class="stage-step is-active" data-step="0"><h3 data-en="A question comes in.">Une question arrive.</h3><p data-en="The orchestrator receives it and shares the work between specialised agents.">L'orchestrateur la reçoit et répartit le travail entre des agents spécialisés.</p></div>
+            <div class="stage-step" data-step="1"><h3 data-en="Collection.">Collecte.</h3><p data-en="Agents go through the product documentation by web scraping.">Des agents parcourent la documentation produit par web scraping.</p></div>
+            <div class="stage-step" data-step="2"><h3 data-en="Indexing.">Indexation.</h3><p data-en="Every page is vectorised: meaning becomes a position in space.">Chaque page est vectorisée : le sens devient une position dans l'espace.</p></div>
+            <div class="stage-step" data-step="3"><h3 data-en="Retrieval.">Recherche.</h3><p data-en="The agents query the vector database and put the answer together.">Les agents interrogent la base vectorielle et assemblent la réponse.</p></div>
+          </div>
+          <ol class="stage-dots" aria-hidden="true"><li class="is-active"></li><li></li><li></li><li></li></ol>
         </div>
+      </div>
+      <div class="wrap">
+        <div class="flag-static">
+        <figure class="showcase">
+          <svg class="diagram" viewBox="0 0 600 400" role="img" aria-labelledby="diag-t">
+          <title id="diag-t" data-en="Simplified diagram: a question goes to an orchestrator that coordinates specialised agents for collection, indexing and retrieval, then answers.">Schéma simplifié : une question part vers un orchestrateur qui coordonne des agents spécialisés pour la collecte, l'indexation et la recherche, puis répond.</title>
+          <defs>
+            <g id="diagram-art">
+              <rect width="600" height="400" fill="#1d1d1f"/>
+              <g fill="none" stroke="#f5f5f7" stroke-width="1.6" stroke-linecap="round">
+                <path d="M128 200H218"/>
+                <path d="M330 200C370 200 372 98 412 98"/>
+                <path d="M330 200H412"/>
+                <path d="M330 200C370 200 372 302 412 302"/>
+                <path d="M412 98" />
+              </g>
+              <g fill="none" stroke="#f5f5f7" stroke-opacity=".35" stroke-width="1.2" stroke-dasharray="3 5">
+                <path d="M520 98C560 98 560 200 520 200"/>
+                <path d="M520 302C560 302 560 200 520 200"/>
+              </g>
+              <g stroke="#f5f5f7" stroke-width="1.6" fill="#1d1d1f">
+                <rect x="40" y="176" width="88" height="48" rx="24"/>
+                <rect x="218" y="166" width="112" height="68" rx="14" fill="#f5f5f7"/>
+                <rect x="412" y="74" width="108" height="48" rx="12"/>
+                <rect x="412" y="176" width="108" height="48" rx="12"/>
+                <rect x="412" y="278" width="108" height="48" rx="12"/>
+              </g>
+              <g fill="#f5f5f7"><circle cx="128" cy="200" r="3.5"/><circle cx="218" cy="200" r="3.5"/><circle cx="412" cy="98" r="3.5"/><circle cx="412" cy="200" r="3.5"/><circle cx="412" cy="302" r="3.5"/></g>
+            </g>
+          </defs>
+          <use href="#diagram-art"/>
+          <g class="diagram-labels" font-family="-apple-system, BlinkMacSystemFont, Inter, system-ui, sans-serif" font-size="15" text-anchor="middle" fill="#f5f5f7">
+            <text x="84" y="205" data-en="Question">Question</text>
+            <text x="274" y="196" fill="#1d1d1f" font-weight="600" data-en="Orchestrator">Orchestrateur</text>
+            <text x="274" y="214" fill="#1d1d1f" font-size="12.5" data-en="routes the work">répartit le travail</text>
+            <text x="466" y="103" data-en="Collection">Collecte</text>
+            <text x="466" y="205" data-en="Indexing">Indexation</text>
+            <text x="466" y="307" data-en="Retrieval">Recherche</text>
+            <text x="466" y="140" font-size="12.5" fill-opacity=".7">web scraping</text>
+            <text x="466" y="242" font-size="12.5" fill-opacity=".7" data-en="vectorisation">vectorisation</text>
+            <text x="466" y="344" font-size="12.5" fill-opacity=".7" data-en="vector database">base vectorielle</text>
+            <text x="300" y="380" font-size="12.5" fill-opacity=".55" data-en="Simplified diagram · proprietary code">Schéma simplifié · code propriétaire</text>
+          </g>
+        </svg>
+          <ol class="flow">
+            <li class="flow-node" data-en="Question">Question</li>
+            <li class="flow-node flow-key"><b data-en="Orchestrator">Orchestrateur</b><span data-en="routes the work">répartit le travail</span></li>
+            <li class="flow-branch">
+              <ol>
+                <li class="flow-node"><b data-en="Collection">Collecte</b><span>web scraping</span></li>
+                <li class="flow-node"><b data-en="Indexing">Indexation</b><span>vectorisation</span></li>
+                <li class="flow-node"><b data-en="Retrieval">Recherche</b><span data-en="vector database">base vectorielle</span></li>
+              </ol>
+            </li>
+          </ol>
+        </figure>
+        <div class="features">
+          <div><h3 data-en="Collection">Collecte</h3><p data-en="The documentation is gathered by web scraping.">La documentation est rassemblée par web scraping.</p></div>
+          <div><h3 data-en="Indexing">Indexation</h3><p data-en="It is vectorised so that it can be searched by meaning.">Elle est vectorisée pour être recherchée par le sens.</p></div>
+          <div><h3 data-en="Retrieval">Recherche</h3><p data-en="The agents query a vector database and build the answer.">Les agents interrogent une base vectorielle et construisent la réponse.</p></div>
+        </div>
+        </div>
+        <p class="footnote" data-en="Alcatel‑Lucent Enterprise · project started in 2025 · proprietary code, not public.">Alcatel‑Lucent Enterprise · projet démarré en 2025 · code propriétaire, non public.</p>
+      </div>
+    </section>
 
-    </main>
+    <section class="band" id="assistant" aria-labelledby="ask-title">
+      <div class="wrap center">
+        <h2 id="ask-title" data-en="Ask it anything.">Posez‑lui la question.</h2>
+        <p class="lead" data-en="My assistant knows my path and my projects. It answers in a few seconds.">Mon assistant connaît mon parcours et mes projets. Il répond en quelques secondes.</p>
+      </div>
+      <div class="wrap">
+        <div class="chat" data-chat>
+          <ol class="chat-log" aria-live="polite" data-chat-log></ol>
+          <div class="chips" data-chips>
+            <button type="button" class="chip" data-en="What are you working on at ALE?">Sur quoi travailles‑tu chez ALE ?</button>
+            <button type="button" class="chip" data-en="What is your stack?">Quelle est ta stack ?</button>
+            <button type="button" class="chip" data-en="Tell me about the Refuge website">Parle‑moi du site du Refuge</button>
+          </div>
+          <form class="ask" data-chat-form>
+            <label class="sr" for="ask-input" data-en="Your question">Votre question</label>
+            <input id="ask-input" name="q" type="text" maxlength="500" autocomplete="off" placeholder="Posez une question…" data-en-placeholder="Ask a question…" required>
+            <button type="submit" class="send" aria-label="Envoyer" data-en-aria="Send"><svg class="ico"><use href="#i-send"/></svg></button>
+          </form>
+          <p class="fineprint" data-en="Answers are generated by AI (GPT‑4o mini) and may contain mistakes.">Réponses générées par IA (GPT‑4o mini), elles peuvent contenir des erreurs.</p>
+        </div>
+      </div>
+    </section>
 
-    <footer style="position: fixed; bottom: 30px; width: 100%; text-align: center; pointer-events: none; z-index: 10; color: #444; font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.1em; padding: 0 10px;">
-        Select your interface
-    </footer>
+    <section class="band band-gray" id="projets" aria-labelledby="work-title">
+      <div class="wrap center">
+        <h2 id="work-title" data-en="The work.">Les projets.</h2>
+        <p class="lead" data-en="Production code in a large company, sites for friends and non‑profits, and university projects.">Du code en production dans une grande entreprise, des sites pour des proches et des associations, des projets d'études.</p>
+        <div class="segmented" role="group" aria-label="Filtrer les projets" data-en-aria="Filter projects" data-filter>
+          <button type="button" aria-pressed="true" data-cat="all" data-en="All">Tout</button>
+          <button type="button" aria-pressed="false" data-cat="ale">Alcatel‑Lucent</button>
+          <button type="button" aria-pressed="false" data-cat="perso" data-en="Personal">Personnel</button>
+          <button type="button" aria-pressed="false" data-cat="etudes" data-en="University">Études</button>
+        </div>
+      </div>
+      <div class="wrap">
+        <div class="tiles" data-sheet>
+          <article class="tile tile-lg tile-inset" data-cat="perso">
+          <div class="tile-media"><img src="assets/img/proj/refuge.webp" alt="Page d'accueil du site du Refuge du Pays de Landerneau" data-en-alt="Home page of the Refuge du Pays de Landerneau website" width="1200" height="800" loading="lazy"></div>
+          <div class="tile-body"><h3>Refuge du Pays de Landerneau</h3><p data-en="Public website and volunteer back office for an animal shelter: adoptions, calendar, news, inbox, accounts and roles.">Site public et back‑office des bénévoles d'un refuge animalier : adoptions, agenda, actualités, messagerie, comptes et rôles.</p><p class="meta">2026 · Node.js · Express · SQLite</p><p class="links"><a href="https://refuge-six.vercel.app" target="_blank" rel="noopener"><span data-en="Visit the site">Voir le site</span><svg class="ico"><use href="#i-chev"/></svg></a><a href="https://github.com/tbtdbs29/Refuge" target="_blank" rel="noopener">Code<svg class="ico"><use href="#i-chev"/></svg></a></p></div>
+        </article>
+          <article class="tile tile-lg tile-inset" data-cat="perso">
+          <div class="tile-media"><img src="assets/img/proj/europraid.webp" alt="Page d'accueil du site Europ'Raid 2026 de l'équipage 33" data-en-alt="Home page of crew 33's Europ'Raid 2026 website" width="1200" height="800" loading="lazy"></div>
+          <div class="tile-body"><h3>Europ'Raid 2026 · Team 33</h3><p data-en="The site of the “Camfroutois en course” crew: 10,000 km across Europe in a Peugeot 205, carrying 70 kg of supplies to schools.">Le site de l'équipage « Camfroutois en course » : 10 000 km à travers l'Europe en 205, avec 70 kg de matériel pour des écoles.</p><p class="meta">2026 · HTML · CSS · JS</p><p class="links"><a href="https://github.com/tbtdbs29/CamfroutoisEnCourse" target="_blank" rel="noopener">Code<svg class="ico"><use href="#i-chev"/></svg></a></p></div>
+        </article>
+          <article class="tile tile-lg tile-dark" data-cat="ale">
+          <div class="tile-media"><svg class="diagram" viewBox="-30 -10 660 420" aria-hidden="true"><rect x="-30" y="-10" width="660" height="420" fill="#1d1d1f"/><path d="M142 186H166" stroke="#f5f5f7" stroke-width="2"/><circle cx="142" cy="186" r="4" fill="#f5f5f7"/><circle cx="166" cy="186" r="4" fill="#f5f5f7"/><path d="M288 186H312" stroke="#f5f5f7" stroke-width="2"/><circle cx="288" cy="186" r="4" fill="#f5f5f7"/><circle cx="312" cy="186" r="4" fill="#f5f5f7"/><path d="M434 186H458" stroke="#f5f5f7" stroke-width="2"/><circle cx="434" cy="186" r="4" fill="#f5f5f7"/><circle cx="458" cy="186" r="4" fill="#f5f5f7"/><rect x="20" y="150" width="122" height="72" rx="16" fill="#1d1d1f" stroke="#f5f5f7" stroke-width="2"/><text x="81" y="193" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, Inter, system-ui, sans-serif" font-size="19" font-weight="500" letter-spacing="-.3" fill="#f5f5f7" data-en="Network data">Flux réseau</text><text x="81" y="256" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, Inter, system-ui, sans-serif" font-size="16" fill="#f5f5f7" fill-opacity=".72">Kafka</text><rect x="166" y="150" width="122" height="72" rx="16" fill="#1d1d1f" stroke="#f5f5f7" stroke-width="2"/><text x="227" y="193" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, Inter, system-ui, sans-serif" font-size="19" font-weight="500" letter-spacing="-.3" fill="#f5f5f7" data-en="Storage">Stockage</text><text x="227" y="256" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, Inter, system-ui, sans-serif" font-size="16" fill="#f5f5f7" fill-opacity=".72">TimescaleDB</text><rect x="312" y="150" width="122" height="72" rx="16" fill="#f5f5f7" stroke="#f5f5f7" stroke-width="2"/><text x="373" y="193" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, Inter, system-ui, sans-serif" font-size="19" font-weight="600" letter-spacing="-.3" fill="#1d1d1f" data-en="Models">Modèles</text><text x="373" y="256" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, Inter, system-ui, sans-serif" font-size="16" fill="#f5f5f7" fill-opacity=".72" data-en="probabilistic">probabilistes</text><rect x="458" y="150" width="122" height="72" rx="16" fill="#1d1d1f" stroke="#f5f5f7" stroke-width="2"/><text x="519" y="193" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, Inter, system-ui, sans-serif" font-size="19" font-weight="500" letter-spacing="-.3" fill="#f5f5f7" data-en="Alerts">Alertes</text><text x="519" y="256" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, Inter, system-ui, sans-serif" font-size="16" fill="#f5f5f7" fill-opacity=".72">anomalies</text><text x="300" y="366" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, Inter, system-ui, sans-serif" font-size="15" fill="#f5f5f7" fill-opacity=".55" data-en="Simplified diagram · restricted access">Schéma simplifié · accès restreint</text></svg><ol class="flow flow-tile">
+            <li class="flow-node"><b data-en="Network data">Flux réseau</b><span>Kafka</span></li>
+            <li class="flow-node"><b data-en="Storage">Stockage</b><span>TimescaleDB</span></li>
+            <li class="flow-node flow-key"><b data-en="Models">Modèles</b><span data-en="probabilistic">probabilistes</span></li>
+            <li class="flow-node"><b data-en="Alerts">Alertes</b><span>anomalies</span></li>
+          </ol></div>
+          <div class="tile-body"><h3 data-en="Real‑time data dashboard">Dashboard data temps réel</h3><p data-en="Real‑time network analysis, with probabilistic models that detect anomalies in data streams.">Analyse réseau en temps réel, avec des modèles probabilistes qui détectent les anomalies dans les flux.</p><p class="meta" data-en="Apprenticeship · Python · Kafka">Alternance · Python · Kafka</p></div>
+        </article>
+          <article class="tile tile-lg tile-inset" data-cat="perso">
+          <div class="tile-media"><img src="assets/img/proj/eliteperf.webp" alt="Page d'accueil du site Elite Performance" data-en-alt="Home page of the Elite Performance website" width="1200" height="800" loading="lazy"></div>
+          <div class="tile-body"><h3>Elite Performance</h3><p data-en="An evidence‑based sport and nutrition site: calculator, simulator, comparison and blog.">Un site sport et nutrition fondé sur les études : calculateur, simulateur, comparatif et blog.</p><p class="meta">2026 · HTML · CSS · JS</p><p class="links"><a href="https://github.com/tbtdbs29/elitePerf" target="_blank" rel="noopener">Code<svg class="ico"><use href="#i-chev"/></svg></a></p></div>
+        </article>
+        </div>
+        <h3 class="others-title" data-en="Other projects">Autres projets</h3>
+        <ul class="others">
+          <li class="row" data-cat="ale" data-filter-only><div class="row-main"><h3 data-en="Multi‑agent chatbot">Chatbot multi‑agent</h3><p data-en="The flagship project: a multi‑agent system for OmniVista Network Advisor.">Le projet phare : un système multi‑agent pour OmniVista Network Advisor.</p></div><p class="meta" data-en="2025 · Multi‑agent · Proprietary">2025 · Multi‑agent · Propriétaire</p><p class="links"><a href="#phare"><span data-en="Learn more">En savoir plus</span><svg class="ico"><use href="#i-chev"/></svg></a></p></li>
+          <li class="row" data-cat="perso"><div class="row-main"><h3>Wav'com</h3><p data-en="The showcase site of a communication studio in Brittany: services, pricing, contact.">Le site vitrine d'un studio de communication en Bretagne : services, tarifs, contact.</p></div><p class="meta">2026 · HTML · CSS</p><p class="links"><a href="https://github.com/tbtdbs29/WavCom" target="_blank" rel="noopener">Code<svg class="ico"><use href="#i-chev"/></svg></a></p></li>
+          <li class="row" data-cat="perso"><div class="row-main"><h3 data-en="Pauline's portfolio">Portfolio Pauline</h3><p data-en="A complete portfolio for a communication student, designed for looks and easy reading.">Un portfolio complet pour une étudiante en information‑communication, pensé pour l'esthétique et la lecture.</p></div><p class="meta">2026 · HTML · CSS · JS</p><p class="links"><a href="https://pauline-guilcher.netlify.app/" target="_blank" rel="noopener"><span data-en="Visit the site">Voir le site</span><svg class="ico"><use href="#i-chev"/></svg></a><a href="https://github.com/tbtdbs29/PortfolioPauline" target="_blank" rel="noopener">Code<svg class="ico"><use href="#i-chev"/></svg></a></p></li>
+          <li class="row" data-cat="perso"><div class="row-main"><h3>SaaS Immo</h3><p data-en="A B2B platform for real estate agencies, with an AI that writes property descriptions.">Une plateforme B2B pour agences immobilières, avec une IA qui rédige les descriptions de biens.</p></div><p class="meta">Next.js · Supabase · Stripe</p><p class="links"></p></li>
+          <li class="row" data-cat="perso"><div class="row-main"><h3>Immobilier Watcher</h3><p data-en="A scraper that watches for new apartment listings.">Un scraper qui surveille les nouvelles annonces d'appartements.</p></div><p class="meta">2026 · Python</p><p class="links"><a href="https://github.com/tbtdbs29/immobilier-watcher" target="_blank" rel="noopener">Code<svg class="ico"><use href="#i-chev"/></svg></a></p></li>
+          <li class="row" data-cat="perso"><div class="row-main"><h3 data-en="This portfolio">Ce portfolio</h3><p data-en="The site you are reading, with its built‑in AI assistant.">Le site que vous lisez, avec son assistant IA intégré.</p></div><p class="meta">2026 · JS · Express · OpenAI</p><p class="links"><a href="https://github.com/tbtdbs29/Portfolio" target="_blank" rel="noopener">Code<svg class="ico"><use href="#i-chev"/></svg></a></p></li>
+          <li class="row" data-cat="etudes"><div class="row-main"><h3 data-en="Sports licences">Licences sportives</h3><p data-en="Which sports should a new store bet on? An analysis of French sports licence data (data.gouv.fr) in an interactive dashboard.">Quels sports privilégier pour ouvrir une enseigne ? Analyse des licences sportives (data.gouv.fr) dans un dashboard interactif.</p></div><p class="meta" data-en="2025 · Degree · Streamlit">2025 · BUT · Streamlit</p><p class="links"><a href="https://github.com/tbtdbs29/R5C06_Project" target="_blank" rel="noopener">Code<svg class="ico"><use href="#i-chev"/></svg></a></p></li>
+          <li class="row" data-cat="etudes"><div class="row-main"><h3>10heures</h3><p data-en="Music recommendation from a survey: processing the answers and visualising correlations.">Recommandation musicale à partir d'un questionnaire : traitement des réponses et visualisation des corrélations.</p></div><p class="meta" data-en="Degree · Python · Pandas">BUT · Python · Pandas</p><p class="links"><a href="https://github.com/tbtdbs29/10heures" target="_blank" rel="noopener">Code<svg class="ico"><use href="#i-chev"/></svg></a></p></li>
+          <li class="row" data-cat="etudes"><div class="row-main"><h3>Decision Analysis</h3><p data-en="Decision support built on classical statistical models applied to sports data.">Aide à la décision à partir de modèles statistiques classiques appliqués à des données sportives.</p></div><p class="meta" data-en="Degree · Python · Pandas">BUT · Python · Pandas</p><p class="links"><a href="https://github.com/tbtdbs29/decision_analysis" target="_blank" rel="noopener">Code<svg class="ico"><use href="#i-chev"/></svg></a></p></li>
+          <li class="row" data-cat="etudes"><div class="row-main"><h3 data-en="Classifieds app">App Annonces</h3><p data-en="A full‑stack web app listing a region's activities, with a back office.">Une application web full‑stack qui recense les activités d'une région, avec back‑office.</p></div><p class="meta" data-en="Degree · MVC · SQL">BUT · MVC · SQL</p><p class="links"><a href="https://github.com/tbtdbs2/Xx_TregorIndustries_xX" target="_blank" rel="noopener">Code<svg class="ico"><use href="#i-chev"/></svg></a></p></li>
+          <li class="row" data-cat="etudes"><div class="row-main"><h3>Sudoku</h3><p data-en="A Sudoku engine with a complete graphical interface.">Un moteur de Sudoku avec une interface graphique complète.</p></div><p class="meta" data-en="Degree · C · SDL2">BUT · C · SDL2</p><p class="links"></p></li>
+          <li class="row" data-cat="etudes"><div class="row-main"><h3 data-en="N‑Queens">N‑Dames</h3><p data-en="The N‑Queens problem solved with optimised backtracking.">Le problème des N‑Dames résolu par backtracking optimisé.</p></div><p class="meta" data-en="Degree · Python">BUT · Python</p><p class="links"></p></li>
+          <li class="row" data-cat="etudes"><div class="row-main"><h3>Triv'info Pursuit</h3><p data-en="A teaching board game for the computer science degree, from design to production.">Un jeu de plateau pédagogique pour le BUT Informatique, de la conception à la production.</p></div><p class="meta" data-en="Degree · Design">BUT · Conception</p><p class="links"><a href="assets/proj/Trivinfo.pdf" target="_blank" rel="noopener"><span data-en="Read the file (PDF)">Voir le dossier (PDF)</span><svg class="ico"><use href="#i-chev"/></svg></a></p></li>
+          <li class="row" data-cat="etudes"><div class="row-main"><h3 data-en="Sweded American Psycho">American Psycho, suédé</h3><p data-en="A “sweded” remake of American Psycho: writing, shooting and editing.">Un remake « suédé » d'American Psycho : écriture, tournage et montage.</p></div><p class="meta" data-en="Degree · Video">BUT · Vidéo</p><p class="links"><a href="https://youtu.be/BgZtwG82gr0" target="_blank" rel="noopener"><span data-en="Watch the video">Voir la vidéo</span><svg class="ico"><use href="#i-chev"/></svg></a></p></li>
+        </ul>
+      </div>
+    </section>
 
-    <script>
-        const isTouch = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
-        const cursor = document.getElementById('cursor');
+    <section class="band band-dark" id="photo" aria-labelledby="photo-title">
+      <div class="wrap center">
+        <h2 id="photo-title" data-en="Off screen, I take photographs.">Hors écran, je photographie.</h2>
+        <p class="lead" data-en="Travel, air shows, rallies. Patience, precision, and an eye for the frame.">Voyages, meetings aériens, rallyes. Patience, précision, et l'œil sur le cadre.</p>
+        <a class="chev-link" href="galerie.html"><span data-en="Open the gallery">Ouvrir la galerie</span><svg class="ico"><use href="#i-chev"/></svg></a>
+      </div>
+      <div class="carousel" data-carousel>
+        <ul class="carousel-track" data-track>
+          <li><img src="assets/img/photo/falaise.webp" alt="Coucher de soleil sur une falaise au-dessus de la mer" data-en-alt="Sunset over a cliff above the sea" width="1086" height="724" loading="lazy"></li>
+          <li><img src="assets/img/photo/patrouille.webp" alt="La Patrouille de France et ses fumigènes tricolores" data-en-alt="The Patrouille de France flying with tricolour smoke" width="1086" height="724" loading="lazy"></li>
+          <li class="portrait"><img src="assets/img/photo/azulejos.webp" alt="Façade d'église couverte d'azulejos à Porto" data-en-alt="Church façade covered in azulejo tiles in Porto" width="724" height="1086" loading="lazy"></li>
+          <li><img src="assets/img/photo/rallye.webp" alt="Une voiture de course rouge ancienne en pleine vitesse" data-en-alt="A red vintage race car at speed" width="1086" height="724" loading="lazy"></li>
+          <li><img src="assets/img/photo/chevres.webp" alt="Deux chèvres sur un rocher au coucher du soleil" data-en-alt="Two goats on a rock at sunset" width="1086" height="724" loading="lazy"></li>
+          <li><img src="assets/img/photo/van.webp" alt="Un food truck orange garé devant un mur de pierre" data-en-alt="An orange food truck parked by a stone wall" width="1086" height="724" loading="lazy"></li>
+          <li><img src="assets/img/photo/horloge.webp" alt="Une grande horloge sous une verrière" data-en-alt="A large clock under a glass roof" width="1086" height="724" loading="lazy"></li>
+          <li><img src="assets/img/photo/barque.webp" alt="Une barque jaune vue d'en haut sur une eau verte" data-en-alt="A yellow boat seen from above on green water" width="1086" height="724" loading="lazy"></li>
+        </ul>
+        <div class="wrap carousel-nav">
+          <button type="button" class="round" data-prev aria-label="Photo précédente" data-en-aria="Previous photo"><svg class="ico"><use href="#i-left"/></svg></button>
+          <button type="button" class="round" data-next aria-label="Photo suivante" data-en-aria="Next photo"><svg class="ico"><use href="#i-right"/></svg></button>
+        </div>
+      </div>
+    </section>
 
-        if (!isTouch) {
-            document.addEventListener('mousemove', (e) => {
-                cursor.style.left = e.clientX + 'px';
-                cursor.style.top = e.clientY + 'px';
-            });
-            document.querySelectorAll('.hover-trigger, a').forEach(el => {
-                el.addEventListener('mouseenter', () => cursor.classList.add('hovered'));
-                el.addEventListener('mouseleave', () => cursor.classList.remove('hovered'));
-            });
-        }
-    </script>
+    <section class="band" id="parcours" aria-labelledby="about-title">
+      <div class="wrap about">
+        <figure class="about-portrait"><img src="assets/img/portrait-2.webp" alt="Thibault Dubois, sac à dos, au-dessus de Porto" data-en-alt="Thibault Dubois with a backpack, above Porto" width="1100" height="1375" loading="lazy"></figure>
+        <div class="about-body">
+          <h2 id="about-title" data-en="About.">Parcours.</h2>
+          <p class="lead" data-en="I am a software developer at Alcatel‑Lucent Enterprise. I joined as an apprentice during my computer science degree at IUT de Lannion; I now work there on a temporary contract, on a multi‑agent chatbot for OmniVista Network Advisor.">Je suis développeur logiciel chez Alcatel‑Lucent Enterprise. J'y suis entré en alternance pendant mon BUT Informatique à l'IUT de Lannion ; j'y travaille aujourd'hui en intérim, sur un chatbot multi‑agent pour OmniVista Network Advisor.</p>
+          <p data-en="The rest of the time I build sites for friends and non‑profits, I take photographs, and I train. Same method everywhere: repeat, measure, correct.">Le reste du temps, je construis des sites pour des proches et des associations, je photographie, et je m'entraîne. Même méthode partout : répéter, mesurer, corriger.</p>
+          <ol class="timeline">
+            <li><span class="when" data-en="Today">Aujourd'hui</span><div><b data-en="Software developer (temporary contract)">Développeur logiciel (intérim)</b><span>Alcatel‑Lucent Enterprise</span></div></li>
+            <li><span class="when">2024</span><div><b data-en="AI developer, apprenticeship">Alternant développeur IA</b><span data-en="Alcatel‑Lucent Enterprise · real‑time dashboard, predictive models">Alcatel‑Lucent Enterprise · dashboard temps réel, modèles prédictifs</span></div></li>
+            <li><span class="when">2023 – 2026</span><div><b data-en="BUT Informatique, Data & AI track (graduated)">BUT Informatique, parcours Data et IA (diplômé)</b><span>IUT de Lannion</span></div></li>
+            <li><span class="when">2022 – 2023</span><div><b data-en="Hospital service agent">Agent de service hospitalier</b><span data-en="EHPAD du pays de Daoulas · care home">EHPAD du pays de Daoulas</span></div></li>
+            <li><span class="when">2021 – 2023</span><div><b data-en="Baccalauréat STI2D, with honours">Bac STI2D, mention assez bien</b><span>Lycée de l'Elorn, Landerneau</span></div></li>
+            <li><span class="when">2020</span><div><b data-en="Internship">Stage</b><span data-en="S3P Web, Brest · first steps in web development">S3P Web, Brest · premiers pas en développement web</span></div></li>
+          </ol>
+          <h3 class="h-sub" data-en="Away from the code">En dehors du code</h3>
+          <dl class="passions">
+            <div><dt data-en="Photography">Photographie</dt><dd data-en="Patience and precision.">Patience et précision.</dd></div>
+            <div><dt data-en="Motorcycling">Moto</dt><dd data-en="Anticipate the line, manage the risk.">Anticiper la trajectoire, gérer le risque.</dd></div>
+            <div><dt data-en="Weight training">Musculation</dt><dd data-en="No shortcuts: consistency pays.">Pas de raccourci : la régularité paie.</dd></div>
+            <div><dt data-en="Running">Course à pied</dt><dd data-en="Endurance, one kilometre after another.">L'endurance, kilomètre après kilomètre.</dd></div>
+            <div><dt data-en="Swimming">Piscine</dt><dd data-en="Technique, breathing, lengths.">Technique, souffle et longueurs.</dd></div>
+          </dl>
+        </div>
+      </div>
+    </section>
+
+    <section class="band band-gray" id="contact" aria-labelledby="contact-title">
+      <div class="wrap center">
+        <h2 id="contact-title" data-en="Write to me.">Écrivez‑moi.</h2>
+        <p class="lead" data-en="A project, a question, an idea: my inbox is open.">Un projet, une question, une idée : ma boîte mail est ouverte.</p>
+        <a class="mail" href="mailto:td29460@gmail.com">td29460@gmail.com</a>
+        <div class="ctas">
+          <a class="chev-link" href="https://www.linkedin.com/in/thibault-dubois-6bb36a25a/" target="_blank" rel="noopener">LinkedIn<svg class="ico"><use href="#i-chev"/></svg></a>
+          <a class="chev-link" href="https://github.com/tbtdbs29" target="_blank" rel="noopener">GitHub<svg class="ico"><use href="#i-chev"/></svg></a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="foot">
+    <div class="wrap foot-in">
+      <span>© 2026 Thibault Dubois</span>
+      <span data-en="Brittany, France">Bretagne, France</span>
+    </div>
+  </footer>
+
+  <script src="js/site.js" defer></script>
+  <script type="module" src="js/agents3d.js"></script>
 </body>
 </html>
